@@ -1,0 +1,7 @@
+package com.cist2931.petstore;
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello CIST2931!");
+    }
+}
