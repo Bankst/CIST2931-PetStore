@@ -1,3 +1,4 @@
 ﻿petstore-server/*.iml
 petstore-server/.idea
 petstore-server/out
+petstore-server/target
