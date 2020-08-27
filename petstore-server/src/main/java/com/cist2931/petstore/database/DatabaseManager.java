@@ -2,9 +2,7 @@ package com.cist2931.petstore.database;
 
 import com.cist2931.petstore.logging.Logger;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DatabaseManager {
 
@@ -39,4 +37,44 @@ public class DatabaseManager {
         return true;
     }
 
+    public void runQuery(String query) {
+        try {
+            Statement statement = dbConnection.createStatement();
+            ResultSet resultSet = null;
+            if (query.startsWith("SELECT")) {
+                if (statement.execute(query)) {
+                    resultSet = statement.getResultSet();
+                }
+            }
+            if (resultSet != null) {
+                dumpAllSelect(resultSet);
+            }
+
+        } catch (SQLException e) {
+            logger.error("Failed to run query!", e);
+            logger.error("SQLError: " + e.getSQLState());
+            logger.error("VendorError: " + e.getErrorCode());
+        }
+    }
+
+
+    private void dumpAllSelect(ResultSet resultSet) throws SQLException {
+        ResultSetMetaData rsmd = resultSet.getMetaData();
+        int columnsNumber = rsmd.getColumnCount();
+
+        for (int i = 1; i <= columnsNumber; i++) {
+            System.out.print(rsmd.getColumnName(i) + "\t");
+        }
+        System.out.println();
+
+        while (resultSet.next()) {
+
+            for (int i = 1; i <= columnsNumber; i++) {
+                if (i > 1) System.out.print(",  ");
+                String columnValue = resultSet.getString(i);
+                System.out.print(columnValue);
+            }
+            System.out.println();
+        }
+    }
 }

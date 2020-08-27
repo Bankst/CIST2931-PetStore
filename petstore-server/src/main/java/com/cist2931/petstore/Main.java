@@ -22,5 +22,8 @@ public class Main {
             }
         }
         logger.info("SQL database init complete.");
+
+        dbManager.runQuery("SELECT * FROM testTable");
     }
+
 }
