@@ -37,10 +37,14 @@ public class DatabaseManager {
         return true;
     }
 
-    public void runQuery(String query) {
+    public Connection getDbConnection() {
+        return dbConnection;
+    }
+
+    public ResultSet runQuery(String query) {
+        ResultSet resultSet = null;
         try {
             Statement statement = dbConnection.createStatement();
-            ResultSet resultSet = null;
             if (query.startsWith("SELECT")) {
                 if (statement.execute(query)) {
                     resultSet = statement.getResultSet();
@@ -55,6 +59,7 @@ public class DatabaseManager {
             logger.error("SQLError: " + e.getSQLState());
             logger.error("VendorError: " + e.getErrorCode());
         }
+        return resultSet;
     }
 
 
