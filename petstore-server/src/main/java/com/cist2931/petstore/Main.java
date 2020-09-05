@@ -4,6 +4,8 @@ import com.cist2931.petstore.database.DatabaseManager;
 import com.cist2931.petstore.logging.LogLevel;
 import com.cist2931.petstore.logging.Logger;
 import com.cist2931.petstore.objects.Customer;
+import com.cist2931.petstore.objects.Employee;
+import com.cist2931.petstore.objects.Merchandise;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +31,11 @@ public class Main {
 
         Customer bankst = null;
         try {
-            bankst = Customer.GetCustomerByID(dbManager.getDbConnection(), 0);
+            bankst = Customer.GetCustomerByID(dbManager.getDbConnection(), 500);
+            //bankst.InsertCustomer(dbManager.getDbConnection(), 500, "test", "test", "test", "test", "test", "test", 500, "test", "test");
+            //bankst.UpdateCustomer(dbManager.getDbConnection(), 500, "test1", "test1", "test1", "test1", "test1", "test1", 501, "test1", "test1");
+            //bankst.DeleteCustomer(dbManager.getDbConnection(), 500);
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
