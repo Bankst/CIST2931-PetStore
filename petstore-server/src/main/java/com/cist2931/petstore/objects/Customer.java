@@ -13,6 +13,7 @@ public class Customer {
     private String lastName;
     private String street;
     private String city;
+    private String state;
     private int zipcode;
     private String phoneNumber;
     private String email;
@@ -25,6 +26,7 @@ public class Customer {
         lastName = "";
         street = "";
         city = "";
+        state = "";
         zipcode = 0;
         phoneNumber = "";
         email = "";
@@ -37,7 +39,8 @@ public class Customer {
         firstName = rs.getString("FirstName");
         lastName = rs.getString("LastName");
         street = rs.getString("Street");
-        city = rs.getString("city");
+        city = rs.getString("City");
+        state = rs.getString("State");
         zipcode = rs.getInt("Zipcode");
         phoneNumber = rs.getString("PhoneNum");
         email = rs.getString("Email");
@@ -52,6 +55,62 @@ public class Customer {
         if (resultSet.next()) {
             return new Customer(resultSet);
         } else return null;
+    }
+
+    public static void InsertCustomer(Connection dbConnection, int customerID, String password, String firstName, String lastName,
+                                          String street, String city, String state, int zipcode, String phoneNumber, String email) throws SQLException {
+        final String insertQuery = "INSERT INTO Customer(CustID, Password, FirstName, LastName, Street, City, State, Zipcode, PhoneNum, Email) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement statement = dbConnection.prepareStatement(insertQuery);
+        statement.setInt(1, customerID);
+        statement.setString(2, password);
+        statement.setString(3, firstName);
+        statement.setString(4, lastName);
+        statement.setString(5, street);
+        statement.setString(6, city);
+        statement.setString(7, state);
+        statement.setInt(8, zipcode);
+        statement.setString(9, phoneNumber);
+        statement.setString(10, email);
+
+        if(statement.executeUpdate() == 1) {
+            System.out.println("Insert Successful");
+        } else {
+            System.out.println("Insert Failed");
+        }
+    }
+
+    public static void UpdateCustomer(Connection dbConnection, int customerID, String password, String firstName, String lastName,
+                                      String street, String city, String state, int zipcode, String phoneNumber, String email) throws SQLException {
+        final String updateQuery = "UPDATE Customer set Password = ?, FirstName = ?, LastName = ?, Street = ?, City = ?, State = ?, Zipcode = ?, PhoneNum = ?, Email = ? WHERE CustID = ?";
+        PreparedStatement statement = dbConnection.prepareStatement(updateQuery);
+        statement.setString(1, password);
+        statement.setString(2, firstName);
+        statement.setString(3, lastName);
+        statement.setString(4, street);
+        statement.setString(5, city);
+        statement.setString(6, state);
+        statement.setInt(7, zipcode);
+        statement.setString(8, phoneNumber);
+        statement.setString(9, email);
+        statement.setInt(10, customerID);
+
+        if(statement.executeUpdate() == 1) {
+            System.out.println("Update Successful");
+        } else {
+            System.out.println("Update Failed");
+        }
+    }
+
+    public static void DeleteCustomer(Connection dbConnection, int id) throws SQLException {
+        final String deleteQuery = "DELETE FROM Customer WHERE CustID = ?";
+        PreparedStatement statement = dbConnection.prepareStatement(deleteQuery);
+        statement.setInt(1, id);
+
+        if(statement.executeUpdate() == 1) {
+            System.out.println("Delete Successful");
+        } else {
+            System.out.println("Delete Failed");
+        }
     }
 
     @Override
