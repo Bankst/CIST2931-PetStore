@@ -33,14 +33,14 @@ public class Merchandise {
         quantity = rs.getInt("Quantity on Hand");
     }
 
-    public static Employee GetMerchByID(Connection dbConnection, int id) throws SQLException {
+    public static Merchandise GetMerchByID(Connection dbConnection, int id) throws SQLException {
         final String selectQuery = "SELECT * FROM Merchandise WHERE MerchID = ?";
         PreparedStatement statement = dbConnection.prepareStatement(selectQuery);
         statement.setInt(1, id);
 
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.next()) {
-            return new Employee(resultSet);
+            return new Merchandise(resultSet);
         } else return null;
     }
 
