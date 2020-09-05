@@ -57,7 +57,7 @@ public class Customer {
         } else return null;
     }
 
-    public static void InsertCustomer(Connection dbConnection, int customerID, String password, String firstName, String lastName,
+    public static Boolean InsertCustomer(Connection dbConnection, int customerID, String password, String firstName, String lastName,
                                           String street, String city, String state, int zipcode, String phoneNumber, String email) throws SQLException {
         final String insertQuery = "INSERT INTO Customer(CustID, Password, FirstName, LastName, Street, City, State, Zipcode, PhoneNum, Email) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = dbConnection.prepareStatement(insertQuery);
@@ -72,14 +72,10 @@ public class Customer {
         statement.setString(9, phoneNumber);
         statement.setString(10, email);
 
-        if(statement.executeUpdate() == 1) {
-            System.out.println("Insert Successful");
-        } else {
-            System.out.println("Insert Failed");
-        }
+        return statement.executeUpdate() == 1;
     }
 
-    public static void UpdateCustomer(Connection dbConnection, int customerID, String password, String firstName, String lastName,
+    public static Boolean UpdateCustomer(Connection dbConnection, int customerID, String password, String firstName, String lastName,
                                       String street, String city, String state, int zipcode, String phoneNumber, String email) throws SQLException {
         final String updateQuery = "UPDATE Customer set Password = ?, FirstName = ?, LastName = ?, Street = ?, City = ?, State = ?, Zipcode = ?, PhoneNum = ?, Email = ? WHERE CustID = ?";
         PreparedStatement statement = dbConnection.prepareStatement(updateQuery);
@@ -94,23 +90,16 @@ public class Customer {
         statement.setString(9, email);
         statement.setInt(10, customerID);
 
-        if(statement.executeUpdate() == 1) {
-            System.out.println("Update Successful");
-        } else {
-            System.out.println("Update Failed");
-        }
+        return statement.executeUpdate() == 1;
     }
 
-    public static void DeleteCustomer(Connection dbConnection, int id) throws SQLException {
+    public static Boolean DeleteCustomer(Connection dbConnection, int id) throws SQLException {
         final String deleteQuery = "DELETE FROM Customer WHERE CustID = ?";
         PreparedStatement statement = dbConnection.prepareStatement(deleteQuery);
         statement.setInt(1, id);
 
-        if(statement.executeUpdate() == 1) {
-            System.out.println("Delete Successful");
-        } else {
-            System.out.println("Delete Failed");
-        }
+        return statement.executeUpdate() == 1;
+
     }
 
     @Override
