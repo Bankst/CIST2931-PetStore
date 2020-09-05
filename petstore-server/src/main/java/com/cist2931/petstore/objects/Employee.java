@@ -71,7 +71,6 @@ public class Employee {
         statement.setInt(1, empID);
 
         return statement.executeUpdate() == 1;
-
     }
 
     @Override
