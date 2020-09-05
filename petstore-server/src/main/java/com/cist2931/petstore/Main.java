@@ -29,20 +29,39 @@ public class Main {
         }
         logger.info("SQL database init complete.");
 
-        Customer bankst = null;
+        Merchandise bankst;
         try {
-            bankst = Customer.GetCustomerByID(dbManager.getDbConnection(), 500);
-            //bankst.InsertCustomer(dbManager.getDbConnection(), 500, "test", "test", "test", "test", "test", "test", 500, "test", "test");
-            //bankst.UpdateCustomer(dbManager.getDbConnection(), 500, "test1", "test1", "test1", "test1", "test1", "test1", 501, "test1", "test1");
-            //bankst.DeleteCustomer(dbManager.getDbConnection(), 500);
+            bankst = Merchandise.GetMerchByID(dbManager.getDbConnection(), 500);
+            if (bankst != null) {
+                logger.info("Got bankst!");
+                logger.debug(bankst.toString());
+            }
+
+            /*
+            if(bankst.InsertMerch(dbManager.getDbConnection(), 500, "test", 500.50, "test", "test", 500)) {
+                System.out.println("Insert Successful");
+            }
+            else {
+                System.out.println("Insert Failed");
+            }
+
+            if(bankst.UpdateMerch(dbManager.getDbConnection(), 500, "test1", 501.50, "test1", "test1", 501)) {
+                System.out.println("Update Successful");
+            }
+            else {
+                System.out.println("Update Failed");
+            }
+
+            if(bankst.DeleteMerch(dbManager.getDbConnection(), 500)) {
+                System.out.println("Delete Successful");
+            }
+            else {
+                System.out.println("Delete Failed");
+            }
+            */
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        }
-
-        if (bankst != null) {
-            logger.info("Got bankst!");
-            logger.debug(bankst.toString());
         }
 //        ResultSet testTableData = dbManager.runQuery("INSERT INTO Customer (Password, FirstName, LastName, Street, City, State, Zipcode, Email) VALUES ('testpassword', 'John', 'Doe', '123 Main St', 'Townsville', 123456, 'Georgia')");
     }
