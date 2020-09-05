@@ -22,7 +22,7 @@ public class Employee {
     }
 
     public Employee(ResultSet rs) throws SQLException {
-        //initialized from result set
+        // initialize from result set
         empID = rs.getInt("EmpID");
         username = rs.getString("Username");
         password = rs.getString("Password");
@@ -39,6 +39,39 @@ public class Employee {
         if (resultSet.next()) {
             return new Employee(resultSet);
         } else return null;
+    }
+
+    public static Boolean InsertEmployee(Connection dbConnection, int empID, String username, String password, String firstName, String lastName) throws SQLException {
+        final String insertQuery = "INSERT INTO Employee(EmpID, Username, Password, FirstName, LastName) values (?, ?, ?, ?, ?)";
+        PreparedStatement statement = dbConnection.prepareStatement(insertQuery);
+        statement.setInt(1, empID);
+        statement.setString(2, username);
+        statement.setString(3, password);
+        statement.setString(4, firstName);
+        statement.setString(5, lastName);
+
+        return statement.executeUpdate() == 1;
+    }
+
+    public static Boolean UpdateEmployee(Connection dbConnection, int empID, String username, String password, String firstName, String lastName) throws SQLException {
+        final String updateQuery = "UPDATE Employee set Username = ?, Password = ?, FirstName = ?, LastName = ? WHERE EmpID = ?";
+        PreparedStatement statement = dbConnection.prepareStatement(updateQuery);
+        statement.setString(1, username);
+        statement.setString(2, password);
+        statement.setString(3, firstName);
+        statement.setString(4, lastName);
+        statement.setInt(5, empID);
+
+        return statement.executeUpdate() == 1;
+    }
+
+    public static Boolean DeleteEmployee(Connection dbConnection, int empID) throws SQLException {
+        final String deleteQuery = "DELETE FROM Employee WHERE EmpID = ?";
+        PreparedStatement statement = dbConnection.prepareStatement(deleteQuery);
+        statement.setInt(1, empID);
+
+        return statement.executeUpdate() == 1;
+
     }
 
     @Override
