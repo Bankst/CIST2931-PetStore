@@ -3,11 +3,8 @@ package com.cist2931.petstore;
 import com.cist2931.petstore.database.DatabaseManager;
 import com.cist2931.petstore.logging.LogLevel;
 import com.cist2931.petstore.logging.Logger;
-import com.cist2931.petstore.objects.Customer;
-import com.cist2931.petstore.objects.Employee;
 import com.cist2931.petstore.objects.Merchandise;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Main {
@@ -29,41 +26,26 @@ public class Main {
         }
         logger.info("SQL database init complete.");
 
-        Merchandise bankst;
+        Merchandise testMerch;
         try {
-            bankst = Merchandise.GetMerchByID(dbManager.getDbConnection(), 500);
-            if (bankst != null) {
-                logger.info("Got bankst!");
-                logger.debug(bankst.toString());
+            testMerch = Merchandise.getMerchandiseById(dbManager.getDbConnection(), 500);
+            if (testMerch != null) {
+                logger.info("Got testMerch!");
+                logger.debug(testMerch.toString());
+            } else {
+                testMerch = new Merchandise(500, "testMerch", 500.50, "Test", "Test Merchandise", 100);
+
+                System.out.println(testMerch.insert(dbManager.getDbConnection()) ? "Insert Successful" : "Insert Failed");
             }
 
-            /*
-            if(bankst.InsertMerch(dbManager.getDbConnection(), 500, "test", 500.50, "test", "test", 500)) {
-                System.out.println("Insert Successful");
-            }
-            else {
-                System.out.println("Insert Failed");
-            }
+            testMerch.setQuantity(200);
+            System.out.println(testMerch.update(dbManager.getDbConnection()) ? "Update Successful" : "Update Failed");
 
-            if(bankst.UpdateMerch(dbManager.getDbConnection(), 500, "test1", 501.50, "test1", "test1", 501)) {
-                System.out.println("Update Successful");
-            }
-            else {
-                System.out.println("Update Failed");
-            }
-
-            if(bankst.DeleteMerch(dbManager.getDbConnection(), 500)) {
-                System.out.println("Delete Successful");
-            }
-            else {
-                System.out.println("Delete Failed");
-            }
-            */
+            System.out.println(testMerch.delete(dbManager.getDbConnection()) ? "Delete Successful" : "Delete Failed");
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-//        ResultSet testTableData = dbManager.runQuery("INSERT INTO Customer (Password, FirstName, LastName, Street, City, State, Zipcode, Email) VALUES ('testpassword', 'John', 'Doe', '123 Main St', 'Townsville', 123456, 'Georgia')");
     }
 
 }

@@ -12,15 +12,6 @@ public class Employee {
     private String firstName;
     private String lastName;
 
-    public Employee() {
-        //default constructor
-        empID = 0;
-        username = "";
-        password = "";
-        firstName = "";
-        lastName = "";
-    }
-
     public Employee(ResultSet rs) throws SQLException {
         // initialize from result set
         empID = rs.getInt("EmpID");
@@ -30,47 +21,16 @@ public class Employee {
         lastName = rs.getString("LastName");
     }
 
-    public static Employee GetEmployeeByID(Connection dbConnection, int id) throws SQLException {
-        final String selectQuery = "SELECT * FROM Employee WHERE EmpID = ?";
-        PreparedStatement statement = dbConnection.prepareStatement(selectQuery);
-        statement.setInt(1, id);
-
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            return new Employee(resultSet);
-        } else return null;
+    public boolean update(Connection dbConnection) throws SQLException {
+        return updateEmployee(dbConnection, this);
     }
 
-    public static Boolean InsertEmployee(Connection dbConnection, int empID, String username, String password, String firstName, String lastName) throws SQLException {
-        final String insertQuery = "INSERT INTO Employee(EmpID, Username, Password, FirstName, LastName) values (?, ?, ?, ?, ?)";
-        PreparedStatement statement = dbConnection.prepareStatement(insertQuery);
-        statement.setInt(1, empID);
-        statement.setString(2, username);
-        statement.setString(3, password);
-        statement.setString(4, firstName);
-        statement.setString(5, lastName);
-
-        return statement.executeUpdate() == 1;
+    public boolean insert(Connection dbConnection) throws SQLException {
+        return insertEmployee(dbConnection, this);
     }
 
-    public static Boolean UpdateEmployee(Connection dbConnection, int empID, String username, String password, String firstName, String lastName) throws SQLException {
-        final String updateQuery = "UPDATE Employee set Username = ?, Password = ?, FirstName = ?, LastName = ? WHERE EmpID = ?";
-        PreparedStatement statement = dbConnection.prepareStatement(updateQuery);
-        statement.setString(1, username);
-        statement.setString(2, password);
-        statement.setString(3, firstName);
-        statement.setString(4, lastName);
-        statement.setInt(5, empID);
-
-        return statement.executeUpdate() == 1;
-    }
-
-    public static Boolean DeleteEmployee(Connection dbConnection, int empID) throws SQLException {
-        final String deleteQuery = "DELETE FROM Employee WHERE EmpID = ?";
-        PreparedStatement statement = dbConnection.prepareStatement(deleteQuery);
-        statement.setInt(1, empID);
-
-        return statement.executeUpdate() == 1;
+    public boolean delete(Connection dbConnection) throws SQLException {
+        return deleteEmployee(dbConnection, this.empID);
     }
 
     @Override
@@ -122,5 +82,48 @@ public class Employee {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public static Employee getEmployeeByID(Connection dbConnection, int id) throws SQLException {
+        final String selectQuery = "SELECT * FROM Employee WHERE EmpID = ?";
+        PreparedStatement statement = dbConnection.prepareStatement(selectQuery);
+        statement.setInt(1, id);
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            return new Employee(resultSet);
+        } else return null;
+    }
+
+    public static boolean insertEmployee(Connection dbConnection, Employee employee) throws SQLException {
+        final String insertQuery = "INSERT INTO Employee(EmpID, Username, Password, FirstName, LastName) values (?, ?, ?, ?, ?)";
+        PreparedStatement statement = dbConnection.prepareStatement(insertQuery);
+        statement.setInt(1, employee.empID);
+        statement.setString(2, employee.username);
+        statement.setString(3, employee.password);
+        statement.setString(4, employee.firstName);
+        statement.setString(5, employee.lastName);
+
+        return statement.executeUpdate() == 1;
+    }
+
+    public static boolean updateEmployee(Connection dbConnection, Employee employee) throws SQLException {
+        final String updateQuery = "UPDATE Employee set Username = ?, Password = ?, FirstName = ?, LastName = ? WHERE EmpID = ?";
+        PreparedStatement statement = dbConnection.prepareStatement(updateQuery);
+        statement.setString(1, employee.username);
+        statement.setString(2, employee.password);
+        statement.setString(3, employee.firstName);
+        statement.setString(4, employee.lastName);
+        statement.setInt(5, employee.empID);
+
+        return statement.executeUpdate() == 1;
+    }
+
+    public static boolean deleteEmployee(Connection dbConnection, int empID) throws SQLException {
+        final String deleteQuery = "DELETE FROM Employee WHERE EmpID = ?";
+        PreparedStatement statement = dbConnection.prepareStatement(deleteQuery);
+        statement.setInt(1, empID);
+
+        return statement.executeUpdate() == 1;
     }
 }
