@@ -1,4 +1,4 @@
-package com.cist2931.petstore.objects;
+package com.cist2931.petstore.application.merchandise;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

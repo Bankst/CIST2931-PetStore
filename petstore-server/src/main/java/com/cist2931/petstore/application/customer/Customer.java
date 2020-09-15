@@ -1,4 +1,4 @@
-package com.cist2931.petstore.objects;
+package com.cist2931.petstore.application.customer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,18 +18,37 @@ public class Customer {
     private String phoneNumber;
     private String email;
 
+    public Customer(int customerID, String password, String firstName, String lastName, String street, String city, String state, int zipcode, String phoneNumber, String email) {
+        this.customerID = customerID;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.zipcode = zipcode;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
+
     public Customer(ResultSet rs) throws SQLException {
         // initialize from result set
-        customerID = rs.getInt("CustID");
-        password = rs.getString("Password");
-        firstName = rs.getString("FirstName");
-        lastName = rs.getString("LastName");
-        street = rs.getString("Street");
-        city = rs.getString("City");
-        state = rs.getString("State");
-        zipcode = rs.getInt("Zipcode");
-        phoneNumber = rs.getString("PhoneNum");
-        email = rs.getString("Email");
+        this(
+            rs.getInt("CustID"),
+            rs.getString("Password"),
+            rs.getString("FirstName"),
+            rs.getString("LastName"),
+            rs.getString("Street"),
+            rs.getString("City"),
+            rs.getString("State"),
+            rs.getInt("Zipcode"),
+            rs.getString("PhoneNum"),
+            rs.getString("Email")
+        );
+    }
+
+    public Customer() {
+        this(-1, "", "", "", "", "", "", 0, "", "");
     }
 
     @Override
@@ -103,7 +122,7 @@ public class Customer {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setstatemCity(String city) {
         this.city = city;
     }
 

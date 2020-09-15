@@ -3,10 +3,10 @@ package com.cist2931.petstore;
 import com.cist2931.petstore.database.DatabaseManager;
 import com.cist2931.petstore.logging.LogLevel;
 import com.cist2931.petstore.logging.Logger;
-import com.cist2931.petstore.objects.Merchandise;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.sql.SQLException;
-
+@SpringBootApplication
 public class Main {
     private static final Logger logger = new Logger(Main.class);
 
@@ -26,26 +26,7 @@ public class Main {
         }
         logger.info("SQL database init complete.");
 
-        Merchandise testMerch;
-        try {
-            testMerch = Merchandise.getMerchandiseById(dbManager.getDbConnection(), 500);
-            if (testMerch != null) {
-                logger.info("Got testMerch!");
-                logger.debug(testMerch.toString());
-            } else {
-                testMerch = new Merchandise(500, "testMerch", 500.50, "Test", "Test Merchandise", 100);
-
-                System.out.println(testMerch.insert(dbManager.getDbConnection()) ? "Insert Successful" : "Insert Failed");
-            }
-
-            testMerch.setQuantity(200);
-            System.out.println(testMerch.update(dbManager.getDbConnection()) ? "Update Successful" : "Update Failed");
-
-            System.out.println(testMerch.delete(dbManager.getDbConnection()) ? "Delete Successful" : "Delete Failed");
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        logger.info("Starting REST API");
+        SpringApplication.run(Main.class, args);
     }
-
 }
