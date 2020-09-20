@@ -1,41 +1,59 @@
 package com.cist2931.petstore.application.customer;
 
-import org.springframework.web.bind.annotation.*;
+import com.cist2931.petstore.application.AuthenticationService;
+import io.javalin.http.Context;
+import org.apache.commons.lang3.tuple.Pair;
 
-@RestController
-public class CustomerController {
+import java.sql.Connection;
 
-    @RequestMapping(value = "/api/v1/login", method = { RequestMethod.GET, RequestMethod.POST})
-    @ResponseBody
-    public CustomerLoginResponse login(
-            @RequestParam(name="email", defaultValue = "") String email,
-            @RequestParam(name="password", defaultValue = "") String password
-            ) {
+public final class CustomerController {
 
-        Customer customer = null;
-        CustomerLoginResponseCode responseCode = CustomerLoginResponseCode.BAD_LOGIN;
+    private final CustomerService customerService;
 
-        if (!email.isEmpty() && !password.isEmpty()) {
-            customer = getCustomerByEmail(email);
-
-            if (customer != null) {
-                if (checkPassword(password, customer.getPassword())) {
-                    responseCode = CustomerLoginResponseCode.OK;
-                } else {
-                    responseCode = CustomerLoginResponseCode.BAD_LOGIN;
-                }
-            } else {
-                responseCode = CustomerLoginResponseCode.NO_ACCOUNT;
-            }
-        }
-        return new CustomerLoginResponse(responseCode, customer);
+    public CustomerController(Connection dbConnection) {
+        customerService = new CustomerService(dbConnection);
     }
 
-    private Customer getCustomerByEmail(String email) {
-        return null;
+    public void doLogin(Context ctx) {
+        String email = ctx.queryParam("email");
+        String password = ctx.queryParam("password");
+
+        Pair<Integer, String> loginResponse = customerService.login(email, password);
+
+        String tokenJson = "{\"token\": \"" + loginResponse.getRight() + "\"}";
+        ctx.result(tokenJson);
+        ctx.contentType("application/json");
+        ctx.status(loginResponse.getLeft());
     }
 
-    private boolean checkPassword(String requestPassword, String dbPassword) {
-        return (requestPassword.equals(dbPassword));
+    public void doLogout(Context ctx) {
+        String token = AuthenticationService.cleanToken(ctx.header("AUTHORIZATION"));
+
+        int respCode = customerService.logout(token);
+
+        ctx.status(respCode);
+    }
+
+    public void doChangePassword(Context ctx) {
+        String token = AuthenticationService.cleanToken(ctx.header("AUTHORIZATION"));
+        String newPassword = ctx.queryParam("newPassword");
+
+        int respCode = customerService.changePasssword(token, newPassword);
+
+        ctx.status(respCode);
+    }
+
+    public void getOrders(Context ctx) {
+        // TODO: orders
+        ctx.status(501);
+    }
+
+    public void getCustomer(Context ctx) {
+        String token = AuthenticationService.cleanToken(ctx.header("AUTHORIZATION"));
+
+        Pair<Integer, Customer> getResponse = customerService.getByToken(token);
+
+        ctx.json(getResponse.getRight());
+        ctx.status(getResponse.getLeft());
     }
 }

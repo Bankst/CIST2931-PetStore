@@ -1,12 +1,10 @@
 package com.cist2931.petstore;
 
+import com.cist2931.petstore.application.RestServer;
 import com.cist2931.petstore.database.DatabaseManager;
 import com.cist2931.petstore.logging.LogLevel;
 import com.cist2931.petstore.logging.Logger;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
 public class Main {
     private static final Logger logger = new Logger(Main.class);
 
@@ -27,6 +25,7 @@ public class Main {
         logger.info("SQL database init complete.");
 
         logger.info("Starting REST API");
-        SpringApplication.run(Main.class, args);
+        // this MUST be the last call. this takes over the thread and keeps the program running
+        new RestServer(8080, dbManager.getConnection());
     }
 }

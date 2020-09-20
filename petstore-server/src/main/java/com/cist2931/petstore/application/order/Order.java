@@ -9,7 +9,6 @@ public class Order {
     private int quantity;
     private String status;
 
-
     public Order(ResultSet rs) throws SQLException {
         orderID = rs.getInt("OrderID");
         merchID = rs.getInt("MerchID");

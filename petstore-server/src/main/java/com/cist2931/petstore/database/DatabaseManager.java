@@ -18,8 +18,6 @@ public class DatabaseManager {
         return DatabaseManagerSingleton.SINGLETON;
     }
 
-    public DatabaseManager() {}
-
     public boolean loadDriver() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
