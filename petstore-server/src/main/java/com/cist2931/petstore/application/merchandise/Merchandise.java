@@ -1,10 +1,10 @@
 package com.cist2931.petstore.application.merchandise;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@SuppressWarnings("unused")
 public class Merchandise {
     private int merchID;
     private String merchName;
@@ -22,38 +22,28 @@ public class Merchandise {
         this.quantity = quantity;
     }
 
-    public Merchandise(ResultSet rs) throws SQLException {
+    protected Merchandise(ResultSet rs) throws SQLException {
         // initialize from result set
-        merchID = rs.getInt("MerchID");
-        merchName = rs.getString("MerchName");
-        price = rs.getDouble("Price");
-        category = rs.getString("Category");
-        description = rs.getString("Description");
-        quantity = rs.getInt("Quantity");
+        this(
+                rs.getInt("MerchID"),
+                rs.getString("MerchName"),
+                rs.getDouble("Price"),
+                rs.getString("Category"),
+                rs.getString("Description"),
+                rs.getInt("Quantity")
+        );
     }
 
     public boolean update(Connection dbConnection) throws SQLException {
-        return updateMerchandise(dbConnection, this);
+        return MerchandiseSQL.updateMerchandise(dbConnection, this);
     }
 
     public boolean insert(Connection dbConnection) throws SQLException {
-        return insertMerchandise(dbConnection, this);
+        return MerchandiseSQL.insertMerchandise(dbConnection, this);
     }
 
     public boolean delete(Connection dbConnection) throws SQLException {
-        return deleteMerchandise(dbConnection, this.merchID);
-    }
-
-    @Override
-    public String toString() {
-        return "Merchandise{" +
-                "merchID=" + merchID +
-                ", merchName='" + merchName + '\'' +
-                ", price=" + price +
-                ", category='" + category + '\'' +
-                ", description='" + description + '\'' +
-                ", quantity=" + quantity +
-                '}';
+        return MerchandiseSQL.deleteMerchandise(dbConnection, this.merchID);
     }
 
     public int getMerchID() {
@@ -104,48 +94,15 @@ public class Merchandise {
         this.quantity = quantity;
     }
 
-    public static Merchandise getMerchandiseById(Connection dbConnection, int id) throws SQLException {
-        final String selectQuery = "SELECT * FROM Merchandise WHERE MerchID = ?";
-        PreparedStatement statement = dbConnection.prepareStatement(selectQuery);
-        statement.setInt(1, id);
-
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            return new Merchandise(resultSet);
-        } else return null;
-    }
-
-    public static boolean insertMerchandise(Connection dbConnection, Merchandise merchandise) throws SQLException {
-        final String insertQuery = "INSERT INTO Merchandise(MerchID, MerchName, Price, Category, Description, Quantity) values (?, ?, ?, ?, ?, ?)";
-        PreparedStatement statement = dbConnection.prepareStatement(insertQuery);
-        statement.setInt(1, merchandise.merchID);
-        statement.setString(2, merchandise.merchName);
-        statement.setDouble(3, merchandise.price);
-        statement.setString(4, merchandise.category);
-        statement.setString(5, merchandise.description);
-        statement.setInt(6, merchandise.quantity);
-
-        return statement.executeUpdate() == 1;
-    }
-
-    public static boolean updateMerchandise(Connection dbConnection, Merchandise merchandise) throws SQLException {
-        final String updateQuery = "UPDATE Merchandise set MerchName = ?, Price = ?, Category = ?, Description = ?, Quantity = ? WHERE MerchID = ?";
-        PreparedStatement statement = dbConnection.prepareStatement(updateQuery);
-        statement.setString(1, merchandise.merchName);
-        statement.setDouble(2, merchandise.price);
-        statement.setString(3, merchandise.category);
-        statement.setString(4, merchandise.description);
-        statement.setInt(5, merchandise.quantity);
-        statement.setInt(6, merchandise.merchID);
-
-        return statement.executeUpdate() == 1;
-    }
-
-    public static boolean deleteMerchandise(Connection dbConnection, int merchID) throws SQLException {
-        final String deleteQuery = "DELETE FROM Merchandise WHERE MerchID = ?";
-        PreparedStatement statement = dbConnection.prepareStatement(deleteQuery);
-        statement.setInt(1, merchID);
-
-        return statement.executeUpdate() == 1;
+    @Override
+    public String toString() {
+        return "Merchandise{" +
+                "merchID=" + merchID +
+                ", merchName='" + merchName + '\'' +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                ", description='" + description + '\'' +
+                ", quantity=" + quantity +
+                '}';
     }
 }

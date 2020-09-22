@@ -1,9 +1,8 @@
 package com.cist2931.petstore.application.customer;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.cist2931.petstore.application.order.OrderMerchandiseSQL;
+
+import java.sql.*;
 import java.util.Optional;
 
 public final class CustomerSQL {
@@ -50,20 +49,32 @@ public final class CustomerSQL {
     }
 
     public static boolean insertCustomer(Connection conn, Customer customer) throws SQLException {
-        final String insertQuery = "INSERT INTO Customer(CustID, Password, FirstName, LastName, Street, City, State, Zipcode, PhoneNum, Email) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement statement = conn.prepareStatement(insertQuery);
-        statement.setInt(1, customer.getCustomerID());
-        statement.setString(2, customer.getHashedPassword());
-        statement.setString(3, customer.getFirstName());
-        statement.setString(4, customer.getLastName());
-        statement.setString(5, customer.getStreet());
-        statement.setString(6, customer.getCity());
-        statement.setString(7, customer.getState());
-        statement.setInt(8, customer.getZipcode());
-        statement.setString(9, customer.getPhoneNumber());
-        statement.setString(10, customer.getEmail());
+        final String insertQuery = "INSERT INTO Customer(Password, FirstName, LastName, Street, City, State, Zipcode, PhoneNum, Email) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement statement = conn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+        statement.setString(1, customer.getHashedPassword());
+        statement.setString(2, customer.getFirstName());
+        statement.setString(3, customer.getLastName());
+        statement.setString(4, customer.getStreet());
+        statement.setString(5, customer.getCity());
+        statement.setString(6, customer.getState());
+        statement.setInt(7, customer.getZipcode());
+        statement.setString(8, customer.getPhoneNumber());
+        statement.setString(9, customer.getEmail());
 
-        return statement.executeUpdate() == 1;
+        int affectedRows = statement.executeUpdate();
+        if (affectedRows == 0) {
+            return false; // TODO: LOG
+        } else {
+            try(ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int newKey = (int) generatedKeys.getLong(1);
+                    customer.setCustomerID(newKey);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
     }
 
     public static boolean updateCustomer(Connection conn, Customer customer) throws SQLException {

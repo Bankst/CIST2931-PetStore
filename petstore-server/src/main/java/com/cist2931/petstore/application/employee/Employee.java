@@ -96,15 +96,27 @@ public class Employee {
     }
 
     public static boolean insertEmployee(Connection dbConnection, Employee employee) throws SQLException {
-        final String insertQuery = "INSERT INTO Employee(EmpID, Username, Password, FirstName, LastName) values (?, ?, ?, ?, ?)";
+        final String insertQuery = "INSERT INTO Employee(Username, Password, FirstName, LastName) values (?, ?, ?, ?)";
         PreparedStatement statement = dbConnection.prepareStatement(insertQuery);
-        statement.setInt(1, employee.empID);
-        statement.setString(2, employee.username);
-        statement.setString(3, employee.password);
-        statement.setString(4, employee.firstName);
-        statement.setString(5, employee.lastName);
+        statement.setString(1, employee.username);
+        statement.setString(2, employee.password);
+        statement.setString(3, employee.firstName);
+        statement.setString(4, employee.lastName);
 
-        return statement.executeUpdate() == 1;
+        int affectedRows = statement.executeUpdate();
+        if (affectedRows == 0) {
+            return false; // TODO: LOG
+        } else {
+            try(ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int newKey = (int) generatedKeys.getLong(1);
+                    employee.setEmpID(newKey);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
     }
 
     public static boolean updateEmployee(Connection dbConnection, Employee employee) throws SQLException {
