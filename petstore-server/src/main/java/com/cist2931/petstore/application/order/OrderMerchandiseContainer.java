@@ -30,6 +30,12 @@ public class OrderMerchandiseContainer {
         addItem(merchandise.getMerchandiseID(), merchandise.getMerchandiseQuantity());
     }
 
+    public void addItems(OrderMerchandise... merchandises) {
+        for (OrderMerchandise orderMerchandise : merchandises) {
+            addItem(orderMerchandise.getMerchandiseID(), orderMerchandise.getMerchandiseQuantity());
+        }
+    }
+
     public void addItems(List<OrderMerchandise> merchandiseList) {
         for (OrderMerchandise orderMerchandise : merchandiseList) {
             addItem(orderMerchandise.getMerchandiseID(), orderMerchandise.getMerchandiseQuantity());

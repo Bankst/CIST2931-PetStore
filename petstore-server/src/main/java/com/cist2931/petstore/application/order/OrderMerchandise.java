@@ -1,5 +1,9 @@
 package com.cist2931.petstore.application.order;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -15,6 +19,16 @@ public class OrderMerchandise {
                 resultSet.getInt("MerchID"),
                 resultSet.getInt("MerchQuantity")
         );
+    }
+
+    @JsonCreator
+    public OrderMerchandise(
+            @JsonProperty("merchID") int merchandiseID,
+            @JsonProperty("merchQuantity") int merchandiseQuantity
+    ) {
+        this.orderID = -1;
+        this.merchandiseID = merchandiseID;
+        this.merchandiseQuantity = merchandiseQuantity;
     }
 
     public OrderMerchandise(int orderID, int merchandiseID, int merchandiseQuantity) {

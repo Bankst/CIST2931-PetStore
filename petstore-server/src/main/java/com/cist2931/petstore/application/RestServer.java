@@ -8,13 +8,11 @@ import io.javalin.core.JavalinConfig;
 import io.javalin.core.security.Role;
 import io.javalin.core.security.SecurityUtil;
 import io.javalin.http.Context;
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jetty.util.StringUtil;
+import io.javalin.http.staticfiles.Location;
+import io.javalin.http.util.CookieStore;
 
 import java.sql.Connection;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class RestServer {
@@ -42,6 +40,8 @@ public class RestServer {
     private final CustomerController customerController;
 
     public RestServer(int port, Connection dbConnection) {
+        CookieStore.Companion.setCOOKIE_NAME("petstore");
+
         app = Javalin.create(this::configure).start(port);
         authService = new AuthenticationService(dbConnection);
         customerController = new CustomerController(dbConnection);
@@ -49,11 +49,10 @@ public class RestServer {
     }
 
     private UserRole getUserRole(Context ctx) {
-        String authHeader = ctx.header("AUTHORIZATION");
-        if (authHeader != null && !authHeader.isEmpty()) {
-            String token = AuthenticationService.cleanToken(authHeader);
+        String authToken = ctx.cookieStore("authToken");
+        if (authToken != null && !authToken.isEmpty()) {
             if (ctx.path().startsWith(CUSTOMER_API_URL)) {
-                int cid = authService.authorizeCustomer(token);
+                int cid = authService.authorizeCustomer(authToken);
                 if (cid > -1) return UserRole.CUSTOMER;
             } else if (ctx.path().startsWith(EMPLOYEE_API_URL)) {
                 return UserRole.EMPLOYEE;
@@ -86,6 +85,7 @@ public class RestServer {
                 ctx.status(401).result("Unauthorized");
             }
         });
+        config.addStaticFiles("../petstore-client", Location.EXTERNAL);
     }
 
     private void addEndpoints() {
@@ -94,11 +94,13 @@ public class RestServer {
         final Set<Role> EMPLOYEE_ROLE = SecurityUtil.roles(UserRole.EMPLOYEE);
 
         ApiBuilder.path(API_URL, () -> {
+            ApiBuilder.put("customer", customerController::doCreate);
             ApiBuilder.post("customer/login", customerController::doLogin, ANYONE_ROLE);
             ApiBuilder.path("customer", () -> {
                 ApiBuilder.get(customerController::getCustomer, CUSTOMER_ROLE);
                 ApiBuilder.post("logout", customerController::doLogout, CUSTOMER_ROLE);
                 ApiBuilder.post("changePassword", customerController::doChangePassword, CUSTOMER_ROLE);
+                ApiBuilder.put("placeOrder", customerController::doPlaceOrder, CUSTOMER_ROLE);
                 ApiBuilder.get("getOrders", customerController::getOrders, CUSTOMER_ROLE);
             });
         });

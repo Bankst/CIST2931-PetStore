@@ -1,8 +1,11 @@
 package com.cist2931.petstore.application.customer;
 
 import com.cist2931.petstore.application.PasswordHelper;
+import com.cist2931.petstore.application.order.Order;
+import com.cist2931.petstore.application.order.OrderMerchandise;
 import com.cist2931.petstore.logging.Logger;
 import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,27 +25,26 @@ public final class CustomerService {
     public Pair<Integer, String> login(String email, String password) {
         int responseCode;
         String token = "";
-        Customer customer = null;
 
         if (email != null && !email.isEmpty() && password != null && !password.isEmpty()) {
             Optional<Customer> customerOptional = CustomerSQL.getCustomerByEmail(conn, email);
             if (customerOptional.isPresent()) {
-                customer = customerOptional.get();
+                Customer customer = customerOptional.get();
                 if (PasswordHelper.verifyPassword(password, customer.getHashedPassword())) {
                     token = UUID.randomUUID().toString();
                     customer.setAuthToken(token);
                     try {
                         customer.update(conn);
                         logger.info("Updated login token for customer(" + customer.getCustomerID() +  ")");
-                        responseCode = 200; // OK - OK
+                        responseCode = HttpStatus.OK_200; // OK - OK
                     } catch (SQLException ignored) {
                         logger.error("Failed to update customer(" + customer.getCustomerID() +  ") row for login token!");
-                        responseCode = 500; // Server Error - server error
+                        responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500; // Server Error - server error
                         token = "";
                     }
-                } else responseCode = 401; // Unauthorized - password incorrect
-            } else responseCode = 403; // Forbidden - account does not exist
-        } else responseCode = 400; // Bad Request - request data malformed or invalid
+                } else responseCode = HttpStatus.UNAUTHORIZED_401; // Unauthorized - password incorrect
+            } else responseCode = HttpStatus.FORBIDDEN_403; // Forbidden - account does not exist
+        } else responseCode = HttpStatus.BAD_REQUEST_400; // Bad Request - request data malformed or invalid
 
         return Pair.of(responseCode, token);
     }
@@ -57,14 +59,15 @@ public final class CustomerService {
                 customer.update(conn);
             } catch (SQLException ignored) {
                 logger.error("Failed to update customer(" + customer.getCustomerID() +  ") row for logout!");
-                return 500;
+                return HttpStatus.INTERNAL_SERVER_ERROR_500;
             }
 
-            return 200;
-        } else return 403;
+            logger.info("Logged out customer(" + customer.getCustomerID() + ")");
+            return HttpStatus.OK_200;
+        } else return HttpStatus.FORBIDDEN_403;
     }
 
-    public int changePasssword(String token, String newPassword) {
+    public int changePassword(String token, String newPassword) {
         Optional<Customer> customerOptional = CustomerSQL.getCustomerByToken(conn, token);
         if (customerOptional.isPresent()) {
             Customer customer = customerOptional.get();
@@ -75,12 +78,12 @@ public final class CustomerService {
             try {
                 customer.update(conn);
                 logger.info("Updated password for customer(" + customer.getCustomerID() +  ")");
-                return 200;
+                return HttpStatus.OK_200;
             } catch (SQLException ignored) {
                 logger.error("Failed to update customer(" + customer.getCustomerID() +  ") row for new password!");
-                return 500;
+                return HttpStatus.INTERNAL_SERVER_ERROR_500;
             }
-        } else return 403;
+        } else return HttpStatus.FORBIDDEN_403;
     }
 
     public Pair<Integer, Customer> getByToken(String token) {
@@ -90,10 +93,39 @@ public final class CustomerService {
         Optional<Customer> customerOptional =  CustomerSQL.getCustomerByToken(conn, token);
         if (customerOptional.isPresent()) {
             customer = customerOptional.get();
-            responseCode = 200;
+            responseCode = HttpStatus.OK_200;
+            logger.info("Handled info request for customer(" + customer.getCustomerID() + ")");
         } else {
-            responseCode = 403;
+            responseCode = HttpStatus.FORBIDDEN_403;
         }
+
         return Pair.of(responseCode, customer);
+    }
+
+    public Pair<Integer, Integer> placeOrder(String token, OrderMerchandise[] orderItems) {
+        int orderNo = -1;
+        int responseCode;
+
+        Optional<Customer> customerOptional =  CustomerSQL.getCustomerByToken(conn, token);
+        if (customerOptional.isPresent()) {
+            Customer customer = customerOptional.get();
+
+            Order newOrder = new Order();
+            newOrder.setStatus("Placed");
+            newOrder.getOrderMerchandiseContainer().addItems(orderItems);
+
+            try {
+                newOrder.insert(conn);
+                orderNo = newOrder.getOrderID();
+                responseCode = HttpStatus.OK_200;
+            } catch (SQLException ex) {
+                logger.error("Failed to insert order for customer(" + customer.getCustomerID() + ")", ex);
+                responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+            }
+        } else {
+            responseCode = HttpStatus.FORBIDDEN_403;
+        }
+
+        return Pair.of(responseCode, orderNo);
     }
 }

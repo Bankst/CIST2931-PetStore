@@ -18,8 +18,7 @@ public class Customer {
     private int zipcode;
     private String phoneNumber;
     private String email;
-    @JsonIgnore
-    private String authToken;
+    @JsonIgnore private String authToken;
 
     public Customer(int customerID, String password, String firstName, String lastName, String street, String city, String state, int zipcode, String phoneNumber, String email, String authToken) {
         this.customerID = customerID;

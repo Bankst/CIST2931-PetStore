@@ -17,8 +17,8 @@ public class Order {
         orderMerchandiseContainer = new OrderMerchandiseContainer(orderID);
     }
 
-    public Order(int orderID, int customerID, String status, OrderMerchandise... merchandises) {
-        this.orderID = orderID;
+    public Order(int customerID, String status, OrderMerchandise... merchandises) {
+        this.orderID = -1;
         this.customerID = customerID;
         this.status = status;
         orderMerchandiseContainer = new OrderMerchandiseContainer(orderID);

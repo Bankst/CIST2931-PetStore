@@ -35,8 +35,4 @@ public class AuthenticationService {
         }
         return -1;
     }
-
-    public static String cleanToken(String authHeader) {
-        return StringUtils.removeStart(authHeader, "Bearer").trim();
-    }
 }
