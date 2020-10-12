@@ -1,7 +1,5 @@
 package com.cist2931.petstore.application;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

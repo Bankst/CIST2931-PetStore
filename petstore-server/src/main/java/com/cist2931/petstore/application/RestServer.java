@@ -89,7 +89,7 @@ public class RestServer {
     }
 
     private void addEndpoints() {
-        final Set<Role> ANYONE_ROLE = SecurityUtil.roles(UserRole.ANYONE);
+        final Set<Role> ANYONE_ROLE = SecurityUtil.roles(UserRole.ANYONE, UserRole.CUSTOMER, UserRole.EMPLOYEE);
         final Set<Role> CUSTOMER_ROLE = SecurityUtil.roles(UserRole.CUSTOMER);
         final Set<Role> EMPLOYEE_ROLE = SecurityUtil.roles(UserRole.EMPLOYEE);
 
