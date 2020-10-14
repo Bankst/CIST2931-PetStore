@@ -197,6 +197,8 @@ a {
 .select {
     position: relative;
     margin-bottom: 1rem;
+	max-width:100px; 
+	margin:0 auto;
 }
 
 .select:after {
