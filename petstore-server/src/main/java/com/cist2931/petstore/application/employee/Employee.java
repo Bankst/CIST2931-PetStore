@@ -1,16 +1,18 @@
 package com.cist2931.petstore.application.employee;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Employee {
     private int empID;
     private String username;
-    private String password;
+    @JsonIgnore private String password;
     private String firstName;
     private String lastName;
+    @JsonIgnore private String authToken;
 
     public Employee(ResultSet rs) throws SQLException {
         // initialize from result set
@@ -19,18 +21,23 @@ public class Employee {
         password = rs.getString("Password");
         firstName = rs.getString("FirstName");
         lastName = rs.getString("LastName");
+        authToken = rs.getString("Token");
+    }
+
+    public Employee select(Connection dbConnection, int id) throws SQLException {
+        return EmployeeSQL.getEmployeeById(dbConnection, id);
     }
 
     public boolean update(Connection dbConnection) throws SQLException {
-        return updateEmployee(dbConnection, this);
+        return EmployeeSQL.updateEmployee(dbConnection, this);
     }
 
     public boolean insert(Connection dbConnection) throws SQLException {
-        return insertEmployee(dbConnection, this);
+        return EmployeeSQL.insertEmployee(dbConnection, this);
     }
 
     public boolean delete(Connection dbConnection) throws SQLException {
-        return deleteEmployee(dbConnection, this.empID);
+        return EmployeeSQL.deleteEmployee(dbConnection, this.empID);
     }
 
     @Override
@@ -41,6 +48,7 @@ public class Employee {
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", authToken='" + authToken + '\'' +
                 '}';
     }
 
@@ -84,58 +92,12 @@ public class Employee {
         this.lastName = lastName;
     }
 
-    public static Employee getEmployeeByID(Connection dbConnection, int id) throws SQLException {
-        final String selectQuery = "SELECT * FROM Employee WHERE EmpID = ?";
-        PreparedStatement statement = dbConnection.prepareStatement(selectQuery);
-        statement.setInt(1, id);
-
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            return new Employee(resultSet);
-        } else return null;
+    public String getAuthToken() {
+        return authToken;
     }
 
-    public static boolean insertEmployee(Connection dbConnection, Employee employee) throws SQLException {
-        final String insertQuery = "INSERT INTO Employee(Username, Password, FirstName, LastName) values (?, ?, ?, ?)";
-        PreparedStatement statement = dbConnection.prepareStatement(insertQuery);
-        statement.setString(1, employee.username);
-        statement.setString(2, employee.password);
-        statement.setString(3, employee.firstName);
-        statement.setString(4, employee.lastName);
-
-        int affectedRows = statement.executeUpdate();
-        if (affectedRows == 0) {
-            return false; // TODO: LOG
-        } else {
-            try(ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    int newKey = (int) generatedKeys.getLong(1);
-                    employee.setEmpID(newKey);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 
-    public static boolean updateEmployee(Connection dbConnection, Employee employee) throws SQLException {
-        final String updateQuery = "UPDATE Employee set Username = ?, Password = ?, FirstName = ?, LastName = ? WHERE EmpID = ?";
-        PreparedStatement statement = dbConnection.prepareStatement(updateQuery);
-        statement.setString(1, employee.username);
-        statement.setString(2, employee.password);
-        statement.setString(3, employee.firstName);
-        statement.setString(4, employee.lastName);
-        statement.setInt(5, employee.empID);
-
-        return statement.executeUpdate() == 1;
-    }
-
-    public static boolean deleteEmployee(Connection dbConnection, int empID) throws SQLException {
-        final String deleteQuery = "DELETE FROM Employee WHERE EmpID = ?";
-        PreparedStatement statement = dbConnection.prepareStatement(deleteQuery);
-        statement.setInt(1, empID);
-
-        return statement.executeUpdate() == 1;
-    }
 }
