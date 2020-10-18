@@ -1,22 +1,13 @@
 package com.cist2931.petstore.application.customer;
 
-import com.cist2931.petstore.application.order.OrderMerchandiseSQL;
+import com.cist2931.petstore.logging.Logger;
 
 import java.sql.*;
 import java.util.Optional;
 
 public final class CustomerSQL {
 
-    public static Customer getCustomerById(Connection conn, int id) throws SQLException {
-        final String selectQuery = "SELECT * FROM Customer WHERE CustID = ?";
-        PreparedStatement statement = conn.prepareStatement(selectQuery);
-        statement.setInt(1, id);
-
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            return new Customer(resultSet);
-        } else return null;
-    }
+    private static final Logger logger = new Logger(CustomerSQL.class);
 
     public static Optional<Customer> getCustomerByEmail(Connection conn, String email) {
         final String selectQuery = "SELECT * FROM Customer WHERE Email = ?";
@@ -27,8 +18,8 @@ public final class CustomerSQL {
 
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next() ? Optional.of(new Customer(resultSet)) : Optional.empty();
-        } catch (SQLException ignored) {
-            // TODO: Log errors
+        } catch (SQLException ex) {
+            logger.error("Failed to get customer by email!", ex);
             return Optional.empty();
         }
     }
@@ -42,8 +33,8 @@ public final class CustomerSQL {
 
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next() ? Optional.of(new Customer(resultSet)) : Optional.empty();
-        } catch (SQLException ignored) {
-            // TODO: Log errors
+        } catch (SQLException ex) {
+            logger.error("Failed to get customer by token!", ex);
             return Optional.empty();
         }
     }

@@ -1,5 +1,7 @@
 package com.cist2931.petstore.application;
 
+import io.javalin.http.Context;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,5 +34,13 @@ public class AuthenticationService {
             // TODO: Log
         }
         return -1;
+    }
+
+    public static String getToken(Context ctx) {
+        return ctx.cookieStore("authToken");
+    }
+
+    public static void storeToken(Context ctx, String token) {
+        ctx.cookieStore("authToken", token);
     }
 }
