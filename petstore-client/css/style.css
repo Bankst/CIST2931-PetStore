@@ -1,12 +1,16 @@
+a {
+    color: black;
+}
+
 .body__icon{
     font-size: 24px;
     color:#3aaed8;
-    padding-right:6px;
-    
-    
+    padding-right:6px;        
 }
-a {
-    color: black;
+
+.body_icon--right{
+	padding-left:14px;
+	
 }
 
 .btn-custom{
