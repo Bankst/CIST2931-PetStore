@@ -197,6 +197,12 @@ a {
     border-spacing: 0;"
 }
 
+.cart__subtotal{
+	max-width:300px; 
+	padding-left:100px; 
+	padding-top:20px;
+}
+
 /****Media****/
 
 @media (max-width: 375px) {
