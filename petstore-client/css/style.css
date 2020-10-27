@@ -142,11 +142,15 @@ a {
 }
 
 .midle-weight-heading{
-    font-weight:400
+    font-weight:400;
+}
+
+.heavy-weight-heading{
+	font-weight:500;
 }
 
 .left-item{
-    float:left
+    float:left;
     
 }
 
