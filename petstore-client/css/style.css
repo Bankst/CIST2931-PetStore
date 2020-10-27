@@ -185,6 +185,10 @@ a {
 
 /****Cart*****/
 
+.cart__row{
+	padding-bottom:20px;
+}
+
 .table-custom{
     padding-top:50px; 
     padding-right:50px;    
