@@ -223,23 +223,6 @@ a {
 	padding-top:20px;
 }
 
-/****Media****/
-
-@media (max-width: 375px) {
-    h1 {
-        font-size: 20px;
-    }
-}
-
-@media (max-width: 1200px) and (min-width: 374px) {
-    h1 {
-        font-size: 30px;
-    }
-	.menu {
-	max-height: 300px;
-}
-}
-
 /*Select*/
 
 .select {
@@ -308,3 +291,102 @@ a {
 	 padding:10px 0 10px 0;
  }
 
+/****Media****/
+
+@media (max-width: 375px) {
+    h1 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 1200px) and (min-width: 374px) {
+    h1 {
+        font-size: 30px;
+    }
+	.menu {
+	max-height: 300px;
+}
+}
+
+
+
+@media (max-width: 768px){
+	
+p{
+	font-size:18px;
+}	
+
+.product-picture{
+    padding: 45px 30px 0 30px;
+}
+
+.card-custom{
+	padding:5px 15px 0 15px;	
+}
+
+
+
+.subtotal{
+	padding: 30px;
+}
+
+.product-information{
+    padding:30px;
+}
+
+.description{
+     padding:30px;
+}
+
+.add-button{
+  padding-top:20px;  
+}
+
+.btn-custom{
+	font-size:18px;
+}
+
+.table-custom{
+    padding:25px 10px 25px 10px;  
+    
+}
+
+.table__table img{
+	min-width:120px;
+}
+
+.footer-custom{
+    margin-top:25px;
+	padding-right:0;
+    
+}  
+
+.td_first{
+	width:20%;
+}
+
+.td_second{
+	width:20%;
+}
+
+.td_third{
+	width:45%;
+}
+
+.td_forth {
+	width:15%;
+}
+
+.cart__subtotal{
+	padding-top:10px;
+}
+
+.cart_row{
+	padding-bottom:0;
+}
+
+.login{
+	padding-top:10px;
+}
+
+}
