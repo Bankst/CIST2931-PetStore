@@ -137,6 +137,10 @@ a {
    padding:50px;
 }
 
+.product-information__price{
+	padding-top:30px;
+}
+
 .midle-weight-heading{
     font-weight:400
 }
