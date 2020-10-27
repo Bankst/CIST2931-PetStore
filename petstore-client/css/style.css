@@ -266,4 +266,10 @@ a {
 	max-width:300px;
 }
 
+.login__inner{
+	border: solid 1px #52aa8a;
+}
 
+.login__form{
+	padding:15px;
+}
