@@ -160,6 +160,10 @@ a {
     padding-bottom:30px;
 }
 
+.description p {
+	padding-top:30px;
+}
+
 .subtotal{
    padding-left:100px; 
     padding-top:130px; 
