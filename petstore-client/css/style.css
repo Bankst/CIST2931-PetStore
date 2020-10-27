@@ -197,6 +197,22 @@ a {
     border-spacing: 0;"
 }
 
+.td_first{
+	width:25%;
+}
+
+.td_second{
+	width:35%;
+}
+
+.td_third{
+	width:20%;
+}
+
+.td_forth {
+	width:20%;
+}
+
 .cart__subtotal{
 	max-width:300px; 
 	padding-left:100px; 
