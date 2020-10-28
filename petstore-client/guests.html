@@ -72,262 +72,316 @@
 </nav>
 <!--navbar end-->
 
-<section id="guests">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-3">
-            </div>
-            <div class="col-sm-6" style="padding-bottom:30px;">
-                <div class="guest-information" style="padding:20px;">
-                    <h5 style="padding-left:30px; padding-top:20px; font-weight:400;">Enter your Shipment Information:</h5>
-                    <div class="mx-auto login" style="padding-top:10px;">
-                        <div class="login-form" style="border: solid 1px #52aa8a;">
-                            <form action="" style="padding:15px;">
-                                <div class="form-group">
-                                    <label for="first_name">First Name:</label>
-                                    <input type="text" class="form-control" id="first_name" placeholder="First Name" name="first_name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="last_name">Last Name:</label>
-                                    <input type="text" class="form-control" id="last_name" placeholder="Last Name" name="last_name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="address">Address:</label>
-                                    <input type="text" class="form-control" id="address" placeholder="Street Address" name="address">
-                                </div>
-                                <div class="form-group">
-                                    <label for="city">City:</label>
-                                    <input type="text" class="form-control" id="city" placeholder="City" name="city">
-                                </div>
-                                <div class="form-group">
-                                    <label for="state">State:</label>
-                                    <input type="text" class="form-control" id="state" placeholder="State" name="state">
-                                </div>
-                                <div class="form-group">
-                                    <label for="zip">Zip:</label>
-                                    <input type="text" class="form-control" id="zip" placeholder="Zip Code" name="zip">
-                                </div>
-                                <div class="form-group">
-                                    <label for="phone">Phone Number:</label>
-                                    <input type="text" class="form-control" id="phone" placeholder="Phone Number" name="phone">
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Zip:</label>
-                                    <input type="email" class="form-control" id="email" placeholder="Email" name="email">
-                                </div>
+ <section id="guests">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-0">
+                </div>
+                <div class="col-lg-6 col-12 pb-4">
+                    <div class="py-3 mx-4">
+                        <h5 class="pl-3 pt-3 midle-weight-heading">Enter your Shipment Information:</h5>
+                        <div class="mx-auto pt-4">
+                            <div class="customer-data p-3">
+                                <form action="" class="was-validated py-2 px-4">
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3 label-text">
+                                            <label for="first_name">First Name:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3 label-text">
+                                            <label for="last_name">Last Name:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                                        </div>
+                                    </div>
 
 
-                                <div class="text-center sign-in" style="padding-top:20px;">
-                                    <button type="submit" class="btn btn-custom">Sign in to Order</button>
-                                </div>
-                            </form>
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3 label-text">
+                                            <label for="address">Address:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="address" name="address" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3  label-text">
+                                            <label for="city">City:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="city" name="city" required>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3  label-text">
+                                            <label for="state">State:</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" id="state" name="state" required>
+                                        </div>
+
+                                        <div class="col-md-3  label-text">
+                                            <label for="zip">Zip:</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" id="zip" name="zip" required>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3  label-text">
+                                            <label for="phone">Phone Number:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="phone" name="phone" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3  label-text">
+                                            <label for="email">Email:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="email" name="email" required>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="text-center pt-3">
+                                        <button type="submit" class="btn btn-custom">Submit the Order</button>
+                                    </div>
+                                </form>
+                            </div>
+
                         </div>
 
                     </div>
 
                 </div>
-                <!--Cart-->
-
-                <h5 style="padding-left:30px; padding-top:20px; font-weight:400;">Review Items in your Cart:</h5>
-                <div class="table-responsive" style="padding-top:10px;">
-                    <table class="table table__table">
-                        <tbody>
-                        <tr>
-                            <td class="align-middle" style="width:25%;">
-                                <div>
-                                    <img class="img img-fluid" src="http://placehold.it/130" alt="product"
-                                         style="padding:15px;">
-                                </div>
-                            </td>
-                            <td class="align-middle" style="width:35%;">
-                                <div class="text-center">
-                                    <h5 class="card-custom__title">Title of the Product</h5>
-                                    <p class="card-text">$48</p>
-                                </div>
-                            </td>
-                            <td class="align-middle" style="width:20%;">
-                                <div class="form-group select">
-                                    <select class="form-control" id="sel1">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
-                                </div>
-
-
-                            </td>
-                            <td class="align-middle text-center" style="width:20%;">
-                                <p style="margin:0 auto;">
-                                    <i class=" material-icons" style="vertical-align: middle;">&#xe928;</i>Delete
-                                </p>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="align-middle" style="width:25%;">
-                                <div>
-                                    <img class="img img-fluid" src="http://placehold.it/130" alt="product"
-                                         style="padding:15px;">
-                                </div>
-                            </td>
-                            <td class="align-middle" style="width:35%;">
-                                <div class="text-center">
-                                    <h5 class="card-custom__title">Title of the Product</h5>
-                                    <p class="card-text">$48</p>
-                                </div>
-                            </td>
-                            <td class="align-middle" style="width:20%;">
-                                <div class="form-group select">
-                                    <select class="form-control" id="sel2">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
-                                </div>
-
-
-                            </td>
-                            <td class="align-middle text-center" style="width:20%;">
-                                <p style="margin:0 auto;">
-                                    <i class=" material-icons" style="vertical-align: middle;">&#xe928;</i> Delete
-                                </p>
-
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="align-middle" style="width:25%;">
-                                <div>
-                                    <img class="img img-fluid" src="http://placehold.it/130" alt="product"
-                                         style="padding:15px;">
-                                </div>
-                            </td>
-                            <td class="align-middle" style="width:35%;">
-                                <div class="text-center">
-                                    <h5 class="card-custom__title">Title of the Product</h5>
-                                    <p class="card-text">$48</p>
-                                </div>
-                            </td>
-                            <td class="align-middle" style="width:20%;">
-                                <div class="form-group select">
-                                    <select class="form-control" id="sel3">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
-                                </div>
-
-
-                            </td>
-                            <td class="align-middle text-center" style="width:20%;">
-                                <p style="margin:0 auto;">
-                                    <i class=" material-icons" style="vertical-align: middle;">&#xe928;</i> Delete
-                                </p>
-
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="align-middle" style="width:25%;">
-                                <div>
-                                    <img class="img img-fluid" src="http://placehold.it/130" alt="product"
-                                         style="padding:15px;">
-                                </div>
-                            </td>
-                            <td class="align-middle" style="width:35%;">
-                                <div class="text-center">
-                                    <h5 class="card-custom__title">Title of the Product</h5>
-                                    <p class="card-text">$48</p>
-                                </div>
-                            </td>
-                            <td class="align-middle" style="width:20%;">
-                                <div class="form-group select">
-                                    <select class="form-control" id="sel4">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
-                                </div>
-
-
-                            </td>
-                            <td class="align-middle text-center" style="width:20%;">
-                                <p style="margin:0 auto;">
-                                    <i class=" material-icons" style="vertical-align: middle;">&#xe928;</i> Delete
-                                </p>
-
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="align-middle" style="width:25%;">
-                                <div>
-                                    <img class="img img-fluid" src="http://placehold.it/130" alt="product"
-                                         style="padding:15px;">
-                                </div>
-                            </td>
-                            <td class="align-middle" style="width:35%;">
-                                <div class="text-center">
-                                    <h5 class="card-custom__title">Title of the Product</h5>
-                                    <p class="card-text">$48</p>
-                                </div>
-                            </td>
-                            <td class="align-middle" style="width:20%;">
-                                <div class="form-group select">
-                                    <select class="form-control" id="sel5">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
-                                </div>
-
-
-                            </td>
-                            <td class="align-middle text-center" style="width:20%;">
-                                <p style="margin:0 auto;">
-                                    <i class=" material-icons" style="vertical-align: middle;">&#xe928;</i> Delete
-                                </p>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="subtotal" style="max-width:300px; padding-left:100px; padding-top:20px;">
-                    <div class="left-item">
-                        <h5>Subtotal:</h5>
-                    </div>
-                    <div class="right-item">
-                        <h5>$103</h5>
-                    </div>
-
-
-                </div>
-                <div class="buttons" style="padding: 0 10px 0 20px;">
-                    <div style="padding-top:10px;">
-                        <button type="button" class="btn btn-custom"
-                                style="font-weight:400; float:left; margin-top:10px;">Submit the Order
-                        </button>
-                    </div>
-                    <div style="padding-top:10px;">
-                        <button type="button" class="btn btn-custom"
-                                style="font-weight:300; float: right; margin-top:10px;">Continue Shopping
-                        </button>
-                    </div>
+                <div class="col-lg-3 col-0">
                 </div>
 
             </div>
-            <div class="col-sm-3">
-            </div>
+            <!--Cart-->
 
+            <div class="row">
+                <div class="col-lg-2">
+                </div>
+
+                <div class="col-lg-8 cart__row">
+                    <h5 class="midle-weight-heading py-3 pl-4">Review Items in your Cart:</h5>
+                    <div class="table-responsive">
+                        <table class="table table__table">
+                            <tbody>
+                                <tr>
+                                    <td class="align-middle td_first">
+                                        <div>
+                                            <img class="img img-fluid" src="http://placehold.it/130" alt="product" style="padding:15px;">
+                                        </div>
+                                    </td>
+                                    <td class="align-middle td_second">
+                                        <div class="text-center">
+                                            <h5 class="card-custom__title">Title of the Product</h5>
+                                            <p class="card-text">$48</p>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle td_third">
+                                        <div class="form-group select">
+                                            <select class="form-control" id="sel1">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                            </select>
+                                        </div>
+
+
+                                    </td>
+                                    <td class="align-middle text-center td_forth">
+                                        <p style="margin:0 auto;">
+                                            <i class=" material-icons" style="vertical-align: middle;">&#xe928;</i> Delete
+                                        </p>
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="align-middle td_first">
+                                        <div>
+                                            <img class="img img-fluid" src="http://placehold.it/130" alt="product" style="padding:15px;">
+                                        </div>
+                                    </td>
+                                    <td class="align-middle td_second">
+                                        <div class="text-center">
+                                            <h5 class="card-custom__title">Title of the Product</h5>
+                                            <p class="card-text">$48</p>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle td_third">
+                                        <div class="form-group select">
+                                            <select class="form-control" id="sel2">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                            </select>
+                                        </div>
+
+
+                                    </td>
+                                    <td class="align-middle text-center td_forth">
+                                        <p style="margin:0 auto;">
+                                            <i class=" material-icons" style="vertical-align: middle;">&#xe928;</i> Delete
+                                        </p>
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="align-middle td_first">
+                                        <div>
+                                            <img class="img img-fluid" src="http://placehold.it/130" alt="product" style="padding:15px;">
+                                        </div>
+                                    </td>
+                                    <td class="align-middle td_second">
+                                        <div class="text-center">
+                                            <h5 class="card-custom__title">Title of the Product</h5>
+                                            <p class="card-text">$48</p>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle td_third">
+                                        <div class="form-group select">
+                                            <select class="form-control" id="sel3">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                            </select>
+                                        </div>
+
+
+                                    </td>
+                                    <td class="align-middle text-center td_forth">
+                                        <p style="margin:0 auto;">
+                                            <i class=" material-icons" style="vertical-align: middle;">&#xe928;</i> Delete
+                                        </p>
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="align-middle td_first">
+                                        <div>
+                                            <img class="img img-fluid" src="http://placehold.it/130" alt="product" style="padding:15px;">
+                                        </div>
+                                    </td>
+                                    <td class="align-middle td_second">
+                                        <div class="text-center">
+                                            <h5 class="card-custom__title">Title of the Product</h5>
+                                            <p class="card-text">$48</p>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle td_third">
+                                        <div class="form-group select">
+                                            <select class="form-control" id="sel4">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                            </select>
+                                        </div>
+
+
+                                    </td>
+                                    <td class="align-middle text-center td_forth">
+                                        <p style="margin:0 auto;">
+                                            <i class=" material-icons" style="vertical-align: middle;">&#xe928;</i> Delete
+                                        </p>
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="align-middle td_first">
+                                        <div>
+                                            <img class="img img-fluid" src="http://placehold.it/130" alt="product" style="padding:15px;">
+                                        </div>
+                                    </td>
+                                    <td class="align-middle td_second">
+                                        <div class="text-center">
+                                            <h5 class="card-custom__title">Title of the Product</h5>
+                                            <p class="card-text">$48</p>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle td_third">
+                                        <div class="form-group select">
+                                            <select class="form-control" id="sel5">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                            </select>
+                                        </div>
+
+
+                                    </td>
+                                    <td class="align-middle text-center td_forth">
+                                        <p style="margin:0 auto;">
+                                            <i class=" material-icons" style="vertical-align: middle;">&#xe928;</i> Delete
+                                        </p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="cart__subtotal">
+                        <div class="left-item">
+                            <h5>Subtotal:</h5>
+                        </div>
+                        <div class="right-item">
+                            <h5>$103</h5>
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="buttons px-3">
+                        <div>
+                            <button type="button" class="btn btn-custom left-item my-3 heavy-weight-heading">
+                                Submit the Order
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-custom right-item my-3 midle-weight-heading">
+                                Continue Shopping
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2">
+                </div>
+
+            </div>
         </div>
-    </div>
-</section>
+        
+    </section>
+
 
 <!--footer-->
 <footer class="footer footer-custom">
