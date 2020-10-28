@@ -74,78 +74,128 @@
 
     </nav>
     <!--navbar end-->
-<section id="registration">
-<div class="container">
-<div class="row">
-<div class="col-sm-8" style="padding-bottom:30px;">
+ <section id="registration">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-12">
+                    <!---Registration-->
+                    <div class="mx-4 pt-3">
+                        <h6 class="pl-3  midle-weight-heading">Enter your Shipment Information:</h6>
+                        <div class="mx-auto pt-3 pb-4">
+                            <div class="customer-data p-3">
+                                <form action="" class="was-validated py-2 px-4">
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3 label-text">
+                                            <label for="first_name">First Name:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                                        </div>
+                                    </div>
 
-<div class="guest-information" style="padding-right:80px; padding-top:20px;">
-	
-                    <div class="mx-auto login" style="padding-top:10px;">
-                        <div class="login-form" style="border: solid 1px #52aa8a;">
-                            <form action="/action_page.php" style="padding:15px;">
-                                <div class="form-group">
-                                    <label for="first_name">First Name:</label>
-                                    <input type="text" class="form-control" id="first_name" placeholder="First Name" name="first_name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="last_name">Last Name:</label>
-                                    <input type="text" class="form-control" id="last_name" placeholder="Last Name" name="last_name">
-                                </div>
-								  <div class="form-group">
-                                    <label for="user_name">User Name:</label>
-                                    <input type="text" class="form-control" id="user_name" placeholder="User Name" name="user_name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="password">Password:</label>
-                                    <input type="text" class="form-control" id="password" placeholder="Password" name="password">
-                                </div>
-								<div class="form-group">
-                                    <label for="adress">Address:</label>
-                                    <input type="text" class="form-control" id="address" placeholder="Street Address" name="address">
-                                </div>
-                                <div class="form-group">
-                                    <label for="city">City:</label>
-                                    <input type="text" class="form-control" id="city" placeholder="City" name="city">
-                                </div>
-								<div class="form-group">
-                                    <label for="state">State:</label>
-                                    <input type="text" class="form-control" id="address" placeholder="State" name="state">
-                                </div>
-                                <div class="form-group">
-                                    <label for="zip">Zip:</label>
-                                    <input type="text" class="form-control" id="zip" placeholder="Zip Code" name="zip">
-                                </div>
-								<div class="form-group">
-                                    <label for="phone">Phone Number:</label>
-                                    <input type="text" class="form-control" id="phone" placeholder="Phone Number" name="phone">
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Zip:</label>
-                                    <input type="email" class="form-control" id="email" placeholder="Email" name="email">
-                                </div>
-								
-								
-                        
-                        <div class="text-center sign-in" style="padding-top:20px; padding-bottom:20px;">
-                            <button type="submit" class="btn btn-custom">Submit</button>
-                        </div>
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3 label-text">
+                                            <label for="last_name">Last Name:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                                        </div>
+                                    </div>
 
-                        </form>
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3 label-text">
+                                            <label for="username">User Name:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="username" name="username" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3 label-text">
+                                            <label for="password">Password:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="password" name="password" required>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3 label-text">
+                                            <label for="address">Address:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="address" name="address" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3  label-text">
+                                            <label for="city">City:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="city" name="city" required>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3  label-text">
+                                            <label for="state">State:</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" id="state" name="state" required>
+                                        </div>
+
+                                        <div class="col-md-3  label-text">
+                                            <label for="zip">Zip:</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" id="zip" name="zip" required>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3  label-text">
+                                            <label for="phone">Phone Number:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="phone" name="phone" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3  label-text">
+                                            <label for="email">Email:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="email" name="email" required>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="text-center pt-3">
+                                        <button type="submit" class="btn btn-custom">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+
                         </div>
 
                     </div>
-	
-	</div>
 
+                </div>
+                <!--Login-->
 
-
-</div>
-<div class="col-sm-4">
-<div class="mx-auto login" style="padding-top:30px; max-width:300px;">
-<h6 style="font-weight:400;">Already have an Account? Login here:</h6>
-                        <div class="login-form" style="border: solid 1px #52aa8a; padding-bottom:20px;">
-                            <form action="" style="padding:15px;">
+                <div class="col-lg-4 col-12">
+                    <div class="mx-auto login py-3">
+                        <h6 class="midle-weight-heading pb-3">Already have an Account? Login here:</h6>
+                        <div class="login__inner pb-3">
+                            <form action="" class="p-3">
                                 <div class="form-group">
                                     <label for="email">User Name:</label>
                                     <input type="email" class="form-control" id="user_name" placeholder="User Name" name="user_name">
@@ -154,24 +204,23 @@
                                     <label for="pwd">Password:</label>
                                     <input type="password" class="form-control" id="pwd" placeholder="Password" name="pswd">
                                 </div>
-                       
-                        <div class="text-center sign-in" style="padding-top:20px;">
-                            <button type="submit" class="btn btn-custom" href="customer.html">Sign in</button>
-                        </div>
 
-                        </form>
- </div>
+                                <div class="text-center sign-in pt-3">
+                                    <button type="submit" class="btn btn-custom" href="customer.html">Sign in</button>
+                                </div>
+
+                            </form>
+                        </div>
                     </div>
 
 
-</div>
+                </div>
 
-</div>
-</div>
-</section>
+            </div>
+        </div>
 
+    </section>
     
-
     <!--footer-->
     <footer class="footer footer-custom">
         <div class="container">
