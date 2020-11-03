@@ -1,0 +1,379 @@
+body {
+    font-size: 16px;
+    line-height: 25px;
+    color: #444444;
+    font-weight: 400;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1, h2, h3, h4, h5 {
+    color: #221e1e;
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+}
+
+
+input{
+    outline:0 !important;
+    box-shadow:none !important
+}
+input:active{
+    outline:0 !important;
+    box-shadow:none !important
+}
+input:focus{
+    outline:0 !important;
+    box-shadow:none !important
+}
+header {
+    background: #a5d6a726;
+    padding: 10px 0px;
+    font-weight:600
+}
+
+.logo {
+    width: 120px;
+}
+
+header span {
+    display: inline-block;
+    margin-left: 30px;
+    margin-top: 20px;
+}
+
+header a {
+    color: #444444;
+    text-decoration: none;
+}
+
+    header a:hover {
+        color: #444444;
+        text-decoration: none;
+    }
+
+.login-bg {
+    position: absolute;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+}
+.check-style{
+    font-size:14px;
+    margin-bottom:0px
+}
+
+.account-details {
+    right: 0;
+    position: absolute;
+    height: 100%;
+    margin: 0;
+    width: 540px;
+    background-color: #ffffff;
+    padding: 30px;
+    box-shadow: 0px 0px 9px 0px #7b7b7b
+}
+
+    .account-details img {
+        width: 150px;
+        margin-bottom: 40px;
+    }
+
+    .account-details label {
+        margin-top: 15px;
+    }
+
+    .account-details .custom-input {
+        border: 1px solid #acacac;
+        background: #0080000f;
+        border-radius: 0px;
+    }
+
+    .account-details .btn-standard {
+        margin-top: 30px;
+    }
+
+.btn-standard {
+    background: #388659;
+    border: 1px solid #388659;
+    border-radius: 0px;
+    color: white;
+}
+
+    .btn-standard:hover {
+        opacity: 0.8;
+        color: white;
+    }
+
+
+
+.search-fields {
+    position: relative;
+}
+
+    .search-fields input {
+        padding-left: 40px;
+        border-radius: 25px;
+        border: 1px solid gray;
+        height: 45px;
+        text-transform: uppercase;
+        font-size: 14px;
+        letter-spacing: 0.7px;
+    }
+
+    .search-fields i {
+        left: 12px;
+        top: 14px;
+        position: absolute;
+    }
+
+.table-style select {
+    border: 1px solid gray;
+    padding-right: 0px;
+}
+
+
+.table-style p {
+    margin-top: 6px;
+}
+
+.table-style .btn {
+    margin-top: 6px;
+}
+
+.btn-table-01 {
+    background: #52AA8A;
+    border: 1px solid #52AA8A;
+    color: white;
+    padding: 3px 0px;
+    font-size: 14px;
+    width: 80px;
+}
+
+    .btn-table-01:hover {
+        opacity: 0.9;
+        color: white;
+    }
+
+
+.btn-table-02 {
+    background: #3AAED8;
+    border: 1px solid #3AAED8;
+    color: white;
+    padding: 3px 0px;
+    font-size: 14px;
+    width: 80px;
+}
+
+    .btn-table-02:hover {
+        opacity: 0.9;
+        color: white;
+    }
+
+
+.section-title {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+    .section-title h2 {
+        font-size: 32px;
+        font-weight: bold;
+        text-transform: uppercase;
+        position: relative;
+        color: #222222;
+    }
+
+        .section-title h2::before, .section-title h2::after {
+            content: '';
+            width: 50px;
+            height: 2px;
+            background: #3AAED8;
+            display: inline-block;
+        }
+
+        .section-title h2::before {
+            margin: 0 15px 10px 0;
+        }
+
+        .section-title h2::after {
+            margin: 0 0 10px 15px;
+        }
+
+    .section-title p {
+        margin: 15px 0 0 0;
+    }
+
+
+footer {
+    background: #444;
+    padding: 10px 0px;
+    text-align: center;
+    margin-top: 120px;
+}
+
+    footer p {
+        color: white;
+        margin: 0px;
+        font-size: 14px;
+    }
+
+.table-style td:first-child p {
+    font-weight: 600 !important;
+}
+
+.content-details p {
+    font-weight: 600 !important;
+    display: inline-block;
+    font-size: 18px;
+    margin-bottom: 0px;
+    color: #cdcdcd;
+}
+
+.content-details {
+    border-bottom: 1px solid #c6c5c5;
+    border-top: 1px solid #c6c5c5;
+}
+
+
+    .content-details span {
+        color: white !important;
+    }
+
+.a-box {
+    padding: 30px;
+    background: #a5d6a726;
+    box-shadow: 0px 0px 1px 1px #b2b2b2;
+    margin-top: 30px;
+}
+
+.bg-light {
+    background: #a5d6a726 !important;
+}
+
+.a-box h3 {
+    color: #52AA8A;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.total {
+    font-weight: 700;
+    color: #444444;
+}
+
+    .total span {
+        color: #3AAED8;
+        font-size: 40px;
+    }
+
+/**/
+
+@media(min-width:768px) {
+    .account-details {
+        padding-top: 100px;
+        
+    }
+
+    .table-order-details td:first-child {
+        width: 60%;
+    }
+}
+
+@media(max-width:767px) {
+
+    .content-details p{
+        margin-top:10px;
+        margin-bottom:10px
+    }
+
+ 
+
+    .total{
+        font-size:26px
+    }
+
+    .total span{
+        font-size:26px
+    }
+
+
+    .account-details {
+        width: 100% !important;
+        padding: 20px;
+        width: 90% !important;
+        position: initial !important;
+        height: initial !important;
+      
+        margin: 0 auto !important;
+          margin-top: 30px !important;
+          margin-bottom:30px !important
+    }
+
+    .account-details {
+        padding-top: 30px;
+    }
+
+    .table-style .thead-dark th {
+        font-size: 13px;
+    }
+
+    .table-style td {
+        font-size: 13px;
+    }
+
+    .table-style select {
+        width: 160px;
+        font-size: 13px;
+    }
+
+    .section-title h2::before, .section-title h2::after {
+        display: none;
+    }
+
+    .section-title h2 {
+        font-size: 26px;
+    }
+
+    .search-fields input {
+        margin-bottom: 10px;
+    }
+
+    header .logo {
+        margin: 0 auto;
+        display: block;
+    }
+
+    header span {
+        margin-left: 9px;
+        margin-right: 9px;
+     
+    }
+
+    .search-fields input {
+        height: 39px;
+        font-size: 13px;
+    }
+
+    .search-fields i {
+        top: 11px;
+    }
+
+    .table-order-details th:first-child {
+        display: block;
+        width: 200px;
+    }
+}
+
+
+@media(min-width:768px) and (max-width:991px)
+{
+    .account-details{
+          width: 340px;
+    }
+
+}
