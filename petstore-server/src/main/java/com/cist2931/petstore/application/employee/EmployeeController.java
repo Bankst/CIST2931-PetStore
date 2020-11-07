@@ -63,5 +63,4 @@ public class EmployeeController {
         ctx.json(getResponse.getRight());
         ctx.status(getResponse.getLeft());
     }
-
 }

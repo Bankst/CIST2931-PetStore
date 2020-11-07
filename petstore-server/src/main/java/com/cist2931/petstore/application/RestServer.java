@@ -85,7 +85,7 @@ public class RestServer {
                 ctx.status(401).result("Unauthorized");
             }
         });
-        config.addStaticFiles("../petstore-client", Location.EXTERNAL);
+        config.addStaticFiles("./petstore-client", Location.EXTERNAL);
     }
 
     private void addEndpoints() {

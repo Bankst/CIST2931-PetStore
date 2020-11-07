@@ -19,9 +19,57 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="./css/style.css">
 
+    <script src="js/api.js"></script>
+
+    <script>
+        function onLoad() {
+            document.getElementById('login_form').addEventListener('submit', processForm);
+        }
+
+        function processForm(e) {
+            if (e.preventDefault) e.preventDefault();
+
+            let data = new FormData(document.querySelector('form'));
+
+            sendRequest('/api/v1/customer/login', 'POST', data, loginSuccess, loginError)
+            return false;
+        }
+
+        function getCustomerSuccess() {
+            if (this.status === 200) {
+                let jsonResponse = JSON.parse(this.responseText)
+                // this is an example on how to get response data from JSON for a Customer object
+                console.log(
+                    "Name: " + jsonResponse.firstName + " " +  jsonResponse.lastName +
+                    ", Address: " + jsonResponse.street + " " + jsonResponse.city + ", " + jsonResponse.state + " " + jsonResponse.zipcode
+                );
+            }
+        }
+
+        function loginSuccess() {
+            if (this.status === 200) {
+                alert("Login OK");
+                // send to customer.html
+            } else {
+                let error = "";
+                switch(this.status) {
+                    case 400: error = "Bad input data!"; break;
+                    case 401: error = "Login failed - incorrect password!"; break;
+                    case 403: error = "Login failed - account does not exist!"; break;
+                    case 500: error = "Internal server error!"; break;
+                }
+                alert(error);
+            }
+        }
+
+        function loginError(x) {
+            console.log(x);
+        }
+
+    </script>
 </head>
 
-<body>
+<body onload="onLoad()">
     
 <!--header-->
     <div class="jumbotron header">
@@ -259,21 +307,20 @@
                 <div class="col-lg-4">
                     <div class="mx-auto login">
                         <div class="login__inner" style="border: solid 1px #52aa8a;">
-                            <form class="login__form" action="" style="padding:15px;">
+                            <form id="login_form" class="login__form" style="padding:15px;">
                                 <div class="form-group">
                                     <label for="email">User Name:</label>
-                                    <input type="email" class="form-control" id="user_name" placeholder="User Name" name="user_name">
+                                    <input type="email" class="form-control" id="email" placeholder="User Name" name="email">
                                 </div>
                                 <div class="form-group">
-                                    <label for="pwd">Password:</label>
-                                    <input type="password" class="form-control" id="pwd" placeholder="Password" name="pswd">
+                                    <label for="password">Password:</label>
+                                    <input type="password" class="form-control" id="password" placeholder="Password" name="password">
                                 </div>
+                                <div class="text-center login__sign-in">
+                                    <button type="submit" class="btn btn-custom">Sign in to Order</button>
+                                </div>
+                            </form>
                         </div>
-                        <div class="text-center login__sign-in">
-                            <button type="submit" class="btn btn-custom">Sign in to Order</button>
-                        </div>
-
-                        </form>
 
                         <p class="text-center"> Don't have an account? Register <a href="registration.html">here</a>.</p>
 
