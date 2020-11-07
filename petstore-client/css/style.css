@@ -133,6 +133,10 @@ a {
     
 }
 
+.error {
+    color: red;
+    margin:0 auto;
+}
 
 /****Product View*****/
 .product-picture{
