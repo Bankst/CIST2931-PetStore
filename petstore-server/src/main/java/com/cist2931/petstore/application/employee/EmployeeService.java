@@ -1,12 +1,18 @@
 package com.cist2931.petstore.application.employee;
 
 import com.cist2931.petstore.application.PasswordHelper;
+import com.cist2931.petstore.application.customer.Customer;
+import com.cist2931.petstore.application.customer.CustomerSQL;
+import com.cist2931.petstore.application.order.Order;
+import com.cist2931.petstore.application.order.OrderSQL;
 import com.cist2931.petstore.logging.Logger;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -98,5 +104,24 @@ public final class EmployeeService {
         }
 
         return Pair.of(responseCode, employee);
+    }
+
+    public Pair<Integer, List<Order>> getOrders(String token) {
+        int responseCode;
+        List<Order> orders = new ArrayList<>();
+
+        Optional<Employee> employeeOptional = EmployeeSQL.getEmployeeByToken(conn, token);
+        if(employeeOptional.isPresent()) {
+            try {
+                orders = OrderSQL.getAllOrders(conn);
+                responseCode = HttpStatus.OK_200;
+            } catch (SQLException ex) {
+                logger.error("Failed to get orders", ex);
+                responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+            }
+        } else {
+            responseCode = HttpStatus.FORBIDDEN_403;
+        }
+        return Pair.of(responseCode, orders);
     }
 }
