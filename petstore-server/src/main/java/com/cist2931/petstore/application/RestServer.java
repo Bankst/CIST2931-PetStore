@@ -1,6 +1,7 @@
 package com.cist2931.petstore.application;
 
 import com.cist2931.petstore.application.customer.CustomerController;
+import com.cist2931.petstore.application.employee.EmployeeController;
 import com.cist2931.petstore.logging.Logger;
 import io.javalin.Javalin;
 import io.javalin.apibuilder.ApiBuilder;
@@ -38,6 +39,7 @@ public class RestServer {
     private final Javalin app;
     private final AuthenticationService authService;
     private final CustomerController customerController;
+    private final EmployeeController employeeController;
 
     public RestServer(int port, Connection dbConnection) {
         CookieStore.Companion.setCOOKIE_NAME("petstore");
@@ -45,6 +47,7 @@ public class RestServer {
         app = Javalin.create(this::configure).start(port);
         authService = new AuthenticationService(dbConnection);
         customerController = new CustomerController(dbConnection);
+        employeeController = new EmployeeController(dbConnection);
         app.routes(this::addEndpoints);
     }
 
@@ -102,6 +105,14 @@ public class RestServer {
                 ApiBuilder.post("changePassword", customerController::doChangePassword, CUSTOMER_ROLE);
                 ApiBuilder.put("placeOrder", customerController::doPlaceOrder, CUSTOMER_ROLE);
                 ApiBuilder.get("getOrders", customerController::getOrders, CUSTOMER_ROLE);
+            });
+            ApiBuilder.put("employee", employeeController::doCreate);
+            ApiBuilder.post("employee/login", employeeController::doLogin, ANYONE_ROLE);
+            ApiBuilder.path("employee", () -> {
+                ApiBuilder.get(employeeController::getEmployee, EMPLOYEE_ROLE);
+                ApiBuilder.post("logout", employeeController::doLogout, EMPLOYEE_ROLE);
+                ApiBuilder.post("changePassword", employeeController::doChangePassword, EMPLOYEE_ROLE);
+                ApiBuilder.get("getOrders", employeeController::getOrders, EMPLOYEE_ROLE);
             });
         });
     }
