@@ -9,6 +9,21 @@ import java.util.Optional;
 public final class OrderSQL {
     private OrderSQL() {}
 
+    public static List<Order> getAllOrders(Connection conn) throws SQLException {
+        final String selectQuery = "SELECT * FROM Orders ORDER BY OrderID";
+        PreparedStatement statement = conn.prepareStatement(selectQuery);
+
+        ResultSet resultSet = statement.executeQuery();
+        List<Order> orders = new ArrayList<>();
+        while (resultSet.next()) {
+            Order order = new Order(resultSet);
+            List<OrderMerchandise> orderMerchandiseList = OrderMerchandiseSQL.getOrderMerchandisesByOrderID(conn, order.getOrderID());
+            order.getOrderMerchandiseContainer().addItems(orderMerchandiseList);
+            orders.add(order);
+        }
+        return orders;
+    }
+
     public static Optional<Order> getOrderByOrderID(Connection conn, int orderID) throws SQLException {
         final String selectQuery = "SELECT * FROM Orders WHERE OrderID = ?";
         PreparedStatement statement = conn.prepareStatement(selectQuery);
