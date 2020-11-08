@@ -68,7 +68,7 @@ public final class CustomerController {
         ctx.status(respCode);
 
         if (respCode == HttpStatus.OK_200) {
-            ctx.cookieStore("authToken", "");
+            AuthenticationService.storeToken(ctx, "");
         }
     }
 
