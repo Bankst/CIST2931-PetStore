@@ -254,4 +254,48 @@ public final class CustomerService {
 
         return responseCode;
     }
+
+    public Pair<Integer, String> updateInfo(String token, String firstName, String lastName, String street, String city, String state, int zipcode, String phoneNum, String email, String password) {
+        int responseCode;
+        Optional<Customer> customerOptional = CustomerSQL.getCustomerByToken(conn, token);
+        if (customerOptional.isPresent()) {
+            Customer customer = customerOptional.get();
+
+            customer.setFirstName(firstName);
+            customer.setLastName(lastName);
+            customer.setStreet(street);
+            customer.setCity(city);
+            customer.setState(state);
+            customer.setZipcode(zipcode);
+            customer.setPhoneNumber(phoneNum);
+
+            if(!(PasswordHelper.verifyPassword(password, customer.getHashedPassword())) || !(email.equals(customer.getEmail()))) {
+                CustomerService customerService = new CustomerService(conn);
+                try {
+                    customer.setHashedPassword(password);
+                    customer.setEmail(email);
+                    customer.update(conn);
+                    logger.info("Updated info for customer(" + customer.getCustomerID() + ")");
+                    Pair<Integer, String> loginResponse = customerService.login(email,password);
+
+                    token = loginResponse.getRight();
+                    responseCode = HttpStatus.OK_200;
+                } catch (SQLException ex) {
+                    logger.error("Failed to update customer(" + customer.getCustomerID() + ") row for info!", ex);
+                    responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+                }
+            } else {
+                try {
+                    customer.update(conn);
+                    logger.info("Updated info for customer(" + customer.getCustomerID() + ")");
+
+                    responseCode = HttpStatus.OK_200;
+                } catch (SQLException ex) {
+                    logger.error("Failed to update customer(" + customer.getCustomerID() + ") row for info!", ex);
+                    responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+                }
+            }
+        } else responseCode = HttpStatus.FORBIDDEN_403;
+        return Pair.of(responseCode, token);
+    }
 }

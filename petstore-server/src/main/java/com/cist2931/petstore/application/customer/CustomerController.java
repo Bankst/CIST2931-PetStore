@@ -11,6 +11,7 @@ import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Objects;
 
 public final class CustomerController {
 
@@ -115,5 +116,25 @@ public final class CustomerController {
 
         ctx.json(getResponse.getRight());
         ctx.status(getResponse.getLeft());
+    }
+
+    public void doUpdateInfo(Context ctx) {
+        String token = AuthenticationService.getToken(ctx);
+        String firstName = ctx.formParam("firstName");
+        String lastName = ctx.formParam("lastName");
+        String street = ctx.formParam("street");
+        String city = ctx.formParam("city");
+        String state = ctx.formParam("state");
+        int zipcode = Integer.parseInt(ctx.formParam("zipcode"));
+        String phoneNum = ctx.formParam("phoneNum");
+        String email = ctx.formParam("email");
+        String password = ctx.formParam("password");
+
+        Pair<Integer, String> updateResponse = customerService.updateInfo(token, firstName, lastName, street, city, state, zipcode, phoneNum, email, password);
+        ctx.status(updateResponse.getLeft());
+
+        if (updateResponse.getLeft() == HttpStatus.OK_200) {
+            AuthenticationService.storeToken(ctx, updateResponse.getRight());
+        }
     }
 }
