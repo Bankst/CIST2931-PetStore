@@ -105,7 +105,7 @@ public class RestServer {
                 ApiBuilder.post("changePassword", customerController::doChangePassword, CUSTOMER_ROLE);
                 ApiBuilder.put("placeOrder", customerController::doPlaceOrder, CUSTOMER_ROLE);
                 ApiBuilder.get("getOrders", customerController::getOrders, CUSTOMER_ROLE);
-                ApiBuilder.get("updateInfo", customerController::doUpdateInfo, CUSTOMER_ROLE);
+                ApiBuilder.post("updateInfo", customerController::doUpdateInfo, CUSTOMER_ROLE);
             });
             ApiBuilder.put("employee", employeeController::doCreate);
             ApiBuilder.post("employee/login", employeeController::doLogin, ANYONE_ROLE);
