@@ -22,7 +22,7 @@
     <script src="js/api.js"></script>
 
     <script>
-        function onLoad() {
+       function onLoad() {
             document.getElementById('login_form').addEventListener('submit', processForm);
         }
 
@@ -39,17 +39,30 @@
             if (this.status === 200) {
                 let jsonResponse = JSON.parse(this.responseText)
                 // this is an example on how to get response data from JSON for a Customer object
-                console.log(
-                    "Name: " + jsonResponse.firstName + " " +  jsonResponse.lastName +
-                    ", Address: " + jsonResponse.street + " " + jsonResponse.city + ", " + jsonResponse.state + " " + jsonResponse.zipcode
-                );
+                //console.log(
+                   // "Name: " + jsonResponse.firstName + " " +  jsonResponse.lastName +
+                   // ", Address: " + jsonResponse.street + " " + jsonResponse.city + ", " + jsonResponse.state + " " + jsonResponse.zipcode
+               // );
+				localStorage.setItem("first_name",jsonResponse.firstName);
+                 localStorage.setItem("last_name",jsonResponse.lastName);
+                 localStorage.setItem("address", jsonResponse.street);
+                 localStorage.setItem("city",jsonResponse.city);
+                 localStorage.setItem("state", jsonResponse.state);
+                 localStorage.setItem("zip", jsonResponse.zipcode);
+				 localStorage.setItem("email", jsonResponse.email);
+				 localStorage.setItem("phone", jsonResponse.phoneNumber);
+				 
+				
+				document.location.assign("customer.html");
             }
         }
 
         function loginSuccess() {
             if (this.status === 200) {
-                alert("Login OK");
+                //alert("Login OK");
                 // send to customer.html
+				sendRequest('/api/v1/customer', 'GET', null, getCustomerSuccess, null);
+			
             } else {
                 let error = "";
                 switch(this.status) {
@@ -65,7 +78,6 @@
         function loginError(x) {
             console.log(x);
         }
-
     </script>
 </head>
 
@@ -135,11 +147,11 @@
                             <form id="login_form" class="login__form p-3">
                                 <div class="form-group">
                                     <label for="email">User Name:</label>
-                                    <input type="text" class="form-control" id="email" placeholder="User Name" name="email required">
+                                    <input type="text" class="form-control" id="email" placeholder="User Name" name="email" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="password">Password:</label>
-                                    <input type="password" class="form-control" id="password" placeholder="Password" name="password required">
+                                    <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
                                 </div>
                                 <div class="text-center login__sign-in">
                                     <button type="submit" class="btn btn-custom">Sign in</button>
