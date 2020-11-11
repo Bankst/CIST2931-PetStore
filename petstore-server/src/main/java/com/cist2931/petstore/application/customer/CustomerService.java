@@ -272,7 +272,7 @@ public final class CustomerService {
             if(!(PasswordHelper.verifyPassword(password, customer.getHashedPassword())) || !(email.equals(customer.getEmail()))) {
                 CustomerService customerService = new CustomerService(conn);
                 try {
-                    customer.setHashedPassword(password);
+                    customer.setHashedPassword(PasswordHelper.hashPassword(password));
                     customer.setEmail(email);
                     customer.update(conn);
                     logger.info("Updated info for customer(" + customer.getCustomerID() + ")");
