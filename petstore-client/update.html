@@ -26,9 +26,39 @@
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="./css/style.css">
+	
+	<script>
+	function onLoad(){
+	
+	document.getElementById("first_name").value=localStorage.getItem("first_name");
+	document.getElementById("last_name").value=localStorage.getItem("last_name");
+	document.getElementById("address").value=localStorage.getItem("address");
+	document.getElementById("city").value=localStorage.getItem("city");
+	document.getElementById("state").value=localStorage.getItem("state");
+	document.getElementById("zip").value=localStorage.getItem("zip");
+	document.getElementById("phone").value=localStorage.getItem("phone");
+	document.getElementById("email").value=localStorage.getItem("email");
+	}
+	
+	//Getting new data to update customer
+	function update(){
+    localStorage.setItem("first_name",document.getElementById("first_name").value);
+	localStorage.setItem("last_name", document.getElementById("last_name").value);
+	localStorage.setItem("address", document.getElementById("address").value);
+	localStorage.setItem("city",document.getElementById("city").value);
+	localStorage.setItem("state",document.getElementById("state").value);
+	localStorage.setItem("zip",document.getElementById("zip").value);
+	localStorage.setItem("phone",document.getElementById("phone").value);
+	localStorage.setItem("email",document.getElementById("email").value);
+	
+	//sending customer back to customer page
+	document.location.assign("customer.html");
+   
+	}
+	</script>
 </head>
 
-<body>
+<body onload="onLoad()">
 
 <div class="jumbotron header">
     <div class="container">
@@ -163,7 +193,7 @@
 
 
                                     <div class="text-center pt-3">
-                                        <button type="submit" class="btn btn-custom" id="register">Submit Changes</button>
+                                        <button type="button" class="btn btn-custom" id="register" onclick="update()">Submit Changes</button>
                                     </div>
                                 </form>
                             </div>

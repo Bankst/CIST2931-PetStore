@@ -19,10 +19,18 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="./css/style.css">
 
+<script>
+function onLoad(){
+   document.getElementById("hello").innerHTML="Hello " +localStorage.getItem("first_name")+" "+localStorage.getItem("last_name")+"!";
+    document.getElementById("customer_name").innerHTML=localStorage.getItem("first_name")+" "+localStorage.getItem("last_name");
+	document.getElementById("street_address").innerHTML=localStorage.getItem("address");
+	document.getElementById("city_state").innerHTML=localStorage.getItem("city")+" "+localStorage.getItem("state")+" "+localStorage.getItem("zip");
+}
 
+</script>
 </head>
 
-<body>
+<body onload="onLoad()">
 
     <div class="jumbotron header">
         <div class="container">
@@ -78,7 +86,7 @@
 
   <!--Hello-->
     <div class="container">
-        <h5 class="midle-weight-heading pt-3">Hello, dear Customer! </h5>
+        <h5 class="midle-weight-heading pt-3" id="hello"></h5>
     </div>
     <!--/end Hello-->
 
@@ -289,9 +297,9 @@
                     <div class="mx-auto login pt-2">
                         <div class="login__inner">
                             <div id="customer-data" class="p-3">
-                                <p class="text-uppercase p-customer">Customer's Name</p>
-                                <p class="text-uppercase heavy-weight-heading p-customer">798 Lower Way</p>
-                                <p class="text-uppercase heavy-weight-heading p-customer">Woodstock GA 30115</p>
+                                <p class="text-uppercase p-customer" id="customer_name"></p>
+                                <p class="text-uppercase heavy-weight-heading p-customer" id="street_address"></p>
+                                <p class="text-uppercase heavy-weight-heading p-customer" id="city_state"></p>
                             </div>
                         </div>
 
@@ -312,7 +320,7 @@
                             <button type="button" class="btn btn-custom left-item heavy-weight-heading mt-2 mb-3">Submit the Order</button>
                         </div>
                         <div style="">
-                            <button type="button" class="btn btn-custom right-item midle-weight-heading mt-2 mb-3">Change Data</button>
+                            <button type="button" class="btn btn-custom right-item midle-weight-heading mt-2 mb-3" onclick="document.location.assign('update.html');">Change Data</button>
                         </div>
                     </div>
 
