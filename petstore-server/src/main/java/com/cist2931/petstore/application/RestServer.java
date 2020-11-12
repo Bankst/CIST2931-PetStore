@@ -2,7 +2,9 @@ package com.cist2931.petstore.application;
 
 import com.cist2931.petstore.application.customer.CustomerController;
 import com.cist2931.petstore.application.employee.EmployeeController;
+import com.cist2931.petstore.application.merchandise.MerchandiseController;
 import com.cist2931.petstore.logging.Logger;
+import com.google.protobuf.Api;
 import io.javalin.Javalin;
 import io.javalin.apibuilder.ApiBuilder;
 import io.javalin.core.JavalinConfig;
@@ -25,7 +27,7 @@ public class RestServer {
 
     // This will be handled by the according customer and employee APIs
     // the business object "Order" will be common between them
-//    public static final String ORDER_API_URL = API_URL + "/orders";
+    // public static final String ORDER_API_URL = API_URL + "/orders";
 
     private static final Logger logger = new Logger(RestServer.class);
 
@@ -40,6 +42,7 @@ public class RestServer {
     private final AuthenticationService authService;
     private final CustomerController customerController;
     private final EmployeeController employeeController;
+    private final MerchandiseController merchandiseController;
 
     public RestServer(int port, Connection dbConnection) {
         CookieStore.Companion.setCOOKIE_NAME("petstore");
@@ -48,6 +51,7 @@ public class RestServer {
         authService = new AuthenticationService(dbConnection);
         customerController = new CustomerController(dbConnection);
         employeeController = new EmployeeController(dbConnection);
+        merchandiseController = new MerchandiseController(dbConnection);
         app.routes(this::addEndpoints);
     }
 
@@ -114,6 +118,11 @@ public class RestServer {
                 ApiBuilder.post("logout", employeeController::doLogout, EMPLOYEE_ROLE);
                 ApiBuilder.post("changePassword", employeeController::doChangePassword, EMPLOYEE_ROLE);
                 ApiBuilder.get("getOrders", employeeController::getOrders, EMPLOYEE_ROLE);
+            });
+            ApiBuilder.put("merchandise", merchandiseController::doCreate);
+            ApiBuilder.path("merchandise", () -> {
+               ApiBuilder.get(merchandiseController::getMerchandise, ANYONE_ROLE);
+               ApiBuilder.post("updateInfo", merchandiseController::doUpdateInfo, ANYONE_ROLE);
             });
         });
     }
