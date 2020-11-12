@@ -125,10 +125,12 @@ public final class CustomerController {
         String street = ctx.formParam("street");
         String city = ctx.formParam("city");
         String state = ctx.formParam("state");
-        int zipcode = Integer.parseInt(ctx.formParam("zipcode"));
+        String zipcodeRaw = ctx.formParam("zipcode");
         String phoneNum = ctx.formParam("phoneNum");
         String email = ctx.formParam("email");
         String password = ctx.formParam("password");
+
+        int zipcode = Integer.parseInt(zipcodeRaw);
 
         Pair<Integer, String> updateResponse = customerService.updateInfo(token, firstName, lastName, street, city, state, zipcode, phoneNum, email, password);
         ctx.status(updateResponse.getLeft());
