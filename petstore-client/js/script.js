@@ -39,36 +39,31 @@ zip.addEventListener("keyup", zip_checker, false);
 //Function to check password
 
 function passwordChecker(){
-console.log("Function is working");
 password_value=pswd.value;
 var password_length=password_value.length;
-console.log(password_value);
-console.log(password_length);
+
 
 if (password_length<8){
-   console.log("Password is too short");
     errorMessage.innerText = "Password is too short";
 	register.setAttribute("disabled", "disabled");
 }
 else {
    if (password_length>12){
-       console.log("Password is too long");
 	   errorMessage.innerText = "Password is too long";
 	   register.setAttribute("disabled", "disabled");
    }else {
    if (password_value.match(/\d/)===null) {
-      
-      console.log("Password has to contain at leat one number");
+     
 	  errorMessage.innerText = "Password has to contain at leat one number";
 	  register.setAttribute("disabled", "disabled");
    }else{
    if (password_value.match(/[#%\-@_&*!]/)){
-   console.log("Password is good");
+   
     errorMessage.innerText = "";
 	passwordCompare();
 	
    }else{
-   console.log("Password has to contain at leat one special character: #%-@_");
+   
     errorMessage.innerText = "Password has to contain at leat one special character: #%-@_&*!";
 	register.setAttribute("disabled", "disabled");
    }
