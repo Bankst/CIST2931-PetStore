@@ -32,7 +32,7 @@
 	function onLoad(){
 	
 	document.getElementById('update_form').addEventListener('submit', processForm);
-	//loading existing data
+	
 	document.getElementById("first_name").value=localStorage.getItem("first_name");
 	document.getElementById("last_name").value=localStorage.getItem("last_name");
 	document.getElementById("address").value=localStorage.getItem("address");
@@ -55,16 +55,16 @@
 	localStorage.setItem("email",document.getElementById("email").value);
 	}
 	
-	//function to send new data on server
+	
 	function processForm(e) {
             if (e.preventDefault) e.preventDefault();
 
-            //let data = new FormData(document.querySelector('form'));
-			//for (var [key, value] of data.entries()) { 
- // console.log(key, value);
-//}
+            let data = new FormData(document.querySelector('form'));
+			for (var [key, value] of data.entries()) { 
+  console.log(key, value);
+}
 
-            sendRequest('/api/v1/customer', 'PUT', data, updateSuccess, updateError);
+            sendRequest('/api/v1/customer/updateInfo', 'POST', data, updateSuccess, updateError);
             return false;
         }
 		
@@ -211,7 +211,7 @@
                                             <label for="phone">Phone Number:</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" id="phone" name="phoneNumber" required>
+                                            <input type="text" class="form-control" id="phone" name="phoneNum" required>
                                         </div>
 										<div class="error" id="error_phone"></div>
                                     </div>
