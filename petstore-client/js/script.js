@@ -95,7 +95,6 @@ function passwordCompare(){
 
 function phone_checker() {
 	var phone_value=phone.value;
-	console.log(phone_value);
 	
 	if (phone_value.match(/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)){
 		errorMessagePhone.innerText = "";
