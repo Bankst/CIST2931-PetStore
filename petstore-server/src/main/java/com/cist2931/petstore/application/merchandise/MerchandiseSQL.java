@@ -1,23 +1,34 @@
 package com.cist2931.petstore.application.merchandise;
 
+import com.cist2931.petstore.application.customer.Customer;
+import com.cist2931.petstore.application.customer.CustomerSQL;
+import com.cist2931.petstore.logging.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 @SuppressWarnings("unused")
 public class MerchandiseSQL {
+    private static final Logger logger = new Logger(MerchandiseSQL.class);
+
     private MerchandiseSQL() {}
 
-    public static Merchandise getMerchandiseById(Connection dbConnection, int id) throws SQLException {
+    public static Optional<Merchandise> getMerchandiseById(Connection dbConnection, int id) {
         final String selectQuery = "SELECT * FROM Merchandise WHERE MerchID = ?";
-        PreparedStatement statement = dbConnection.prepareStatement(selectQuery);
-        statement.setInt(1, id);
 
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            return new Merchandise(resultSet);
-        } else return null;
+        try {
+            PreparedStatement statement = dbConnection.prepareStatement(selectQuery);
+            statement.setInt(1, id);
+
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next() ? Optional.of(new Merchandise(resultSet)) : Optional.empty();
+        } catch (SQLException ex) {
+            logger.error("Failed to get merchandise from id.", ex);
+            return Optional.empty();
+        }
     }
 
     public static boolean insertMerchandise(Connection dbConnection, Merchandise merchandise) throws SQLException {
