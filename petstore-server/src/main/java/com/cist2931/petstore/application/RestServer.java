@@ -101,7 +101,7 @@ public class RestServer {
         final Set<Role> EMPLOYEE_ROLE = SecurityUtil.roles(UserRole.EMPLOYEE);
 
         ApiBuilder.path(API_URL, () -> {
-            ApiBuilder.put("customer", customerController::doCreate);
+            ApiBuilder.put("customer", customerController::doCreate,  ANYONE_ROLE);
             ApiBuilder.post("customer/login", customerController::doLogin, ANYONE_ROLE);
             ApiBuilder.path("customer", () -> {
                 ApiBuilder.get(customerController::getCustomer, CUSTOMER_ROLE);
