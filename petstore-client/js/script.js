@@ -94,7 +94,6 @@ function passwordCompare(){
 //Function to check phone number
 
 function phone_checker() {
-	console.log("function is working");
 	var phone_value=phone.value;
 	console.log(phone_value);
 	
@@ -112,9 +111,7 @@ function phone_checker() {
 //Function to check email address
 
 function email_checker(){
-	console.log("function is working");
 	var email_value=email.value;
-	console.log(email_value);
 	
 	if (email_value.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,20}$/)){
 		errorMessageEmail.innerText = "";
@@ -129,10 +126,7 @@ function email_checker(){
 
 // Function to check zip code
 function zip_checker(){
-	console.log("function is working");
 	var zip_value=zip.value;
-	console.log(zip_value);
-	
 	if (zip_value.match(/(^\d{5}$)|(^\d{5}-\d{4}$)/)){
 		errorMessageZip.innerText = "";
 		register.removeAttribute("disabled");
