@@ -26,10 +26,13 @@
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="./css/style.css">
+	<script src="js/api.js"></script>
 	
 	<script>
 	function onLoad(){
 	
+	document.getElementById('update_form').addEventListener('submit', processForm);
+	//loading existing data
 	document.getElementById("first_name").value=localStorage.getItem("first_name");
 	document.getElementById("last_name").value=localStorage.getItem("last_name");
 	document.getElementById("address").value=localStorage.getItem("address");
@@ -50,11 +53,44 @@
 	localStorage.setItem("zip",document.getElementById("zip").value);
 	localStorage.setItem("phone",document.getElementById("phone").value);
 	localStorage.setItem("email",document.getElementById("email").value);
-	
-	//sending customer back to customer page
-	document.location.assign("customer.html");
-   
 	}
+	
+	//function to send new data on server
+	function processForm(e) {
+            if (e.preventDefault) e.preventDefault();
+
+            //let data = new FormData(document.querySelector('form'));
+			//for (var [key, value] of data.entries()) { 
+ // console.log(key, value);
+//}
+
+            sendRequest('/api/v1/customer', 'PUT', data, updateSuccess, updateError);
+            return false;
+        }
+		
+    function updateSuccess() {
+            if (this.status === 200) {
+                
+				//sending customer back to customer page
+	           document.location.assign("customer.html");
+			
+            } else {
+                let error = "";
+                switch(this.status) {
+                    case 400: error = "Bad input data!"; break;
+                    case 401: error = "Login failed - incorrect password!"; break;
+                    case 403: error = "Login failed - account does not exist!"; break;
+                    case 500: error = "Internal server error!"; break;
+                }
+                alert(error);
+            }
+        }
+
+        function updateError(x) {
+            console.log(x);
+        }
+   
+	
 	</script>
 </head>
 
@@ -112,13 +148,13 @@
                         <h5 class="pl-3 pt-3 midle-weight-heading">Edit your Shipment Information:</h5>
                         <div class="mx-auto pt-4">
                             <div class="customer-data p-3">
-                                <form action="" class="py-2 px-4">
+                                <form id="update_form" class="py-2 px-4">
                                     <div class="form-row form-group d-flex align-items-center">
                                         <div class="col-md-3 label-text">
                                             <label for="first_name">First Name:</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <input type="text" minlength="2" class="form-control" id="first_name" name="first_name" required>
+                                            <input type="text" minlength="2" class="form-control" id="first_name" name="firstName" required>
                                         </div>
                                     </div>
 
@@ -127,7 +163,7 @@
                                             <label for="last_name">Last Name:</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <input type="text" minlength="2" class="form-control" id="last_name" name="last_name" required>
+                                            <input type="text" minlength="2" class="form-control" id="last_name" name="lastName" required>
                                         </div>
                                     </div>
 
@@ -137,7 +173,7 @@
                                             <label for="address">Address:</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <input type="text" minlength="10" class="form-control" id="address" name="address" required>
+                                            <input type="text" minlength="10" class="form-control" id="address" name="street" required>
                                         </div>
                                     </div>
 
@@ -164,7 +200,7 @@
                                             <label for="zip">Zip:</label>
                                         </div>
                                         <div class="col-md-3">
-                                            <input type="text" class="form-control" id="zip" name="zip" required>
+                                            <input type="text" class="form-control" id="zip" name="zipcode" required>
                                         </div>
 										<div class="error" id="error_zip"></div>
 
@@ -175,7 +211,7 @@
                                             <label for="phone">Phone Number:</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" id="phone" name="phone" required>
+                                            <input type="text" class="form-control" id="phone" name="phoneNumber" required>
                                         </div>
 										<div class="error" id="error_phone"></div>
                                     </div>
@@ -189,11 +225,22 @@
                                         </div>
 										<div class="error" id="error_email"></div>
                                     </div>
+									
+									
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3  label-text">
+                                            <label for="password">New Password:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="password" class="form-control" id="password_update" name="password">
+                                        </div>
+										<div class="error" id="error_email"></div>
+                                    </div>
 
 
 
                                     <div class="text-center pt-3">
-                                        <button type="button" class="btn btn-custom" id="register" onclick="update()">Submit Changes</button>
+                                        <button type="submit" class="btn btn-custom" id="register" onclick="update()">Submit Changes</button>
                                     </div>
                                 </form>
                             </div>
