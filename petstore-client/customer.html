@@ -28,13 +28,20 @@
     <link rel="stylesheet" href="./css/style.css">
 
     <script>
-        function onLoad() {
-            const customerName = `${localStorage.getItem("first_name")} ${localStorage.getItem("last_name")}`;
+       function onLoad() {
+		    if (localStorage.getItem('first_name') !== null) {
+			   const customerName = `${localStorage.getItem("first_name")} ${localStorage.getItem("last_name")}`;
             document.getElementById("hello").innerHTML = `Hello ${customerName}!`;
             document.getElementById("customer_name").innerHTML = customerName;
             document.getElementById("street_address").innerHTML = localStorage.getItem("street");
             document.getElementById("city_state").innerHTML =
                 `${localStorage.getItem("city")} ${localStorage.getItem("state")} ${localStorage.getItem("zip")}`;
+				
+			document.getElementById('login_form').addEventListener('submit', processForm);
+			}else{
+			document.location.assign("login.html");			
+			}				
+	        
         }
     </script>
 </head>
