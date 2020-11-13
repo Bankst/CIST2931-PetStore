@@ -6,10 +6,12 @@ import com.cist2931.petstore.application.customer.Customer;
 import com.cist2931.petstore.application.customer.CustomerController;
 import com.cist2931.petstore.logging.Logger;
 import io.javalin.http.Context;
+import io.javalin.http.NotFoundResponse;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
+import java.util.List;
 
 public class MerchandiseController {
 
@@ -44,8 +46,15 @@ public class MerchandiseController {
         ctx.status(respCode);
     }
 
-    public void getMerchandise(Context ctx) {
-        String merchIDRaw = ctx.queryParam("merchID");
+    public void getAllMerchandise(Context ctx) {
+        Pair<Integer, List<Merchandise>> getResponse = merchandiseService.getAll();
+
+        ctx.json(getResponse.getRight());
+        ctx.status(getResponse.getLeft());
+    }
+
+    public void getSingleMerchandise(Context ctx) {
+        String merchIDRaw = ctx.pathParam("merchID");
 
         int merchID = Integer.parseInt(merchIDRaw);
 
@@ -70,5 +79,18 @@ public class MerchandiseController {
        int respCode = merchandiseService.updateInfo(merchID, merchName, price, category, description, quantity);
 
        ctx.status(respCode);
+    }
+
+    public void getCategoryMerchandise(Context ctx) {
+        String merchCategory = ctx.pathParam("categoryName");
+
+        Pair<Integer, List<Merchandise>> getResponse = merchandiseService.getCategory(merchCategory);
+
+        if (getResponse.getRight().size() != 0) {
+            ctx.json(getResponse.getRight());
+            ctx.status(getResponse.getLeft());
+        } else {
+            throw new NotFoundResponse("No merchandise with given category!");
+        }
     }
 }

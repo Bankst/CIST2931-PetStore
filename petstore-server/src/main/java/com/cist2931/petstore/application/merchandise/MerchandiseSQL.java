@@ -1,13 +1,13 @@
 package com.cist2931.petstore.application.merchandise;
 
-import com.cist2931.petstore.application.customer.Customer;
-import com.cist2931.petstore.application.customer.CustomerSQL;
 import com.cist2931.petstore.logging.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("unused")
@@ -15,6 +15,46 @@ public class MerchandiseSQL {
     private static final Logger logger = new Logger(MerchandiseSQL.class);
 
     private MerchandiseSQL() {}
+
+    public static Optional<List<Merchandise>> getMerchandiseByCategory(Connection dbConnection, String category) {
+        final String selectQuery = "SELECT * FROM Merchandise WHERE Category = ?";
+
+        try {
+            PreparedStatement statement = dbConnection.prepareStatement(selectQuery);
+            statement.setString(1, category);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            List<Merchandise> merchandiseList = new ArrayList<>();
+
+            while (resultSet.next()) {
+                merchandiseList.add(new Merchandise(resultSet));
+            }
+            return Optional.of(merchandiseList);
+        } catch (SQLException ex) {
+            logger.error("Failed to get merchandise list for category " + category + ".", ex);
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<List<Merchandise>> getAllMerchandise(Connection dbConnection) {
+        final String selectQuery = "SELECT * FROM Merchandise";
+
+        try {
+            PreparedStatement statement = dbConnection.prepareStatement(selectQuery);
+            ResultSet resultSet = statement.executeQuery();
+
+            List<Merchandise> merchandiseList = new ArrayList<>();
+
+            while (resultSet.next()) {
+                merchandiseList.add(new Merchandise(resultSet));
+            }
+            return Optional.of(merchandiseList);
+        } catch (SQLException ex) {
+            logger.error("Failed to get merchandise list.", ex);
+            return Optional.empty();
+        }
+    }
 
     public static Optional<Merchandise> getMerchandiseById(Connection dbConnection, int id) {
         final String selectQuery = "SELECT * FROM Merchandise WHERE MerchID = ?";

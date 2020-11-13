@@ -1,7 +1,5 @@
 package com.cist2931.petstore.application.merchandise;
 
-import com.cist2931.petstore.application.customer.Customer;
-import com.cist2931.petstore.application.customer.CustomerSQL;
 import com.cist2931.petstore.application.customer.CustomerService;
 import com.cist2931.petstore.logging.Logger;
 import org.apache.commons.lang3.tuple.Pair;
@@ -9,6 +7,7 @@ import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 public class MerchandiseService {
@@ -53,10 +52,38 @@ public class MerchandiseService {
             responseCode = HttpStatus.OK_200;
             logger.info("Handled info request for merchandise(" + merchandise.getMerchID() + ")");
         } else {
-            responseCode = HttpStatus.FORBIDDEN_403;
+            responseCode = HttpStatus.NOT_FOUND_404;
         }
 
         return Pair.of(responseCode, merchandise);
+    }
+
+    public Pair<Integer, List<Merchandise>> getAll() {
+        int responseCode;
+        List<Merchandise> merchList = null;
+
+        Optional<List<Merchandise>> merchandiseListOptional = MerchandiseSQL.getAllMerchandise(conn);
+        if (merchandiseListOptional.isPresent()) {
+            merchList = merchandiseListOptional.get();
+            responseCode = HttpStatus.OK_200;
+        } else {
+            responseCode = HttpStatus.NOT_FOUND_404;
+        }
+        return Pair.of(responseCode, merchList);
+    }
+
+    public Pair<Integer, List<Merchandise>> getCategory(String category) {
+        int responseCode;
+        List<Merchandise> merchList = null;
+
+        Optional<List<Merchandise>> merchandiseListOptional = MerchandiseSQL.getMerchandiseByCategory(conn, category);
+        if (merchandiseListOptional.isPresent()) {
+            merchList = merchandiseListOptional.get();
+            responseCode = HttpStatus.OK_200;
+        } else {
+            responseCode = HttpStatus.NOT_FOUND_404;
+        }
+        return Pair.of(responseCode, merchList);
     }
 
     public int updateInfo(int merchID, String merchName, double price, String category, String description, int quantity) {
@@ -80,7 +107,7 @@ public class MerchandiseService {
                 logger.error("Failed to update merchandise(" + merchandise.getMerchID() + ") row for info!", ex);
                 responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
             }
-        } else responseCode = HttpStatus.FORBIDDEN_403;
+        } else responseCode = HttpStatus.NOT_FOUND_404;
         return responseCode;
     }
 }

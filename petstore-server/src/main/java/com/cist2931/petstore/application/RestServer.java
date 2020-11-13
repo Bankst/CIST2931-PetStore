@@ -120,8 +120,10 @@ public class RestServer {
             });
             ApiBuilder.put("merchandise", merchandiseController::doCreate, ANYONE_ROLE);
             ApiBuilder.path("merchandise", () -> {
-               ApiBuilder.get(merchandiseController::getMerchandise, ANYONE_ROLE);
-               ApiBuilder.post("updateInfo", merchandiseController::doUpdateInfo, ANYONE_ROLE);
+                ApiBuilder.get(merchandiseController::getAllMerchandise, ANYONE_ROLE);
+                ApiBuilder.get(":merchID", merchandiseController::getSingleMerchandise, ANYONE_ROLE);
+                ApiBuilder.get("category/:categoryName", merchandiseController::getCategoryMerchandise, ANYONE_ROLE);
+                ApiBuilder.post("updateInfo", merchandiseController::doUpdateInfo, ANYONE_ROLE);
             });
         });
     }
