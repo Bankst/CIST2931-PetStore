@@ -30,6 +30,7 @@
 
     <script>
         function onLoad() {
+		     if (localStorage.getItem('first_name') !== null){
 
             document.getElementById('update_form').addEventListener('submit', processForm);
 
@@ -41,6 +42,9 @@
             document.getElementById("zip").value = localStorage.getItem("zip");
             document.getElementById("phone").value = localStorage.getItem("phone");
             document.getElementById("email").value = localStorage.getItem("email");
+			}else{
+			document.location.assign("login.html");			
+			}
         }
 
         //Getting new data to update customer
@@ -95,7 +99,6 @@
         function updateError(x) {
             console.log(x);
         }
-
 
     </script>
 </head>
