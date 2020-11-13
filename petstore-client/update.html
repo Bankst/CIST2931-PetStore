@@ -26,61 +26,67 @@
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="./css/style.css">
-	<script src="js/api.js"></script>
-	
-	<script>
-	function onLoad(){
-	
-	document.getElementById('update_form').addEventListener('submit', processForm);
-	
-	document.getElementById("first_name").value=localStorage.getItem("first_name");
-	document.getElementById("last_name").value=localStorage.getItem("last_name");
-	document.getElementById("address").value=localStorage.getItem("address");
-	document.getElementById("city").value=localStorage.getItem("city");
-	document.getElementById("state").value=localStorage.getItem("state");
-	document.getElementById("zip").value=localStorage.getItem("zip");
-	document.getElementById("phone").value=localStorage.getItem("phone");
-	document.getElementById("email").value=localStorage.getItem("email");
-	}
-	
-	//Getting new data to update customer
-	function update(){
-    localStorage.setItem("first_name",document.getElementById("first_name").value);
-	localStorage.setItem("last_name", document.getElementById("last_name").value);
-	localStorage.setItem("address", document.getElementById("address").value);
-	localStorage.setItem("city",document.getElementById("city").value);
-	localStorage.setItem("state",document.getElementById("state").value);
-	localStorage.setItem("zip",document.getElementById("zip").value);
-	localStorage.setItem("phone",document.getElementById("phone").value);
-	localStorage.setItem("email",document.getElementById("email").value);
-	}
-	
-	
-	function processForm(e) {
+    <script src="js/api.js"></script>
+
+    <script>
+        function onLoad() {
+
+            document.getElementById('update_form').addEventListener('submit', processForm);
+
+            document.getElementById("first_name").value = localStorage.getItem("first_name");
+            document.getElementById("last_name").value = localStorage.getItem("last_name");
+            document.getElementById("address").value = localStorage.getItem("street");
+            document.getElementById("city").value = localStorage.getItem("city");
+            document.getElementById("state").value = localStorage.getItem("state");
+            document.getElementById("zip").value = localStorage.getItem("zip");
+            document.getElementById("phone").value = localStorage.getItem("phone");
+            document.getElementById("email").value = localStorage.getItem("email");
+        }
+
+        //Getting new data to update customer
+        function update() {
+            localStorage.setItem("first_name", document.getElementById("first_name").value);
+            localStorage.setItem("last_name", document.getElementById("last_name").value);
+            localStorage.setItem("street", document.getElementById("address").value);
+            localStorage.setItem("city", document.getElementById("city").value);
+            localStorage.setItem("state", document.getElementById("state").value);
+            localStorage.setItem("zip", document.getElementById("zip").value);
+            localStorage.setItem("phone", document.getElementById("phone").value);
+            localStorage.setItem("email", document.getElementById("email").value);
+        }
+
+
+        function processForm(e) {
             if (e.preventDefault) e.preventDefault();
 
             let data = new FormData(document.querySelector('form'));
-			for (var [key, value] of data.entries()) { 
-  console.log(key, value);
-}
 
             sendRequest('/api/v1/customer/updateInfo', 'POST', data, updateSuccess, updateError);
             return false;
         }
-		
-    function updateSuccess() {
+
+        function updateSuccess() {
             if (this.status === 200) {
-                
-				//sending customer back to customer page
-	           document.location.assign("customer.html");
-			
+
+                //sending customer back to customer page
+                update();
+                document.location.assign("customer.html");
+
             } else {
                 let error = "";
-                switch(this.status) {
-                    case 400: error = "Bad input data!"; break;
-                    case 401: error = "Login failed - incorrect password!"; break;
-                    case 403: error = "Login failed - account does not exist!"; break;
-                    case 500: error = "Internal server error!"; break;
+                switch (this.status) {
+                    case 400:
+                        error = "Bad input data!";
+                        break;
+                    case 401:
+                        error = "Login failed - incorrect password!";
+                        break;
+                    case 403:
+                        error = "Login failed - account does not exist!";
+                        break;
+                    case 500:
+                        error = "Internal server error!";
+                        break;
                 }
                 alert(error);
             }
@@ -89,9 +95,9 @@
         function updateError(x) {
             console.log(x);
         }
-   
-	
-	</script>
+
+
+    </script>
 </head>
 
 <body onload="onLoad()">
@@ -122,7 +128,7 @@
         <div class="navbar" id="collapsibleNavbar">
             <ul class="nav navbar-nav">
                 <li class="nav-item menu__item text-uppercase active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="#">Cats</a></li>
                 <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="#">Dogs</a></li>
@@ -138,125 +144,111 @@
 </nav>
 <!--navbar end-->
 
- <section id="guests">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-0">
-                </div>
-                <div class="col-lg-6 col-12 pb-4">
-                    <div class="py-3 mx-4">
-                        <h5 class="pl-3 pt-3 midle-weight-heading">Edit your Shipment Information:</h5>
-                        <div class="mx-auto pt-4">
-                            <div class="customer-data p-3">
-                                <form id="update_form" class="py-2 px-4">
-                                    <div class="form-row form-group d-flex align-items-center">
-                                        <div class="col-md-3 label-text">
-                                            <label for="first_name">First Name:</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input type="text" minlength="2" class="form-control" id="first_name" name="firstName" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row form-group d-flex align-items-center">
-                                        <div class="col-md-3 label-text">
-                                            <label for="last_name">Last Name:</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input type="text" minlength="2" class="form-control" id="last_name" name="lastName" required>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="form-row form-group d-flex align-items-center">
-                                        <div class="col-md-3 label-text">
-                                            <label for="address">Address:</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input type="text" minlength="10" class="form-control" id="address" name="street" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row form-group d-flex align-items-center">
-                                        <div class="col-md-3  label-text">
-                                            <label for="city">City:</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" id="city" name="city" required>
-                                        </div>
-
-                                    </div>
-
-
-                                    <div class="form-row form-group d-flex align-items-center">
-                                        <div class="col-md-3  label-text">
-                                            <label for="state">State:</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="text" minlength="2" class="form-control" id="state" name="state" required>
-                                        </div>
-
-                                        <div class="col-md-3  label-text">
-                                            <label for="zip">Zip:</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="text" class="form-control" id="zip" name="zipcode" required>
-                                        </div>
-										<div class="error" id="error_zip"></div>
-
-                                    </div>
-
-                                    <div class="form-row form-group d-flex align-items-center">
-                                        <div class="col-md-3  label-text">
-                                            <label for="phone">Phone Number:</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" id="phone" name="phoneNum" required>
-                                        </div>
-										<div class="error" id="error_phone"></div>
-                                    </div>
-
-                                    <div class="form-row form-group d-flex align-items-center">
-                                        <div class="col-md-3  label-text">
-                                            <label for="email">Email:</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" id="email" name="email" required>
-                                        </div>
-										<div class="error" id="error_email"></div>
-                                    </div>
-									
-									
-                                    <div class="form-row form-group d-flex align-items-center">
-                                        <div class="col-md-3  label-text">
-                                            <label for="password">New Password:</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input type="password" class="form-control" id="password_update" name="password">
-                                        </div>
-										<div class="error" id="error_email"></div>
-                                    </div>
-
-
-
-                                    <div class="text-center pt-3">
-                                        <button type="submit" class="btn btn-custom" id="register" onclick="update()">Submit Changes</button>
-                                    </div>
-                                </form>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-                <div class="col-lg-3 col-0">
-                </div>
-
+<section id="guests">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-0">
             </div>
-            
-        
-    </section>
+            <div class="col-lg-6 col-12 pb-4">
+                <div class="py-3 mx-4">
+                    <h5 class="pl-3 pt-3 middle-weight-heading">Edit your Shipment Information:</h5>
+                    <div class="mx-auto pt-4">
+                        <div class="customer-data p-3">
+                            <form id="update_form" class="py-2 px-4">
+                                <div class="form-row form-group d-flex align-items-center">
+                                    <div class="col-md-3 label-text">
+                                        <label for="first_name">First Name:</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" minlength="2" class="form-control" id="first_name"
+                                               name="firstName" required>
+                                    </div>
+                                </div>
+                                <div class="form-row form-group d-flex align-items-center">
+                                    <div class="col-md-3 label-text">
+                                        <label for="last_name">Last Name:</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" minlength="2" class="form-control" id="last_name"
+                                               name="lastName" required>
+                                    </div>
+                                </div>
+                                <div class="form-row form-group d-flex align-items-center">
+                                    <div class="col-md-3 label-text">
+                                        <label for="address">Address:</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" minlength="10" class="form-control" id="address"
+                                               name="street" required>
+                                    </div>
+                                </div>
+                                <div class="form-row form-group d-flex align-items-center">
+                                    <div class="col-md-3  label-text">
+                                        <label for="city">City:</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" id="city" name="city" required>
+                                    </div>
+                                </div>
+                                <div class="form-row form-group d-flex align-items-center">
+                                    <div class="col-md-3  label-text">
+                                        <label for="state">State:</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" minlength="2" class="form-control" id="state" name="state"
+                                               required>
+                                    </div>
+                                    <div class="col-md-3  label-text">
+                                        <label for="zip">Zip:</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" class="form-control" id="zip" name="zipcode" required>
+                                    </div>
+                                    <div class="error" id="error_zip"></div>
+                                </div>
+                                <div class="form-row form-group d-flex align-items-center">
+                                    <div class="col-md-3  label-text">
+                                        <label for="phone">Phone Number:</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" id="phone" name="phoneNum" required>
+                                    </div>
+                                    <div class="error" id="error_phone"></div>
+                                </div>
+                                <div class="form-row form-group d-flex align-items-center">
+                                    <div class="col-md-3  label-text">
+                                        <label for="email">Email:</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" id="email" name="email" required>
+                                    </div>
+                                    <div class="error" id="error_email"></div>
+                                </div>
+                                <div class="form-row form-group d-flex align-items-center">
+                                    <div class="col-md-3  label-text">
+                                        <label for="password_update">New Password:</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="password" class="form-control" id="password_update"
+                                               name="password">
+                                    </div>
+                                    <div class="error" id="error_password"></div>
+                                </div>
+                                <div class="text-center pt-3">
+                                    <button type="submit" class="btn btn-custom" id="register">Submit
+                                        Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-0">
+            </div>
+        </div>
+    </div>
+</section>
 
 
 <!--footer-->

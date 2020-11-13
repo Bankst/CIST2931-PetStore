@@ -4,7 +4,6 @@ import com.cist2931.petstore.application.customer.CustomerController;
 import com.cist2931.petstore.application.employee.EmployeeController;
 import com.cist2931.petstore.application.merchandise.MerchandiseController;
 import com.cist2931.petstore.logging.Logger;
-import com.google.protobuf.Api;
 import io.javalin.Javalin;
 import io.javalin.apibuilder.ApiBuilder;
 import io.javalin.core.JavalinConfig;
@@ -101,7 +100,7 @@ public class RestServer {
         final Set<Role> EMPLOYEE_ROLE = SecurityUtil.roles(UserRole.EMPLOYEE);
 
         ApiBuilder.path(API_URL, () -> {
-            ApiBuilder.put("customer", customerController::doCreate,  ANYONE_ROLE);
+            ApiBuilder.put("customer", customerController::doCreate, ANYONE_ROLE);
             ApiBuilder.post("customer/login", customerController::doLogin, ANYONE_ROLE);
             ApiBuilder.path("customer", () -> {
                 ApiBuilder.get(customerController::getCustomer, CUSTOMER_ROLE);

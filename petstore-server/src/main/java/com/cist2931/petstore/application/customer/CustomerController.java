@@ -2,6 +2,7 @@ package com.cist2931.petstore.application.customer;
 
 import com.cist2931.petstore.StringUtils;
 import com.cist2931.petstore.application.AuthenticationService;
+import com.cist2931.petstore.application.PasswordHelper;
 import com.cist2931.petstore.application.order.Order;
 import com.cist2931.petstore.application.order.OrderMerchandise;
 import com.cist2931.petstore.logging.Logger;
@@ -11,7 +12,6 @@ import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
 import java.util.List;
-import java.util.Objects;
 
 public final class CustomerController {
 
@@ -24,15 +24,15 @@ public final class CustomerController {
     }
 
     public void doCreate(Context ctx) {
-        String password = ctx.queryParam("password");
-        String firstName = ctx.queryParam("firstName");
-        String lastName = ctx.queryParam("lastName");
-        String street = ctx.queryParam("street");
-        String city = ctx.queryParam("city");
-        String state = ctx.queryParam("state");
-        String zipcodeRaw = ctx.queryParam("zipcode");
-        String phoneNumber = ctx.queryParam("phoneNumber");
-        String email = ctx.queryParam("email");
+        String password = ctx.formParam("password");
+        String firstName = ctx.formParam("firstName");
+        String lastName = ctx.formParam("lastName");
+        String street = ctx.formParam("street");
+        String city = ctx.formParam("city");
+        String state = ctx.formParam("state");
+        String zipcodeRaw = ctx.formParam("zipcode");
+        String phoneNumber = ctx.formParam("phoneNumber");
+        String email = ctx.formParam("email");
 
         if (!StringUtils.hasValue(password, firstName, lastName, street, city, zipcodeRaw, phoneNumber, email)) {
             ctx.status(HttpStatus.BAD_REQUEST_400);
@@ -42,7 +42,9 @@ public final class CustomerController {
         //noinspection ConstantConditions
         int zipcode = Integer.parseInt(zipcodeRaw);
 
-        Customer customer = new Customer(-1, password, firstName, lastName, street, city, state, zipcode, phoneNumber, email, null);
+        String hashedPassword = PasswordHelper.hashPassword(password);
+
+        Customer customer = new Customer(-1, hashedPassword, firstName, lastName, street, city, state, zipcode, phoneNumber, email, null);
 
         int respCode = customerService.create(customer);
 
