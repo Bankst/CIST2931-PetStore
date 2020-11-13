@@ -26,9 +26,20 @@
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="./css/style.css">
+	<script>
+        function onLoad() {
+		    if (localStorage.getItem('first_name') !== null) {
+			 document.location.assign("customer.html");	
+			}else{
+			//code will be here			
+			}
+				
+	        
+        }
+    </script>
 </head>
 
-<body>
+<body onload="onLoad()">
 
 <div class="jumbotron header">
     <div class="container">
@@ -82,7 +93,7 @@
                         <h5 class="pl-3 pt-3 middle-weight-heading">Enter your Shipment Information:</h5>
                         <div class="mx-auto pt-4">
                             <div class="customer-data p-3">
-                                <form action="" class="was-validated py-2 px-4">
+                                <form action="" class="py-2 px-4">
                                     <div class="form-row form-group d-flex align-items-center">
                                         <div class="col-md-3 label-text">
                                             <label for="first_name">First Name:</label>
