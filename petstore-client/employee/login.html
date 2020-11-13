@@ -9,17 +9,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
+	<script src="/js/api.js"></script>
+	<script>
+	function onLoad() {
+            document.getElementById('login_form').addEventListener('submit', processForm);
+        }
+
+        function processForm(e) {
+            if (e.preventDefault) e.preventDefault();
+
+            let data = new FormData(document.querySelector('form'));
+
+            sendRequest('/api/v1/employee/login', 'POST', data, loginSuccess, loginError)
+            return false;
+        }
+
+       
+
+        function loginSuccess() {
+            if (this.status === 200) {
+                localStorage.setItem("username",username.firstName);
+				document.location.assign("order-management.html");
+			
+            } else {
+                let error = "";
+                switch(this.status) {
+                    case 400: error = "Bad input data!"; break;
+                    case 401: error = "Login failed - incorrect password!"; break;
+                    case 403: error = "Login failed - account does not exist!"; break;
+                    case 500: error = "Internal server error!"; break;
+                }
+                alert(error);
+            }
+        }
+
+        function loginError(x) {
+            console.log(x);
+        }
+		</script>
+	
     </head>
-<body>
+<body onload="onLoad()">
 
     <div class="login-bg" style="background:url(./images/bg1.jpg)">
         <div class="account-details">
             <img src="./images/logo.png" class="img-fluid mx-auto d-block" alt="img" />
-            <form>
+            <form id="login_form">
                 <label><i class="fa fa-user-o"></i> Employee ID</label>
-                <input type="text" class="form-control custom-input"  />
+                <input type="text" class="form-control custom-input" id="username" name="username" required  />
                 <label><i class="fa fa-lock"></i>  Password</label>
-                <input type="password" class="form-control custom-input"  />
+                <input type="password" name="password" id="password" class="form-control custom-input" required />
                 <label class="check-style"><input type="checkbox" /> Remember Password</label>
                 <input type="submit" value="SignIn" class="btn btn-standard text-uppercase w-100" />
             </form>
@@ -33,3 +72,4 @@
 </body>
 
 </html>
+
