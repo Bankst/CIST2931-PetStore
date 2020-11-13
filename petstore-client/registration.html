@@ -71,34 +71,56 @@
             console.log(x);
         }
 
-        function processLoginForm(e) {
+       //login form
+	   
+	    function processLoginForm(e) {
             if (e.preventDefault) e.preventDefault();
 
-            let data = new FormData(document.querySelector('form'));
-            sendRequest('/api/v1/customer/login', 'POST', data, loginSuccess, loginError);
+            let data = new FormData(document.getElementById('login_form'));
+
+            sendRequest('/api/v1/customer/login', 'POST', data, loginSuccess, loginError)
             return false;
         }
 
-        function loginSuccess() {
-            function loginSuccess() {
-                if (this.status === 200) {
-                    //alert("Login OK");
-                    // send to customer.html
-
-                    // sendRequest('/api/v1/customer', 'GET', null, getCustomerSuccess, null);
-
-                } else {
-                    let error = "";
-                    switch(this.status) {
-                        case 400: error = "Bad input data!"; break;
-                        case 401: error = "Login failed - incorrect password!"; break;
-                        case 403: error = "Login failed - account does not exist!"; break;
-                        case 500: error = "Internal server error!"; break;
-                    }
-                    alert(error);
-                }
+        function getCustomerSuccess() {
+            if (this.status === 200) {
+                let jsonResponse = JSON.parse(this.responseText)
+                
+				localStorage.setItem("first_name",jsonResponse.firstName);
+                 localStorage.setItem("last_name",jsonResponse.lastName);
+                 localStorage.setItem("street", jsonResponse.street);
+                 localStorage.setItem("city",jsonResponse.city);
+                 localStorage.setItem("state", jsonResponse.state);
+                 localStorage.setItem("zip", jsonResponse.zipcode);
+				 localStorage.setItem("email", jsonResponse.email);
+				 localStorage.setItem("phone", jsonResponse.phoneNumber);
+				 
+				
+				document.location.assign("customer.html");
             }
         }
+
+        function loginSuccess() {
+            if (this.status === 200) {
+              
+				sendRequest('/api/v1/customer', 'GET', null, getCustomerSuccess, null);
+			
+            } else {
+                let error = "";
+                switch(this.status) {
+                    case 400: error = "Bad input data!"; break;
+                    case 401: error = "Login failed - incorrect password!"; break;
+                    case 403: error = "Login failed - account does not exist!"; break;
+                    case 500: error = "Internal server error!"; break;
+                }
+                alert(error);
+            }
+        }
+
+        function loginError(x) {
+            console.log(x);
+        }
+	   
     </script>
 
     <script src="js/api.js"></script>
@@ -158,7 +180,7 @@
                     <h6 class="pl-3  middle-weight-heading">Enter your information:</h6>
                     <div class="mx-auto pt-3 pb-4">
                         <div class="customer-data p-3">
-                            <form id="registration_form" class="was-validated py-2 px-4">
+                            <form id="registration_form" class="py-2 px-4">
                                 <div class="form-row form-group d-flex align-items-center">
                                     <div class="col-md-3 label-text">
                                         <label for="firstName">First Name:</label>
@@ -228,8 +250,10 @@
                                     <div class="col-md-3">
                                         <input type="text" class="form-control" id="zip" name="zipcode" required>
                                     </div>
-                                    <div class="error" id="error_zip"></div>
-                                </div>
+									<div class="error text-right pr-3" id="error_zip" style="width:100%;"></div>
+									
+                                </div >								
+								
                                 <div class="form-row form-group d-flex align-items-center">
                                     <div class="col-md-3  label-text">
                                         <label for="phone">Phone Number:</label>
@@ -262,11 +286,11 @@
                 <div class="mx-auto login py-3">
                     <h6 class="middle-weight-heading pb-3">Already have an Account? Login here:</h6>
                     <div class="login__inner pb-3">
-                        <form action="" class="p-3">
+                        <form id="login_form" class="p-3">
                             <div class="form-group">
                                 <label for="login_email">Email:</label>
                                 <input type="email" class="form-control" id="login_email" placeholder="Email"
-                                       name="user_name" required>
+                                       name="email" required>
                             </div>
                             <div class="form-group">
                                 <label for="login_password">Password:</label>
@@ -310,3 +334,4 @@
 <script src="./js/script.js"></script>
 </body>
 </html>
+
