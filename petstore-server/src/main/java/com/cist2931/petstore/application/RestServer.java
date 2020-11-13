@@ -111,7 +111,7 @@ public class RestServer {
                 ApiBuilder.get("getOrders", customerController::getOrders, CUSTOMER_ROLE);
                 ApiBuilder.post("updateInfo", customerController::doUpdateInfo, CUSTOMER_ROLE);
             });
-            ApiBuilder.put("employee", employeeController::doCreate);
+            ApiBuilder.put("employee", employeeController::doCreate, ANYONE_ROLE);
             ApiBuilder.post("employee/login", employeeController::doLogin, ANYONE_ROLE);
             ApiBuilder.path("employee", () -> {
                 ApiBuilder.get(employeeController::getEmployee, EMPLOYEE_ROLE);
@@ -119,7 +119,7 @@ public class RestServer {
                 ApiBuilder.post("changePassword", employeeController::doChangePassword, EMPLOYEE_ROLE);
                 ApiBuilder.get("getOrders", employeeController::getOrders, EMPLOYEE_ROLE);
             });
-            ApiBuilder.put("merchandise", merchandiseController::doCreate);
+            ApiBuilder.put("merchandise", merchandiseController::doCreate, ANYONE_ROLE);
             ApiBuilder.path("merchandise", () -> {
                ApiBuilder.get(merchandiseController::getMerchandise, ANYONE_ROLE);
                ApiBuilder.post("updateInfo", merchandiseController::doUpdateInfo, ANYONE_ROLE);
