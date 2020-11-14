@@ -28,20 +28,50 @@
     <link rel="stylesheet" href="./css/style.css">
 
     <script>
-       function onLoad() {
-		    if (localStorage.getItem('first_name') !== null) {
-			   const customerName = `${localStorage.getItem("first_name")} ${localStorage.getItem("last_name")}`;
-            document.getElementById("hello").innerHTML = `Hello ${customerName}!`;
-            document.getElementById("customer_name").innerHTML = customerName;
-            document.getElementById("street_address").innerHTML = localStorage.getItem("street");
-            document.getElementById("city_state").innerHTML =
-                `${localStorage.getItem("city")} ${localStorage.getItem("state")} ${localStorage.getItem("zip")}`;
-				
-			document.getElementById('login_form').addEventListener('submit', processForm);
-			}else{
-			document.location.assign("login.html");			
-			}				
-	        
+        function onLoad() {
+            if (localStorage.getItem('first_name') !== null) {
+                const customerName = `${localStorage.getItem("first_name")} ${localStorage.getItem("last_name")}`;
+                document.getElementById("hello").innerHTML = `Hello ${customerName}!`;
+                document.getElementById("customer_name").innerHTML = customerName;
+                document.getElementById("street_address").innerHTML = localStorage.getItem("street");
+                document.getElementById("city_state").innerHTML =
+                    `${localStorage.getItem("city")} ${localStorage.getItem("state")} ${localStorage.getItem("zip")}`;
+
+                // TODO: load existing cart from localStorage
+                let items = [
+                    {merchID:0, quantity:1},
+                    {merchID:15, quantity:5}
+                ]
+
+                // check if adding item
+                const queryString = window.location.search;
+                if (queryString.length) {
+                    const params = new URLSearchParams(queryString);
+
+                    if (params.has('id')) {
+                        let merchID = parseInt(params.get('id'));
+                        let quantity = params.has('quantity') ? params.get('quantity') : 1;
+
+                        let newItem = {merchID:merchID, quantity:quantity}
+
+                        // if item is the same merchID, add the new quantity
+                        if (items.includes(newItem)) {
+                            items[merchID].quantity += quantity;
+                        } else {
+                            items.push(newItem);
+                        }
+                    }
+                }
+
+                // display items
+                for (let i = 0; i < items.length; i++) {
+                    let item = items[i];
+                    console.log(`Item ${i} - ID: ${item.merchID}, Quantity: ${item.quantity}`);
+                }
+
+            } else {
+                document.location.assign("login.html");
+            }
         }
     </script>
 </head>

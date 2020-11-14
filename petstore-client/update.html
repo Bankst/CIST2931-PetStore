@@ -30,21 +30,21 @@
 
     <script>
         function onLoad() {
-		     if (localStorage.getItem('first_name') !== null){
+            if (localStorage.getItem('first_name') !== null) {
 
-            document.getElementById('update_form').addEventListener('submit', processForm);
+                document.getElementById('update_form').addEventListener('submit', processForm);
 
-            document.getElementById("first_name").value = localStorage.getItem("first_name");
-            document.getElementById("last_name").value = localStorage.getItem("last_name");
-            document.getElementById("address").value = localStorage.getItem("street");
-            document.getElementById("city").value = localStorage.getItem("city");
-            document.getElementById("state").value = localStorage.getItem("state");
-            document.getElementById("zip").value = localStorage.getItem("zip");
-            document.getElementById("phone").value = localStorage.getItem("phone");
-            document.getElementById("email").value = localStorage.getItem("email");
-			}else{
-			document.location.assign("login.html");			
-			}
+                document.getElementById("first_name").value = localStorage.getItem("first_name");
+                document.getElementById("last_name").value = localStorage.getItem("last_name");
+                document.getElementById("address").value = localStorage.getItem("street");
+                document.getElementById("city").value = localStorage.getItem("city");
+                document.getElementById("state").value = localStorage.getItem("state");
+                document.getElementById("zip").value = localStorage.getItem("zip");
+                document.getElementById("phone").value = localStorage.getItem("phone");
+                document.getElementById("email").value = localStorage.getItem("email");
+            } else {
+                document.location.assign("login.html");
+            }
         }
 
         //Getting new data to update customer
