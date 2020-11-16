@@ -205,7 +205,10 @@ a {
     border: solid 1px #52aa8a;
     border-collapse: separate;
     border-spacing: 0;
-"
+}
+
+.table__table tr:first-child td { 
+	border-top:none; 
 }
 
 .td_first {
@@ -457,5 +460,14 @@ a {
 	margin:0 auto;
 }
 
+.table__table tr td:nth-child(1) {border-top: 1px solid #dee2e6}
+.table__table tr td:nth-child(2) {border-top: 1px solid #dee2e6}
+.table__table tr td:nth-child(3) {border-top: none}
+.table__table tr td:nth-child(4) {border-top: none}
+
+.table__table tr:first-child td:nth-child(1) {border-top: none}
+.table__table tr:first-child td:nth-child(2) {border-top: none}
+.table__table tr:first-child td:nth-child(3) {border-top: none}
+.table__table tr:first-child td:nth-child(4) {border-top: none}
 	
 }
