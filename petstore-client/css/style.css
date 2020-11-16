@@ -239,6 +239,10 @@ a {
     /*margin:0 auto;*/
 }
 
+.select_product{
+	min-width: 100px;
+}
+
 .select:after {
     content: "";
     display: block;
