@@ -409,3 +409,53 @@ a {
     }
 
 }
+
+@media (max-width: 550px) {
+	
+
+.table__table tr{
+		display:flex;
+		flex-wrap: wrap;		
+		
+	}
+	
+	
+.td_first{
+		
+		
+		text-align: center;
+		width:50%;
+		border-bottom:0;
+	}
+	
+.td_second{
+	
+		text-align: center;
+		width:50%;
+		border-bottom:0;
+	}	
+	
+.td_third{
+	    border-top:0;
+		text-align: center;
+		width:50%;
+	}
+	
+.td_forth{
+	
+		
+		text-align: center;
+		width:50%;
+	}		
+	
+.card-custom__title{
+	margin-top:25px;
+	
+}
+
+.select{
+	margin:0 auto;
+}
+
+	
+}
