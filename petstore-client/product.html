@@ -89,12 +89,15 @@
     </div>
 
     <!--navbar-->
-    <nav class="navbar navbar-expand menu">
+    <nav class="navbar navbar-expand-sm navbar-dark navbar-toggleable menu">
         <div class="container">
-            <div class="navbar" id="collapsibleNavbar">
+		     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+         </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="nav navbar-nav">
                     <li class="nav-item menu__item text-uppercase active">
-                        <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="#">Cats</a></li>
                     <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="#">Dogs</a></li>
@@ -104,7 +107,7 @@
                 </ul>
             </div>
             <div class="navbar-text menu__icon">
-                <a class="nav-link" href="#"><i class="fa nav__icon">&#xf07a;</i></a>
+                <a class="nav-link" href="cart.html"><i class="fa nav__icon">&#xf07a;</i></a>
             </div>
         </div>
     </nav>
