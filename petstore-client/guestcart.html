@@ -28,14 +28,54 @@
     <link rel="stylesheet" href="./css/style.css">
 	<script>
         function onLoad() {
+		    setStatus();
 		    if (localStorage.getItem('first_name') !== null) {
 			 document.location.assign("customercart.html");	
 			}else{
-			//code will be here			
-			}
-				
-	        
+			//code will be here						}			        
         }
+       /******Handling Login/Logout*****/
+		
+		//Function to set Sign in/sign out
+		
+		function setStatus(){
+		if (localStorage.getItem('first_name') !== null){
+		document.getElementById("status").innerHTML='<a href="#" onclick="logOut()">Sign out</a>';
+		}else{
+		document.getElementById("status").innerHTML='<a href="login.html">Sign in</a>';
+		}
+			
+		}
+		
+		//Logout Function
+		
+		function logOut(){
+		console.log("hello");
+		sendRequest('/api/v1/customer/logout', 'POST', null, unsetUserData, logoutError);
+		
+		}
+		
+		//Remove Storage Items
+		function unsetUserData(){
+		if (this.status === 200){
+		 localStorage.removeItem("first_name");
+                 localStorage.removeItem("last_name");
+                localStorage.removeItem("street");
+                localStorage.removeItem("city");
+                localStorage.removeItem("state");
+                localStorage.removeItem("zip");
+                localStorage.removeItem("email");
+                localStorage.removeItem("phone");
+		 document.location.assign("login.html");
+		}
+		}
+			
+			
+	    function logoutError(x) {
+            console.log(x);
+        }
+		
+     
     </script>
 </head>
 
@@ -53,9 +93,9 @@
                 </div>
             </div>
             <div class="col-lg-4 offset-lg-4 col-md-5 col-sm-6 offset-md-2 col-12 my-auto mb-4">
-                <p class="text-right"><i class="fas fa-phone body__icon"></i>456-678-1232
-                    <i class="fas fa-user-circle body__icon body_icon--right"></i>Sign in
-                </p>
+               <p class="text-right"><i class="fas fa-phone body__icon"></i>456-678-1232
+                        <i class="fas fa-user-circle body__icon body_icon--right"></i><span id="status">
+                    </span></p>
             </div>
         </div>
     </div>
