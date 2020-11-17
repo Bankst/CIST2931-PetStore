@@ -142,46 +142,7 @@
             console.log(x);
         }
 	    
-    /******Handling Login/Logout*****/
-		
-		//Function to set Sign in/sign out
-		
-		function setStatus(){
-		if (localStorage.getItem('first_name') !== null){
-		document.getElementById("status").innerHTML='<a href="#" onclick="logOut()">Sign out</a>';
-		}else{
-		document.getElementById("status").innerHTML='<a href="login.html">Sign in</a>';
-		}
-			
-		}
-		
-		//Logout Function
-		
-		function logOut(){
-		console.log("hello");
-		sendRequest('/api/v1/customer/logout', 'POST', null, unsetUserData, logoutError);
-		
-		}
-		
-		//Remove Storage Items
-		function unsetUserData(){
-		if (this.status === 200){
-		 localStorage.removeItem("first_name");
-                 localStorage.removeItem("last_name");
-                localStorage.removeItem("street");
-                localStorage.removeItem("city");
-                localStorage.removeItem("state");
-                localStorage.removeItem("zip");
-                localStorage.removeItem("email");
-                localStorage.removeItem("phone");
-		 document.location.assign("login.html");
-		}
-		}
-			
-			
-	    function logoutError(x) {
-            console.log(x);
-        }
+    
     </script>
 </head>
 
