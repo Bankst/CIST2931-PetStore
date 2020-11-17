@@ -33,6 +33,7 @@
 
         function onLoad() {
             document.getElementById('login_form').addEventListener('submit', processForm);
+	    setStatus();	
 
             // TODO: load existing cart from localStorage
             let storedCart = localStorage.getItem('cart');
