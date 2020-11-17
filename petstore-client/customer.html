@@ -31,6 +31,7 @@
     <script>
         function onLoad() {
             if (localStorage.getItem('first_name') !== null) {
+		setStatus();
 
                 document.getElementById('update_form').addEventListener('submit', processForm);
 
