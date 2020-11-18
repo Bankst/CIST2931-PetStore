@@ -76,6 +76,21 @@ public class MerchandiseService {
         int responseCode;
         List<Merchandise> merchList = null;
 
+        switch (category) {
+            case "cats":
+                category = "Cat";
+                break;
+            case "dogs":
+                category = "Dog";
+                break;
+            case "fish":
+                category = "Fish";
+                break;
+            case "birds":
+                category = "Bird";
+                break;
+        }
+
         Optional<List<Merchandise>> merchandiseListOptional = MerchandiseSQL.getMerchandiseByCategory(conn, category);
         if (merchandiseListOptional.isPresent()) {
             merchList = merchandiseListOptional.get();

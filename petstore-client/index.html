@@ -26,8 +26,14 @@
         const ItemsPerRow = 4;
 
         function onLoad() {
-            sendRequest('/api/v1/merchandise', 'GET', null, getMerchSuccess, (e) => console.error(e));
-	    setStatus();
+            const queryString = window.location.search;
+            const params = new URLSearchParams(queryString);
+
+            if (params.has('category')) { // get merchandise for selected category
+                sendRequest(`/api/v1/merchandise/category/${params.get('category')}`, 'GET', null, getMerchSuccess, (e) => console.error(e));
+            } else { // get all merchandise
+                sendRequest('/api/v1/merchandise', 'GET', null, getMerchSuccess, (e) => console.error(e));
+            }
         }
 
         function getMerchSuccess() {
@@ -38,12 +44,15 @@
 
                 let rowCount = Math.ceil(jsonResponse.length / ItemsPerRow);
 
+                let itemCount = jsonResponse.length;
                 // fill rows
                 for (let i = 0; i < rowCount; i++) {
                     // start row html
                     merchHtml += '<div class="row">';
 
+                    if (itemCount === 0) break;
                     for (let j = 0; j < ItemsPerRow; j++) {
+                        if (itemCount === 0) break;
                         const index = j + (i * ItemsPerRow);
                         const item = jsonResponse[index];
 
@@ -60,6 +69,7 @@
                                 </div>
                               </div>
                             `
+                        itemCount--;
                     }
                     // end row html
                     merchHtml += '</div>';
@@ -148,13 +158,13 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="nav navbar-nav">
                     <li class="nav-item menu__item text-uppercase active">
-                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="/index.html">Home <span class="sr-only">(current)</span></a>
                     </li>
-                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="#">Cats</a></li>
-                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="#">Dogs</a></li>
-                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="#">Fish</a></li>
-                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="#">Birds</a></li>
-                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="#">Other</a></li>
+                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=cats">Cats</a></li>
+                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=dogs">Dogs</a></li>
+                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=fish">Fish</a></li>
+                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=birds">Birds</a></li>
+                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=other">Other</a></li>
                 </ul>
             </div>
             <div class="navbar-text menu__icon">

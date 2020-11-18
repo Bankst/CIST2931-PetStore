@@ -60,7 +60,10 @@ public class MerchandiseController {
 
         Pair<Integer, Merchandise> getResponse = merchandiseService.getByID(merchID);
 
-        ctx.json(getResponse.getRight());
+        if (getResponse.getLeft() == HttpStatus.OK_200) {
+            ctx.json(getResponse.getRight());
+        }
+
         ctx.status(getResponse.getLeft());
     }
 
