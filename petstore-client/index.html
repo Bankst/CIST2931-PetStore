@@ -4,21 +4,21 @@
 <head>
     <title>CIST2931 PetStore</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
 
 
     <!-- CSS only -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" rel="stylesheet">
 
     <!-- JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script crossorigin="anonymous" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script crossorigin="anonymous" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script crossorigin="anonymous" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" rel="stylesheet">
 
     <!-- Website CSS -->
-    <link rel="stylesheet" href="./css/style.css">
+    <link href="./css/style.css" rel="stylesheet">
 
     <script src="js/api.js"></script>
 
@@ -30,8 +30,12 @@
             const params = new URLSearchParams(queryString);
 
             if (params.has('category')) { // get merchandise for selected category
-                sendRequest(`/api/v1/merchandise/category/${params.get('category')}`, 'GET', null, getMerchSuccess, (e) => console.error(e));
+                const category = params.get('category');
+                $('#nav_' + category).addClass('active');
+
+                sendRequest(`/api/v1/merchandise/category/${category}`, 'GET', null, getMerchSuccess, (e) => console.error(e));
             } else { // get all merchandise
+                $('#nav_home').addClass('active');
                 sendRequest('/api/v1/merchandise', 'GET', null, getMerchSuccess, (e) => console.error(e));
             }
         }
@@ -39,6 +43,11 @@
         function getMerchSuccess() {
             if (this.status === 200) {
                 let jsonResponse = JSON.parse(this.responseText)
+
+                if (jsonResponse.length === 0) {
+                    document.getElementById("merchandise_container").innerHTML = `<h2>Oops! We didn't find anything here!</h2>`;
+                    return;
+                }
 
                 let merchHtml = "";
 
@@ -78,45 +87,45 @@
                 document.getElementById("merchandise_container").innerHTML = merchHtml;
             }
         }
-	    
-	/******Handling Login/Logout*****/
-		
-		//Function to set Sign in/sign out
-		
-		function setStatus(){
-		if (localStorage.getItem('first_name') !== null){
-		document.getElementById("status").innerHTML='<a href="#" onclick="logOut()">Sign out</a>';
-		}else{
-		document.getElementById("status").innerHTML='<a href="login.html">Sign in</a>';
-		}
-			
-		}
-		
-		//Logout Function
-		
-		function logOut(){
-		console.log("hello");
-		sendRequest('/api/v1/customer/logout', 'POST', null, unsetUserData, logoutError);
-		
-		}
-		
-		//Remove Storage Items
-		function unsetUserData(){
-		if (this.status === 200){
-		 localStorage.removeItem("first_name");
-                 localStorage.removeItem("last_name");
-                 localStorage.removeItem("street");
-                 localStorage.removeItem("city");
-                 localStorage.removeItem("state");
-                 localStorage.removeItem("zip");
-                 localStorage.removeItem("email");
-                 localStorage.removeItem("phone");
-		 document.location.assign("index.html");
-		}
-		}
-			
-			
-	    function logoutError(x) {
+
+        /******Handling Login/Logout*****/
+
+        //Function to set Sign in/sign out
+
+        function setStatus() {
+            if (localStorage.getItem('first_name') !== null) {
+                document.getElementById("status").innerHTML = '<a href="#" onclick="logOut()">Sign out</a>';
+            } else {
+                document.getElementById("status").innerHTML = '<a href="login.html">Sign in</a>';
+            }
+
+        }
+
+        //Logout Function
+
+        function logOut() {
+            console.log("hello");
+            sendRequest('/api/v1/customer/logout', 'POST', null, unsetUserData, logoutError);
+
+        }
+
+        //Remove Storage Items
+        function unsetUserData() {
+            if (this.status === 200) {
+                localStorage.removeItem("first_name");
+                localStorage.removeItem("last_name");
+                localStorage.removeItem("street");
+                localStorage.removeItem("city");
+                localStorage.removeItem("state");
+                localStorage.removeItem("zip");
+                localStorage.removeItem("email");
+                localStorage.removeItem("phone");
+                document.location.assign("index.html");
+            }
+        }
+
+
+        function logoutError(x) {
             console.log(x);
         }    
 	    
@@ -152,18 +161,16 @@
    <!--navbar-->
     <nav class="navbar navbar-expand-sm navbar-dark navbar-toggleable menu">
         <div class="container">
-		     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+		     <button class="navbar-toggler" data-target="#collapsibleNavbar" data-toggle="collapse" type="button">
         <span class="navbar-toggler-icon"></span>
          </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="nav navbar-nav">
-                    <li class="nav-item menu__item text-uppercase active">
-                        <a class="nav-link" href="/index.html">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=cats">Cats</a></li>
-                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=dogs">Dogs</a></li>
-                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=fish">Fish</a></li>
-                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=birds">Birds</a></li>
+                    <li id="nav_home" class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html">Home</a></li>
+                    <li id="nav_cats" class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=cats">Cats</a></li>
+                    <li id="nav_dogs" class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=dogs">Dogs</a></li>
+                    <li id="nav_fish" class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=fish">Fish</a></li>
+                    <li id="nav_birds" class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=birds">Birds</a></li>
                 </ul>
             </div>
             <div class="navbar-text menu__icon">
@@ -178,9 +185,9 @@
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6">
-                <form class="form search-form form-custom" action="">
+                <form action="" class="form search-form form-custom">
                     <div class="input-group">
-                        <input type="text" class="form-control form-custom__input" placeholder="Search" name="search" />
+                        <input class="form-control form-custom__input" name="search" placeholder="Search" type="text" />
                         <div class="input-group-btn">
                             <button class="btn btn-default" type="submit">
                             </button>
@@ -196,7 +203,7 @@
     <!--product list-->
     <section class="product_list">
         <div class="container text-center" id="merchandise_container">
-            <h2>Oops! We didn't find anything there!</h2>
+          <h3>Loading...</h3>
         </div>
     </section>
 
