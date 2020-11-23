@@ -2,388 +2,327 @@
 <html lang="en">
 
 <head>
-    <title>Registration</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registration</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSS only -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <!-- CSS only -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
-    <!-- JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-            crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="./css/style.css">
-    <script src="js/api.js"></script>
+  <!-- JS, Popper.js, and jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+          integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+          integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+          crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+        integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="./css/style.css">
+  <script src="js/api.js"></script>
 
-    <script>
-        function onLoad() {
-	    setStatus();
-            document.getElementById('registration_form').addEventListener('submit', processRegistrationForm);
-            document.getElementById('login_form').addEventListener('submit', processLoginForm)
-        }
+  <script>
+      function onLoad() {
+          setClientAccountStatus();
+          document.getElementById('registration_form').addEventListener('submit', processRegistrationForm);
+          document.getElementById('login_form').addEventListener('submit', processLoginForm)
+      }
 
-        function processRegistrationForm(e) {
-            if (e.preventDefault) e.preventDefault();
+      function processRegistrationForm(e) {
+          if (e.preventDefault) e.preventDefault();
 
-            let data = new FormData(document.querySelector('form'));
-            data.delete('cf_password');
+          let data = new FormData(document.querySelector('form'));
+          data.delete('cf_password');
 
-            sendRequest('/api/v1/customer', 'PUT', data, registerSuccess, registerError);
-            return false;
-        }
+          sendRequest('/api/v1/customer', 'PUT', data, registerSuccess, registerError);
+          return false;
+      }
 
-        function registerSuccess() {
-            if (this.status === 200) {
-                //sending customer to login
-                document.location.assign("login.html");
-            } else {
-                let error = "";
-                switch (this.status) {
-                    case 400:
-                        error = "Bad input data!";
-                        break;
-                    case 401:
-                        error = "Login failed - incorrect password!";
-                        break;
-                    case 403:
-                        error = "Login failed - account does not exist!";
-                        break;
-                    case 500:
-                        error = "Internal server error!";
-                        break;
-                }
-                alert(error);
-            }
-        }
+      function registerSuccess() {
+          if (this.status === 200) {
+              //sending customer to login
+              document.location.assign("login.html");
+          } else {
+              let error = "";
+              switch (this.status) {
+                  case 400:
+                      error = "Bad input data!";
+                      break;
+                  case 401:
+                      error = "Login failed - incorrect password!";
+                      break;
+                  case 403:
+                      error = "Login failed - account does not exist!";
+                      break;
+                  case 500:
+                      error = "Internal server error!";
+                      break;
+              }
+              alert(error);
+          }
+      }
 
-        function registerError(x) {
-            console.log(x);
-        }
+      function registerError(x) {
+          console.log(x);
+      }
 
-        //login form
+      //login form
+      function processLoginForm(e) {
+          if (e.preventDefault) e.preventDefault();
 
-        function processLoginForm(e) {
-            if (e.preventDefault) e.preventDefault();
+          let data = new FormData(document.getElementById('login_form'));
 
-            let data = new FormData(document.getElementById('login_form'));
+          sendRequest('/api/v1/customer/login', 'POST', data, loginSuccess)
+          return false;
+      }
 
-            sendRequest('/api/v1/customer/login', 'POST', data, loginSuccess, loginError)
-            return false;
-        }
+      function getCustomerSuccess() {
+          if (this.status === 200) {
+              let jsonResponse = JSON.parse(this.responseText)
 
-        function getCustomerSuccess() {
-            if (this.status === 200) {
-                let jsonResponse = JSON.parse(this.responseText)
+              localStorage.setItem("first_name", jsonResponse.firstName);
+              localStorage.setItem("last_name", jsonResponse.lastName);
+              localStorage.setItem("street", jsonResponse.street);
+              localStorage.setItem("city", jsonResponse.city);
+              localStorage.setItem("state", jsonResponse.state);
+              localStorage.setItem("zip", jsonResponse.zipcode);
+              localStorage.setItem("email", jsonResponse.email);
+              localStorage.setItem("phone", jsonResponse.phoneNumber);
 
-                localStorage.setItem("first_name", jsonResponse.firstName);
-                localStorage.setItem("last_name", jsonResponse.lastName);
-                localStorage.setItem("street", jsonResponse.street);
-                localStorage.setItem("city", jsonResponse.city);
-                localStorage.setItem("state", jsonResponse.state);
-                localStorage.setItem("zip", jsonResponse.zipcode);
-                localStorage.setItem("email", jsonResponse.email);
-                localStorage.setItem("phone", jsonResponse.phoneNumber);
+              document.location.assign("customercart.html");
+          }
+      }
 
+      function loginSuccess() {
+          if (this.status === 200) {
+              sendRequest('/api/v1/customer', 'GET', null, getCustomerSuccess, null);
+          } else {
+              let error = "";
+              switch (this.status) {
+                  case 400:
+                      error = "Bad input data!";
+                      break;
+                  case 401:
+                      error = "Login failed - incorrect password!";
+                      break;
+                  case 403:
+                      error = "Login failed - account does not exist!";
+                      break;
+                  case 500:
+                      error = "Internal server error!";
+                      break;
+              }
+              alert(error);
+          }
+      }
+  </script>
 
-                document.location.assign("customercart.html");
-            }
-        }
-
-        function loginSuccess() {
-            if (this.status === 200) {
-                sendRequest('/api/v1/customer', 'GET', null, getCustomerSuccess, null);
-            } else {
-                let error = "";
-                switch (this.status) {
-                    case 400:
-                        error = "Bad input data!";
-                        break;
-                    case 401:
-                        error = "Login failed - incorrect password!";
-                        break;
-                    case 403:
-                        error = "Login failed - account does not exist!";
-                        break;
-                    case 500:
-                        error = "Internal server error!";
-                        break;
-                }
-                alert(error);
-            }
-        }
-
-        function loginError(x) {
-            console.log(x);
-        }
-     /******Handling Login/Logout*****/
-		
-		//Function to set Sign in/sign out
-		
-		function setStatus(){
-		if (localStorage.getItem('first_name') !== null){
-		document.getElementById("status").innerHTML='<a href="#" onclick="logOut()">Sign out</a>';
-		}else{
-		document.getElementById("status").innerHTML='<a href="login.html">Sign in</a>';
-		}
-			
-		}
-		
-		//Logout Function
-		
-		function logOut(){
-		console.log("hello");
-		sendRequest('/api/v1/customer/logout', 'POST', null, unsetUserData, logoutError);
-		
-		}
-		
-		//Remove Storage Items
-		function unsetUserData(){
-		if (this.status === 200){
-		 localStorage.removeItem("first_name");
-                 localStorage.removeItem("last_name");
-                localStorage.removeItem("street");
-                localStorage.removeItem("city");
-                localStorage.removeItem("state");
-                localStorage.removeItem("zip");
-                localStorage.removeItem("email");
-                localStorage.removeItem("phone");
-		 document.location.assign("index.html");
-		}
-		}
-			
-			
-	    function logoutError(x) {
-            console.log(x);
-        }
-    </script>
-
-    <script src="js/api.js"></script>
+  <script src="js/api.js"></script>
 
 </head>
 
 <body onload="onLoad()">
 <div class="cover-container d-flex h-100 mx-auto flex-column">
 
-<div class="jumbotron header">
+  <!--header-->
+  <div class="jumbotron header">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-4 col-md-5 col-sm-6 col-12 my-auto mb-4">
-                <div class="media align-items-center">
-                    <img class="img-fluid" src="./img/logo.png" style="max-width:120px" alt="Pet Store Logo">
-                    <div class="media-body">
-                        <h2 class="header__title">Pet Store</h2>
-                    </div>
-                </div>
+      <div class="row">
+        <div class="col-lg-4 col-md-5 col-sm-6 col-12 my-auto mb-4">
+          <div class="media align-items-center">
+            <img class="img-fluid" src="./img/logo.png" style="max-width:120px" alt="Pet Store Logo">
+            <div class="media-body">
+              <h2 class="header__title">Pet Store</h2>
             </div>
-            <div class="col-lg-4 offset-lg-4 col-md-5 col-sm-6 offset-md-2 col-12 my-auto mb-4">
-              <p class="text-right"><i class="fas fa-phone body__icon"></i>456-678-1232
-                        <i class="fas fa-user-circle body__icon body_icon--right"></i><span id="status">
-                    </span></p>
-            </div>
+          </div>
         </div>
+        <div class="col-lg-4 offset-lg-4 col-md-5 col-sm-6 offset-md-2 col-12 my-auto mb-4">
+          <p class="text-right">
+            <i class="fas fa-phone body__icon"></i>456-678-1232
+            <i class="fas fa-user-circle body__icon body_icon--right"></i>
+            <span id="status"></span>
+          </p>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+  <!--end header-->
 
-
-<!--navbar-->
-    <nav class="navbar navbar-expand-sm navbar-dark navbar-toggleable menu">
-        <div class="container">
-		     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+  <!--navbar-->
+  <nav class="navbar navbar-expand-sm navbar-dark navbar-toggleable menu">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
-         </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="nav navbar-nav">
-                    <li class="nav-item menu__item text-uppercase active">
-                        <a class="nav-link" href="/index.html">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=cats">Cats</a></li>
-                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=dogs">Dogs</a></li>
-                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=fish">Fish</a></li>
-                    <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="/index.html?category=birds">Birds</a></li>
-                </ul>
-            </div>
-            <div class="navbar-text menu__icon">
-                <a class="nav-link" href="cart.html"><i class="fa nav__icon">&#xf07a;</i></a>
-            </div>
-        </div>
-    </nav>
-    <!--navbar end-->
-    
-<section id="registration">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-12">
-                <!---Registration-->
-                <div class="mx-4 pt-3">
-                    <h6 class="pl-3  middle-weight-heading">Enter your information:</h6>
-                    <div class="mx-auto pt-3 pb-4">
-                        <div class="customer-data p-3">
-                            <form id="registration_form" class="py-2 px-4">
-                                <div class="form-row form-group d-flex align-items-center">
-                                    <div class="col-md-3 label-text">
-                                        <label for="firstName">First Name:</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="text" minlength="2" class="form-control" id="firstName"
-                                               name="firstName" required>
-                                    </div>
-                                </div>
-                                <div class="form-row form-group d-flex align-items-center">
-                                    <div class="col-md-3 label-text">
-                                        <label for="lastName">Last Name:</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="text" minlength="2" class="form-control" id="lastName"
-                                               name="lastName" required>
-                                    </div>
-                                </div>
-                                <div class="form-row form-group d-flex align-items-center">
-                                    <div class="col-md-3 label-text">
-                                        <label for="password">Password:</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="password" class="form-control" id="password" name="password"
-                                               required>
-                                    </div>
-                                    <div class="error" id="error_password"></div>
-                                </div>
-                                <div class="form-row form-group d-flex align-items-center">
-                                    <div class="col-md-3 label-text">
-                                        <label for="confirm_password">Confirm Password:</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="password" class="form-control" id="confirm_password"
-                                               name="cf_password" required>
-                                    </div>
-                                    <div class="error" id="error_confirm"></div>
-                                </div>
-                                <div class="form-row form-group d-flex align-items-center">
-                                    <div class="col-md-3 label-text">
-                                        <label for="street">Address:</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="text" minlength="10" class="form-control" id="street"
-                                               name="street" required>
-                                    </div>
-                                </div>
-                                <div class="form-row form-group d-flex align-items-center">
-                                    <div class="col-md-3  label-text">
-                                        <label for="city">City:</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="text" minlength="3" class="form-control" id="city" name="city"
-                                               required>
-                                    </div>
-                                </div>
-                                <div class="form-row form-group d-flex align-items-center">
-                                    <div class="col-md-3  label-text">
-                                        <label for="state">State:</label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input type="text" class="form-control" id="state" name="state" required>
-                                    </div>
-                                    <div class="col-md-3  label-text">
-                                        <label for="zip">Zip:</label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input type="text" class="form-control" id="zip" name="zipcode" required>
-                                    </div>
-                                    <div class="error text-right pr-3" id="error_zip" style="width:100%;"></div>
-
-                                </div>
-
-                                <div class="form-row form-group d-flex align-items-center">
-                                    <div class="col-md-3  label-text">
-                                        <label for="phone">Phone Number:</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control" id="phone" name="phoneNumber" required>
-                                    </div>
-                                    <div class="error" id="error_phone"></div>
-                                </div>
-                                <div class="form-row form-group d-flex align-items-center">
-                                    <div class="col-md-3  label-text">
-                                        <label for="email">Email:</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control" id="email" name="email" required>
-                                    </div>
-                                    <div class="error" id="error_email"></div>
-                                </div>
-                                <div class="text-center pt-3">
-                                    <button type="submit" class="btn btn-custom" id="register">Submit</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!--Login-->
-            <div class="col-lg-4 col-12">
-                <div class="mx-auto login py-3">
-                    <h6 class="middle-weight-heading pb-3">Already have an Account? Login here:</h6>
-                    <div class="login__inner pb-3">
-                        <form id="login_form" class="p-3">
-                            <div class="form-group">
-                                <label for="login_email">Email:</label>
-                                <input type="email" class="form-control" id="login_email" placeholder="Email"
-                                       name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="login_password">Password:</label>
-                                <input type="password" class="form-control" id="login_password" placeholder="Password"
-                                       name="password" required>
-                            </div>
-                            <div class="text-center sign-in pt-3">
-                                <button type="submit" class="btn btn-custom">Sign in</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="nav navbar-nav">
+          <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html">Home</a></li>
+          <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html?category=cats">Cats</a></li>
+          <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html?category=dogs">Dogs</a></li>
+          <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html?category=fish">Fish</a></li>
+          <li class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html?category=birds">Birds</a></li>
+        </ul>
+      </div>
+      <div class="navbar-text menu__icon" id="cart_button"></div>
     </div>
-</section>
+  </nav>
+  <!--navbar end-->
 
-<!--footer-->
- <footer class="footer mastfoot mt-auto footer-custom">
+  <section id="registration">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-6 text-center">
-                <p class="text-uppercase footer__title">Contact us</p>
-                <p class="footer__text">Email: shop@pet-sup.com</p>
-                <p>Phone: 456-678-1232</p>
+      <div class="row">
+        <div class="col-lg-8 col-12">
+          <!---Registration-->
+          <div class="mx-4 pt-3">
+            <h6 class="pl-3  middle-weight-heading">Enter your information:</h6>
+            <div class="mx-auto pt-3 pb-4">
+              <div class="customer-data p-3">
+                <form id="registration_form" class="py-2 px-4">
+                  <div class="form-row form-group d-flex align-items-center">
+                    <div class="col-md-3 label-text">
+                      <label for="firstName">First Name:</label>
+                    </div>
+                    <div class="col-md-9">
+                      <input type="text" minlength="2" class="form-control" id="firstName" name="firstName" required>
+                    </div>
+                  </div>
+                  <div class="form-row form-group d-flex align-items-center">
+                    <div class="col-md-3 label-text">
+                      <label for="lastName">Last Name:</label>
+                    </div>
+                    <div class="col-md-9">
+                      <input type="text" minlength="2" class="form-control" id="lastName" name="lastName" required>
+                    </div>
+                  </div>
+                  <div class="form-row form-group d-flex align-items-center">
+                    <div class="col-md-3 label-text">
+                      <label for="password">Password:</label>
+                    </div>
+                    <div class="col-md-9">
+                      <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="error" id="error_password"></div>
+                  </div>
+                  <div class="form-row form-group d-flex align-items-center">
+                    <div class="col-md-3 label-text">
+                      <label for="confirm_password">Confirm Password:</label>
+                    </div>
+                    <div class="col-md-9">
+                      <input type="password" class="form-control" id="confirm_password" name="cf_password" required>
+                    </div>
+                    <div class="error" id="error_confirm"></div>
+                  </div>
+                  <div class="form-row form-group d-flex align-items-center">
+                    <div class="col-md-3 label-text">
+                      <label for="street">Address:</label>
+                    </div>
+                    <div class="col-md-9">
+                      <input type="text" minlength="10" class="form-control" id="street" name="street" required>
+                    </div>
+                  </div>
+                  <div class="form-row form-group d-flex align-items-center">
+                    <div class="col-md-3  label-text">
+                      <label for="city">City:</label>
+                    </div>
+                    <div class="col-md-9">
+                      <input type="text" minlength="3" class="form-control" id="city" name="city" required>
+                    </div>
+                  </div>
+                  <div class="form-row form-group d-flex align-items-center">
+                    <div class="col-md-3  label-text">
+                      <label for="state">State:</label>
+                    </div>
+                    <div class="col-md-3">
+                      <input type="text" class="form-control" id="state" name="state" required>
+                    </div>
+                    <div class="col-md-3  label-text">
+                      <label for="zip">Zip:</label>
+                    </div>
+                    <div class="col-md-3">
+                      <input type="text" class="form-control" id="zip" name="zipcode" required>
+                    </div>
+                    <div class="error text-right pr-3" id="error_zip" style="width:100%;"></div>
+                  </div>
+                  <div class="form-row form-group d-flex align-items-center">
+                    <div class="col-md-3  label-text">
+                      <label for="phone">Phone Number:</label>
+                    </div>
+                    <div class="col-md-9">
+                      <input type="text" class="form-control" id="phone" name="phoneNumber" required>
+                    </div>
+                    <div class="error" id="error_phone"></div>
+                  </div>
+                  <div class="form-row form-group d-flex align-items-center">
+                    <div class="col-md-3  label-text">
+                      <label for="email">Email:</label>
+                    </div>
+                    <div class="col-md-9">
+                      <input type="text" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="error" id="error_email"></div>
+                  </div>
+                  <div class="text-center pt-3">
+                    <button type="submit" class="btn btn-custom" id="register">Submit</button>
+                  </div>
+                </form>
+              </div>
             </div>
-
-
-            <div class="col-lg-3 offset-lg-6 col-md-3 offset-md-3 col-6 text-center">
-                <div class="">
-                    <p class="text-uppercase footer__title">Follow us</p>
-                    <i class="fab fa-facebook-square body__icon"></i>
-                    <i class="fab fa-twitter-square body__icon"></i>
-                    <i class="fab fa-instagram body__icon"></i>
-                </div>
-            </div>
-
+          </div>
         </div>
+
+        <!--Login-->
+        <div class="col-lg-4 col-12">
+          <div class="mx-auto login py-3">
+            <h6 class="middle-weight-heading pb-3">Already have an Account? Login here:</h6>
+            <div class="login__inner pb-3">
+              <form id="login_form" class="p-3">
+                <div class="form-group">
+                  <label for="login_email">Email:</label>
+                  <input type="email" class="form-control" id="login_email" placeholder="Email" name="email" required>
+                </div>
+                <div class="form-group">
+                  <label for="login_password">Password:</label>
+                  <input type="password" class="form-control" id="login_password" placeholder="Password" name="password" required>
+                </div>
+                <div class="text-center sign-in pt-3">
+                  <button type="submit" class="btn btn-custom">Sign in</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-</footer>
-	</div>
+  </section>
+
+  <!--footer-->
+  <footer class="footer mastfoot mt-auto footer-custom">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-md-6 col-6 text-center">
+          <p class="text-uppercase footer__title">Contact us</p>
+          <p class="footer__text">Email: shop@pet-sup.com</p>
+          <p>Phone: 456-678-1232</p>
+        </div>
+        <div class="col-lg-3 offset-lg-6 col-md-3 offset-md-3 col-6 text-center">
+          <div>
+            <p class="text-uppercase footer__title">Follow us</p>
+            <i class="fab fa-facebook-square body__icon"></i>
+            <i class="fab fa-twitter-square body__icon"></i>
+            <i class="fab fa-instagram body__icon"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
 <script src="./js/script.js"></script>
-	
 </body>
 </html>
 

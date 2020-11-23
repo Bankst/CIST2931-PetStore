@@ -1,5 +1,6 @@
 package com.cist2931.petstore.application.customer;
 
+import com.cist2931.petstore.StringUtils;
 import com.cist2931.petstore.application.PasswordHelper;
 import com.cist2931.petstore.application.order.Order;
 import com.cist2931.petstore.application.order.OrderMerchandise;
@@ -255,11 +256,19 @@ public final class CustomerService {
         return responseCode;
     }
 
-    public Pair<Integer, String> updateInfo(String token, String firstName, String lastName, String street, String city, String state, int zipcode, String phoneNum, String email, String password) {
+    public Pair<Integer, String> updateInfo(String token, String firstName, String lastName, String street, String city, String state, int zipcode, String phoneNum, String password) {
         int responseCode;
         Optional<Customer> customerOptional = CustomerSQL.getCustomerByToken(conn, token);
         if (customerOptional.isPresent()) {
             Customer customer = customerOptional.get();
+
+            boolean shouldChangePassword = StringUtils.hasValue(password) && PasswordHelper.verifyPassword(password, customer.getHashedPassword());
+            if(shouldChangePassword) {
+                customer.setHashedPassword(PasswordHelper.hashPassword(password));
+                token = UUID.randomUUID().toString();
+                customer.setAuthToken(token);
+                logger.info("Changed password for customer(" + customer.getCustomerID() + ") - pending DB update");
+            }
 
             customer.setFirstName(firstName);
             customer.setLastName(lastName);
@@ -269,32 +278,16 @@ public final class CustomerService {
             customer.setZipcode(zipcode);
             customer.setPhoneNumber(phoneNum);
 
-            if(!(PasswordHelper.verifyPassword(password, customer.getHashedPassword())) || !(email.equals(customer.getEmail()))) {
-                CustomerService customerService = new CustomerService(conn);
-                try {
-                    customer.setHashedPassword(PasswordHelper.hashPassword(password));
-                    customer.setEmail(email);
-                    customer.update(conn);
-                    logger.info("Updated info for customer(" + customer.getCustomerID() + ")");
-                    Pair<Integer, String> loginResponse = customerService.login(email,password);
+            try {
+                customer.update(conn);
+                logger.info("Updated info for customer(" + customer.getCustomerID() + ")");
 
-                    token = loginResponse.getRight();
-                    responseCode = HttpStatus.OK_200;
-                } catch (SQLException ex) {
-                    logger.error("Failed to update customer(" + customer.getCustomerID() + ") row for info!", ex);
-                    responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
-                }
-            } else {
-                try {
-                    customer.update(conn);
-                    logger.info("Updated info for customer(" + customer.getCustomerID() + ")");
-
-                    responseCode = HttpStatus.OK_200;
-                } catch (SQLException ex) {
-                    logger.error("Failed to update customer(" + customer.getCustomerID() + ") row for info!", ex);
-                    responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
-                }
+                responseCode = HttpStatus.OK_200;
+            } catch (SQLException ex) {
+                logger.error("Failed to update customer(" + customer.getCustomerID() + ") row for info!", ex);
+                responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
             }
+
         } else responseCode = HttpStatus.FORBIDDEN_403;
         return Pair.of(responseCode, token);
     }

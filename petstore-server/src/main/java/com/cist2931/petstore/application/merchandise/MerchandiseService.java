@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class MerchandiseService {
-    private static final Logger logger = new Logger(CustomerService.class);
+    private static final Logger logger = new Logger(MerchandiseService.class);
 
     private final Connection conn;
 

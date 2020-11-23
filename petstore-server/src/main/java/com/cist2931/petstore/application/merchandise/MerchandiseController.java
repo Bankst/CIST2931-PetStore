@@ -56,7 +56,13 @@ public class MerchandiseController {
     public void getSingleMerchandise(Context ctx) {
         String merchIDRaw = ctx.pathParam("merchID");
 
-        int merchID = Integer.parseInt(merchIDRaw);
+        int merchID = -1;
+
+        try {
+            merchID = Integer.parseInt(merchIDRaw);
+        } catch (Exception ex) {
+            logger.error("Failed to parse merchID as integer!");
+        }
 
         Pair<Integer, Merchandise> getResponse = merchandiseService.getByID(merchID);
 

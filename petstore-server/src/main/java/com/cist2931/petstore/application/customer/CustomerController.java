@@ -129,12 +129,11 @@ public final class CustomerController {
         String state = ctx.formParam("state");
         String zipcodeRaw = ctx.formParam("zipcode");
         String phoneNum = ctx.formParam("phoneNum");
-        String email = ctx.formParam("email");
         String password = ctx.formParam("password");
 
         int zipcode = Integer.parseInt(zipcodeRaw);
 
-        Pair<Integer, String> updateResponse = customerService.updateInfo(token, firstName, lastName, street, city, state, zipcode, phoneNum, email, password);
+        Pair<Integer, String> updateResponse = customerService.updateInfo(token, firstName, lastName, street, city, state, zipcode, phoneNum, password);
         ctx.status(updateResponse.getLeft());
 
         if (updateResponse.getLeft() == HttpStatus.OK_200) {
