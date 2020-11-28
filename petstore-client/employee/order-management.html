@@ -3,82 +3,12 @@
 <head>
     <title>Pet Store</title>
     <meta charset="utf-8">
-    <link rel="shortcut icon" type="image/x-icon" href="./images/favi.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favi.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./css/style.css">
- <script>
-    function edit_row(no)
-{
- document.getElementById("edit_button"+no).style.display="none";
- document.getElementById("save_button"+no).style.display="block";
-
- var fforder=document.getElementById("fforder_row"+no);
- var ffaddress=document.getElementById("ffaddress_row"+no);
- var ffstatus=document.getElementById("ffstatus_row"+no);
- var ffdate=document.getElementById("ffdate_row"+no);
-  var fftotal=document.getElementById("fftotal_row"+no);
-
- var fforder_data=fforder.innerHTML;
- var ffaddress_data=ffaddress.innerHTML;
- var ffstatus_data=ffstatus.innerHTML;
- var ffdate_data=ffdate.innerHTML;
-  var fftotal_data=fftotal.innerHTML;
-
- fforder.innerHTML="<input type='text' id='fforder_text"+no+"' value='"+fforder_data+"'>";
- ffaddress.innerHTML="<input type='text' id='ffaddress_text"+no+"' value='"+ffaddress_data+"'>";
- ffstatus.innerHTML="<select id='ffstatus_text"+no+"' value='"+ffstatus_data+"'><option value>-select-</option><option value='Shipped'>Shipped</option><option value='Delivered'>Delivered</option><option value='Option'>Canceled</option><option value='Open'>Open</option></select>";
- ffdate.innerHTML="<input type='date' id='ffdate_text"+no+"' value='"+ffdate_data+"'>";
-  fftotal.innerHTML="<input type='text' id='fftotal_text"+no+"' value='"+fftotal_data+"'>";
-}
-
-function save_row(no)
-{
- var fforder_val=document.getElementById("fforder_text"+no).value;
- var ffaddress_val=document.getElementById("ffaddress_text"+no).value;
- var e =document.getElementById("ffstatus_text"+no);
- var ffstatus_val=e.options[e.selectedIndex].text;
- var ffdate_val=document.getElementById("ffdate_text"+no).value;
-  var fftotal_val=document.getElementById("fftotal_text"+no).value;
-
- document.getElementById("fforder_row"+no).innerHTML=fforder_val;
- document.getElementById("ffaddress_row"+no).innerHTML=ffaddress_val;
- document.getElementById("ffstatus_row"+no).innerHTML=ffstatus_val;
- document.getElementById("ffdate_row"+no).innerHTML=ffdate_val;
-  document.getElementById("fftotal_row"+no).innerHTML=fftotal_val;
-
- document.getElementById("edit_button"+no).style.display="block";
- document.getElementById("save_button"+no).style.display="none";
-}
-
-function delete_row(no)
-{
- document.getElementById("row"+no+"").outerHTML="";
-}
-
-function add_row()
-{
- var new_fforder=document.getElementById("new_fforder").value;
- var new_ffaddress=document.getElementById("new_ffaddress").value;
- var new_ffstatus=document.getElementById("new_ffstatus").value;
- var new_ffdate=document.getElementById("new_ffdate").value;
-  var new_fftotal=document.getElementById("new_fftotal").value;
-
- var table=document.getElementById("data_table");
- var table_len=(table.rows.length)-1;
- var row = table.insertRow(table_len).outerHTML="<tr id='row"+table_len+"'><td id='fforder_row"+table_len+"'>"+new_fforder+"</td><td id='ffaddress_row"+table_len+"'>"+new_ffaddress+"</td><td id='ffstatus_row"+table_len+"'>"+new_ffstatus+"</td><td id='ffdate_row"+table_len+"'>"+new_ffdate+"</td><td id='fftotal_row"+table_len+"'>"+new_fftotal+"</td><td><input type='button' id='edit_button"+table_len+"' value='Edit' class='edit' onclick='edit_row("+table_len+")'> <input type='button' id='save_button"+table_len+"' value='Save' class='save' onclick='save_row("+table_len+")'> <input type='button' value='Delete' class='delete' onclick='delete_row("+table_len+")'></td></tr>";
-
- document.getElementById("new_fforder").value="";
- document.getElementById("new_ffaddress").value="";
- document.getElementById("new_ffstatus").value="";
- document.getElementById("new_ffdate").value="";
- document.getElementById("new_fftotal").value="";
-}
-
-</script>
-
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
@@ -86,7 +16,7 @@ function add_row()
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <img src="./images/logo.png" class="img-fluid logo" alt="img" />
+                    <img src="assets/images/logo.png" class="img-fluid logo" alt="img" />
                 </div>
                 <div class="col-md-8 text-md-right text-center">
                     <p>
@@ -145,15 +75,14 @@ function add_row()
         </div>
     </section>
 
-<!-- start revising-->
-    <section id="list_orders" class="mt-5 mb-5">
- <div class="container">
+
+    <section class="mt-5 mb-5">
+        <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
-				 <table class="table table-striped w-100 table-style" id="data_table">
-    
-                     <tr class="thead-dark">
+                    <table class="table table-striped w-100 table-style">
+                        <tr class="thead-dark">
                             <th>Order</th>
                             <th>Date</th>
                             <th>Status</th>
@@ -161,74 +90,71 @@ function add_row()
                             <th>Total</th>
                             <th>Action</th>
                         </tr>
-
-    <tr id="row1">
-    <td id="fforder_row1">#123333</td>
-    <td id="ffaddress_row1">38923 Trevors Lane</td>
-    <td id="ffstatus_row1">Shipped</td>
-    <td id="ffdate_row1">2020-12-21</td>
-	<td id="fftotal_row1">10.00</td>
-    <td>
-	
-    <input type="button" id="edit_button1" value="Edit" class="edit" onclick="edit_row('1')">
-    <input type="button" id="save_button1" value="Save" class="save" onclick="save_row('1')">
-    <input type="button" value="Delete" class="delete" onclick="delete_row('1')">
-	
-    </td>
-    </tr>
-
-    <tr id="row2">
-    <td id="fforder_row2">#233442</td>
-    <td id="ffaddress_row2">39002 Joint Ave</td>
-    <td id="ffstatus_row2">Delivered</td>
-    <td id="ffdate_row2">2020-12-21</td>
-	<td id="fftotal_row2">102.00</td>
-    <td>
-	
-    <input type="button" id="edit_button2" value="Edit" class="edit" onclick="edit_row('2')">
-    <input type="button" id="save_button2" value="Save" class="save" onclick="save_row('2')">
-    <input type="button" value="Delete" class="delete" onclick="delete_row('2')">
-    </td>
-    </tr>
-
-    <tr id="row3">
-    <td id="fforder_row3">#990202</td>
-    <td id="ffaddress_row3">29783 Marc Jobs NE</td>
-    <td id="ffstatus_row3">Open</td>
-    <td id="ffdate_row3">2020-12-21</td>
-	<td id="fftotal_row3">1,020.00</td>
-    <td>
-	
-
-	
-    <input type="button" id="edit_button3" value="Edit" class="edit" onclick="edit_row('3')">
-    <input type="button" id="save_button3" value="Save" class="save" onclick="save_row('3')">
-    <input type="button" value="Delete" class="delete" onclick="delete_row('3')">
-    </td>
-    </tr>
-
-    <tr>
-    <td><input type="text" id="new_fforder" style="max-width:100px;"></td>
-    <td><input type="text" id="new_ffaddress"></td>
-    <td>
-    <select name="ffstatus" id="new_ffstatus">
-        <option value="">-select-</option>
-        <option value="Shipped">Shipped</option>
-        <option value="Delivered">Delivered</option>
-        <option value="Canceled">Canceled</option>
-        <option value="Open">Open</option>
-        </select>
-    </td>
-    <td><input type="date" id="new_ffdate"></td>
-	<td><input type="text" id="new_fftotal"></td>    
-	<td><input type="button" class="add" onclick="add_row();" value="Add Row"></td>
-    </tr>
-
-    </table>
-	</div>
-	</div>
-    </div>
-	</div>
+                        <tr>
+                            <td><p>#11-1792182-121</p></td>
+                            <td><p><i class="fa fa-calendar"></i> Sept 4, 2020</p></td>
+                            <td><a href="" class="btn btn-table-01">Open</a></td>
+                            <td><p>Abc New Road, Road Xyz</p></td>
+                            <td><p>$129,99</p></td>
+                            <td>
+                                <select class="form-control">
+                                    <option value="" disabled selected>Choose your option</option>
+                                    <option value="1">Open</option>
+                                    <option value="2">Shipped</option>
+                                    <option value="3">Delete</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><p>#11-1792182-121</p></td>
+                            <td><p><i class="fa fa-calendar"></i> Sept 4, 2020</p></td>
+                            <td><a href="" class="btn btn-table-02">Shipped</a></td>
+                            <td><p>Abc New Road, Road Xyz</p></td>
+                            <td><p>$129,99</p></td>
+                            <td>
+                                <select class="form-control">
+                                    <option value="" disabled selected>Choose your option</option>
+                                    <option value="1">Open</option>
+                                    <option value="2">Shipped</option>
+                                    <option value="3">Delete</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><p>#11-1792182-121</p></td>
+                            <td><p><i class="fa fa-calendar"></i> Sept 4, 2020</p></td>
+                            <td><a href="" class="btn btn-table-01">Open</a></td>
+                            <td><p>Abc New Road, Road Xyz</p></td>
+                            <td><p>$129,99</p></td>
+                            <td>
+                                <select class="form-control">
+                                    <option value="" disabled selected>Choose your option</option>
+                                    <option value="1">Open</option>
+                                    <option value="2">Shipped</option>
+                                    <option value="3">Delete</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><p>#11-1792182-121</p></td>
+                            <td><p> <i class="fa fa-calendar"></i> Sept 4, 2020</p></td>
+                            <td><a href="" class="btn btn-table-02">Shipped</a></td>
+                            <td><p>Abc New Road, Road Xyz</p></td>
+                            <td><p>$129,99</p></td>
+                            <td>
+                                <select class="form-control">
+                                    <option value="" disabled selected>Choose your option</option>
+                                    <option value="1">Open</option>
+                                    <option value="2">Shipped</option>
+                                    <option value="3">Delete</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
 
