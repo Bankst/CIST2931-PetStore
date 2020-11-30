@@ -175,6 +175,7 @@ public final class CustomerService {
             Order newOrder = new Order();
             newOrder.setStatus("Placed");
             newOrder.getOrderMerchandiseContainer().addItems(orderItems);
+            newOrder.setCustomerID(customer.getCustomerID());
 
             try {
                 newOrder.insert(conn);
