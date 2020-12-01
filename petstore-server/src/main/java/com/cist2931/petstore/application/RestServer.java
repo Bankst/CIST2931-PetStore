@@ -119,7 +119,7 @@ public class RestServer {
                 ApiBuilder.get(merchandiseController::getAllMerchandise, ANYONE_ROLE);
                 ApiBuilder.get(":merchID", merchandiseController::getSingleMerchandise, ANYONE_ROLE);
                 ApiBuilder.get("category/:categoryName", merchandiseController::getCategoryMerchandise, ANYONE_ROLE);
-                ApiBuilder.post("updateInfo", merchandiseController::doUpdateInfo, ANYONE_ROLE);
+                ApiBuilder.get("search/:searchQuery", merchandiseController::getSearchMerchandise, ANYONE_ROLE);
             });
         });
     }

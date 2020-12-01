@@ -2,68 +2,80 @@
 <html lang="en">
 
 <head>
-    <title>CIST2931 PetStore</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CIST2931 PetStore</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-    <!-- CSS only -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <!-- CSS only -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
-    <!-- JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <!-- JS, Popper.js, and jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+          integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+          integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+          crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+        integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-    <!-- Website CSS -->
-    <link rel="stylesheet" href="./css/style.css">
+  <!-- Website CSS -->
+  <link rel="stylesheet" href="./css/style.css">
 
-    <script src="js/api.js"></script>
+  <script src="js/api.js"></script>
 
-    <script>
-        const ItemsPerRow = 4;
+  <script>
+      const ItemsPerRow = 4;
 
-        function onLoad() {
-            const queryString = window.location.search;
-            const params = new URLSearchParams(queryString);
-			setStatus();
+      function onLoad() {
+          const queryString = window.location.search;
+          const params = new URLSearchParams(queryString);
+          setStatus();
 
-            if (params.has('category')) { // get merchandise for selected category
-			   const category = params.get('category');
-			   $('#nav_' + category).addClass('active');
+          if (params.has('category')) { // get merchandise for selected category
+              const category = params.get('category');
+              $('#nav_' + category).addClass('active');
 
-                sendRequest(`/api/v1/merchandise/category/${params.get('category')}`, 'GET', null, getMerchSuccess, (e) => console.error(e));
-            } else { // get all merchandise
-			    $('#nav_home').addClass('active');
-                sendRequest('/api/v1/merchandise', 'GET', null, getMerchSuccess, (e) => console.error(e));
-            }
-        }
+              sendRequest(`/api/v1/merchandise/category/${category}`, 'GET', null, getMerchSuccess, (e) => console.error(e));
+          } else if (params.has('search')) {
+              const searchQuery = params.get('search');
+              document.getElementById('search-bar').value = searchQuery;
+              sendRequest(`/api/v1/merchandise/search/${searchQuery}`, 'GET', null, getMerchSuccess, (e) => console.error(e));
+          } else { // get all merchandise
+              $('#nav_home').addClass('active');
+              sendRequest('/api/v1/merchandise', 'GET', null, getMerchSuccess, (e) => console.error(e));
+          }
+      }
 
-        function getMerchSuccess() {
-            if (this.status === 200) {
-                let jsonResponse = JSON.parse(this.responseText)
+      function getMerchSuccess() {
+          if (this.status === 200) {
+              let jsonResponse = JSON.parse(this.responseText)
 
-                let merchHtml = "";
+              let merchHtml = "";
 
-                let rowCount = Math.ceil(jsonResponse.length / ItemsPerRow);
+              let rowCount = Math.ceil(jsonResponse.length / ItemsPerRow);
 
-                let itemCount = jsonResponse.length;
-                // fill rows
-                for (let i = 0; i < rowCount; i++) {
-                    // start row html
-                    merchHtml += '<div class="row">';
+              let itemCount = jsonResponse.length;
+              // fill rows
+              for (let i = 0; i < rowCount; i++) {
+                  // start row html
+                  merchHtml += '<div class="row">';
 
-                    if (itemCount === 0) break;
-                    for (let j = 0; j < ItemsPerRow; j++) {
-                        if (itemCount === 0) break;
-                        const index = j + (i * ItemsPerRow);
-                        const item = jsonResponse[index];
+                  if (itemCount === 0) break;
+                  for (let j = 0; j < ItemsPerRow; j++) {
+                      if (itemCount === 0) break;
+                      const index = j + (i * ItemsPerRow);
+                      const item = jsonResponse[index];
 
-                        // add item html
-                        merchHtml +=
-                            `
+                      // add item html
+                      merchHtml +=
+                          `
                               <div class="col-lg-3 col-sm-6 mb-4">
                                 <div class="card card-custom">
                                   <a href="product.html?id=${item.merchID}"><img class="card-img-top card-custom__img" src="./img/${(item.merchID).pad(2)}.png" alt="Product image"></a>
@@ -74,161 +86,171 @@
                                 </div>
                               </div>
                             `
-                        itemCount--;
-                    }
-                    // end row html
-                    merchHtml += '</div>';
-                }
-                // set innerHTML
-                document.getElementById("merchandise_container").innerHTML = merchHtml;
-            }
-        }
-	    
-	/******Handling Login/Logout*****/
-		
-		//Function to set Sign in/sign out
-		
-		function setStatus(){
-		if (localStorage.getItem('first_name') !== null){
-		document.getElementById("status").innerHTML='<a href="#" onclick="customerLogOut()">Sign out</a>';
-		}else{
-		document.getElementById("status").innerHTML='<a href="login.html">Sign in</a>';
-		}
-			
-		}
-		
-		//Logout Function
-		
-		function logOut(){
-		console.log("hello");
-		sendRequest('/api/v1/customer/logout', 'POST', null, unsetUserData, logoutError);
-		
-		}
-		
-		//Remove Storage Items
-		function unsetUserData(){
-		if (this.status === 200){
-		 localStorage.removeItem("first_name");
-                 localStorage.removeItem("last_name");
-                 localStorage.removeItem("street");
-                 localStorage.removeItem("city");
-                 localStorage.removeItem("state");
-                 localStorage.removeItem("zip");
-                 localStorage.removeItem("email");
-                 localStorage.removeItem("phone");
-		 document.location.assign("index.html");
-		}
-		}
-			
-			
-	    function logoutError(x) {
-            console.log(x);
-        }    
-	    
-		
+                      itemCount--;
+                  }
+                  // end row html
+                  merchHtml += '</div>';
+              }
+              // set innerHTML
+              document.getElementById("merchandise_container").innerHTML = merchHtml;
+          }
+      }
 
-    </script>
+      /******Handling Login/Logout*****/
+
+      //Function to set Sign in/sign out
+
+      function setStatus() {
+          if (localStorage.getItem('first_name') !== null) {
+              document.getElementById("status").innerHTML = '<a href="#" onclick="customerLogOut()">Sign out</a>';
+          } else {
+              document.getElementById("status").innerHTML = '<a href="login.html">Sign in</a>';
+          }
+
+      }
+
+      //Logout Function
+
+      function logOut() {
+          console.log("hello");
+          sendRequest('/api/v1/customer/logout', 'POST', null, unsetUserData, logoutError);
+
+      }
+
+      //Remove Storage Items
+      function unsetUserData() {
+          if (this.status === 200) {
+              localStorage.removeItem("first_name");
+              localStorage.removeItem("last_name");
+              localStorage.removeItem("street");
+              localStorage.removeItem("city");
+              localStorage.removeItem("state");
+              localStorage.removeItem("zip");
+              localStorage.removeItem("email");
+              localStorage.removeItem("phone");
+              document.location.assign("index.html");
+          }
+      }
+
+
+      function logoutError(x) {
+          console.log(x);
+      }
+
+
+  </script>
 
 </head>
 <body onload="onLoad()">
 <div class="cover-container d-flex h-100 mx-auto flex-column">
-    <!--header-->
-    <div class="jumbotron header">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-5 col-sm-6 col-12 my-auto mb-4">
-                    <div class="media align-items-center">
-                        <img class="img-fluid" src="./img/logo.png" style="max-width:120px">
-                        <div class="media-body">
-                            <h2 class="header__title">Pet Store</h2>
-                        </div>
-                    </div>
-                </div>
+  <!--header-->
+  <div class="jumbotron header">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 col-md-5 col-sm-6 col-12 my-auto mb-4">
+          <div class="media align-items-center">
+            <img class="img-fluid" src="./img/logo.png" style="max-width:120px">
+            <div class="media-body">
+              <h2 class="header__title">Pet Store</h2>
+            </div>
+          </div>
+        </div>
 
-                <div class="col-lg-4 offset-lg-4 col-md-5 col-sm-6 offset-md-2 col-12 my-auto mb-4">
+        <div class="col-lg-4 offset-lg-4 col-md-5 col-sm-6 offset-md-2 col-12 my-auto mb-4">
 
-                     <p class="text-right"><i class="fas fa-phone body__icon"></i>456-678-1232
-                        <i class="fas fa-user-circle body__icon body_icon--right"></i><span id="status">
+          <p class="text-right"><i class="fas fa-phone body__icon"></i>456-678-1232
+            <i class="fas fa-user-circle body__icon body_icon--right"></i><span id="status">
                     </span></p>
 
-                </div>
-            </div>
         </div>
+      </div>
     </div>
-<!--navbar-->
-    <nav class="navbar navbar-expand-sm navbar-dark navbar-toggleable menu">
-        <div class="container">
-		<div>
-		      <button class="navbar-toggler" data-target="#collapsibleNavbar" data-toggle="collapse" type="button">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="nav navbar-nav">
-                    <li id="nav_home" class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html">Home</a></li>
-                    <li id="nav_cats" class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html?category=cats">Cats</a></li>
-                    <li id="nav_dogs" class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html?category=dogs">Dogs</a></li>
-                    <li id="nav_fish" class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html?category=fish">Fish</a></li>
-                    <li id="nav_birds" class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html?category=birds">Birds</a></li>
-                </ul>
-            </div>
-			</div>
-            <div class="navbar-text menu__icon">
-                <a class="nav-link" href="cart.html"><i class="fa nav__icon">&#xf07a;</i></a>
-            </div>
-        </div>
-    </nav>
-<!--navbar end-->
-    <!-- Search form-->
+  </div>
+  <!--navbar-->
+  <nav class="navbar navbar-expand-sm navbar-dark navbar-toggleable menu">
     <div class="container">
-        <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-6">
-                <form class="form search-form form-custom" action="">
-                    <div class="input-group">
-                        <input type="text" class="form-control form-custom__input" placeholder="Search" name="search" id="search-bar" />
-                        <div class="input-group-btn">
-                            <button class="btn btn-default" type="submit" onsubmit="search_bar()">
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-3"></div>
+      <div>
+        <button class="navbar-toggler" data-target="#collapsibleNavbar" data-toggle="collapse" type="button">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="nav navbar-nav">
+            <li id="nav_home" class="nav-item menu__item text-uppercase"><a class="nav-link"
+                                                                            href="./index.html">Home</a></li>
+            <li id="nav_cats" class="nav-item menu__item text-uppercase"><a class="nav-link"
+                                                                            href="./index.html?category=cats">Cats</a>
+            </li>
+            <li id="nav_dogs" class="nav-item menu__item text-uppercase"><a class="nav-link"
+                                                                            href="./index.html?category=dogs">Dogs</a>
+            </li>
+            <li id="nav_fish" class="nav-item menu__item text-uppercase"><a class="nav-link"
+                                                                            href="./index.html?category=fish">Fish</a>
+            </li>
+            <li id="nav_birds" class="nav-item menu__item text-uppercase"><a class="nav-link"
+                                                                             href="./index.html?category=birds">Birds</a>
+            </li>
+          </ul>
         </div>
+      </div>
+      <div class="navbar-text menu__icon">
+        <a class="nav-link" href="cart.html"><i class="fa nav__icon">&#xf07a;</i></a>
+      </div>
     </div>
-    <!--/end search form-->
-
-    <!--product list-->
-    <section class="product_list">
-        <div class="container text-center" id="merchandise_container">
-            <h2>Oops! We didn't find anything there!</h2>
-        </div>
-    </section>
-
-    <!--footer-->
-     <footer class="footer mastfoot mt-auto footer-custom">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-6 text-center">
-                    <p class="text-uppercase footer__title">Contact us</p>
-                    <p class="footer__text">Email: shop@pet-sup.com</p>
-                    <p>Phone: 456-678-1232</p>
-                </div>
-
-                <div class="col-lg-3 offset-lg-6 col-md-3 offset-md-3 col-6 text-center">
-                    <div class="">
-                        <p class="text-uppercase footer__title">Follow us</p>
-                        <i class="fab fa-facebook-square body__icon" ></i>
-                        <i class="fab fa-twitter-square body__icon" ></i>
-                        <i class="fab fa-instagram body__icon"></i>
-                    </div>
-                </div>
-
+  </nav>
+  <!--navbar end-->
+  <!-- Search form-->
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <form class="form search-form form-custom" action="">
+          <div class="input-group">
+            <input type="text" class="form-control form-custom__input" placeholder="Search" name="search"
+                   id="search-bar"/>
+            <div class="input-group-btn">
+              <button class="btn btn-default" type="submit">
+                <i class="fa fa-search"></i>
+              </button>
             </div>
-        </div>
-    </footer>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-3"></div>
+    </div>
+  </div>
+  <!--/end search form-->
 
-	</div>
+  <!--product list-->
+  <section class="product_list">
+    <div class="container text-center" id="merchandise_container">
+      <h2>Oops! We didn't find anything there!</h2>
+    </div>
+  </section>
+
+  <!--footer-->
+  <footer class="footer mastfoot mt-auto footer-custom">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-md-6 col-6 text-center">
+          <p class="text-uppercase footer__title">Contact us</p>
+          <p class="footer__text">Email: shop@pet-sup.com</p>
+          <p>Phone: 456-678-1232</p>
+        </div>
+
+        <div class="col-lg-3 offset-lg-6 col-md-3 offset-md-3 col-6 text-center">
+          <div class="">
+            <p class="text-uppercase footer__title">Follow us</p>
+            <i class="fab fa-facebook-square body__icon"></i>
+            <i class="fab fa-twitter-square body__icon"></i>
+            <i class="fab fa-instagram body__icon"></i>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+</div>
 </body>
 
 </html>

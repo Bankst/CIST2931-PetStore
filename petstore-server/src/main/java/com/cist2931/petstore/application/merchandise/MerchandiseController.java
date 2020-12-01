@@ -73,23 +73,6 @@ public class MerchandiseController {
         ctx.status(getResponse.getLeft());
     }
 
-    public void doUpdateInfo(Context ctx) {
-        String merchIDRaw = ctx.queryParam("merchID");
-        String merchName = ctx.queryParam("merchName");
-        String priceRaw = ctx.queryParam("price");
-        String category = ctx.queryParam("category");
-        String description = ctx.queryParam("description");
-        String quantityRaw = ctx.queryParam("quantity");
-
-        int merchID = Integer.parseInt(merchIDRaw);
-        double price = Double.parseDouble(priceRaw);
-        int quantity = Integer.parseInt(quantityRaw);
-
-       int respCode = merchandiseService.updateInfo(merchID, merchName, price, category, description, quantity);
-
-       ctx.status(respCode);
-    }
-
     public void getCategoryMerchandise(Context ctx) {
         String merchCategory = ctx.pathParam("categoryName");
 
@@ -100,6 +83,19 @@ public class MerchandiseController {
             ctx.status(getResponse.getLeft());
         } else {
             throw new NotFoundResponse("No merchandise with given category!");
+        }
+    }
+
+    public void getSearchMerchandise(Context ctx) {
+        String searchQuery = ctx.pathParam("searchQuery");
+
+        Pair<Integer, List<Merchandise>> getResponse = merchandiseService.getSearchMerch(searchQuery);
+
+        if (getResponse.getRight().size() != 0) {
+            ctx.json(getResponse.getRight());
+            ctx.status(getResponse.getLeft());
+        } else {
+            throw new NotFoundResponse("No merchandise for search query!");
         }
     }
 }

@@ -1,12 +1,16 @@
 package com.cist2931.petstore.application.merchandise;
 
+import com.cist2931.petstore.StringUtils;
 import com.cist2931.petstore.application.customer.CustomerService;
 import com.cist2931.petstore.logging.Logger;
+import me.xdrop.fuzzywuzzy.FuzzySearch;
+import me.xdrop.fuzzywuzzy.model.BoundExtractedResult;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,28 +105,26 @@ public class MerchandiseService {
         return Pair.of(responseCode, merchList);
     }
 
-    public int updateInfo(int merchID, String merchName, double price, String category, String description, int quantity) {
+    public Pair<Integer, List<Merchandise>> getSearchMerch(String searchQuery) {
         int responseCode;
-        Optional<Merchandise> merchandiseOptional = MerchandiseSQL.getMerchandiseById(conn, merchID);
-        if(merchandiseOptional.isPresent()) {
-            Merchandise merchandise = merchandiseOptional.get();
+        List<Merchandise> merchList = new ArrayList<>();
 
-            merchandise.setMerchName(merchName);
-            merchandise.setPrice(price);
-            merchandise.setCategory(category);
-            merchandise.setDescription(description);
-            merchandise.setQuantity(quantity);
+        Pair<Integer, List<Merchandise>> allMerchResponse = getAll();
 
-            try {
-                merchandise.update(conn);
-                logger.info("Updated info for merchandise(" + merchandise.getMerchID() + ")");
+        if (StringUtils.hasValue(searchQuery)) {
 
-                responseCode = HttpStatus.OK_200;
-            } catch (SQLException ex) {
-                logger.error("Failed to update merchandise(" + merchandise.getMerchID() + ") row for info!", ex);
-                responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+            List<BoundExtractedResult<Merchandise>> searchResults = FuzzySearch.extractAll(searchQuery, allMerchResponse.getValue(), Merchandise::getMerchName, 90);
+
+            for(BoundExtractedResult<Merchandise> merchResult : searchResults) {
+                merchList.add(merchResult.getReferent());
             }
-        } else responseCode = HttpStatus.NOT_FOUND_404;
-        return responseCode;
+
+            responseCode = HttpStatus.OK_200;
+        } else {
+            responseCode = allMerchResponse.getLeft();
+            merchList = allMerchResponse.getRight();
+        }
+
+        return Pair.of(responseCode, merchList);
     }
 }
