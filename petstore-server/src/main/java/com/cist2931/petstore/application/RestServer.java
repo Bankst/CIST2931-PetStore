@@ -16,7 +16,6 @@ import io.javalin.http.util.CookieStore;
 import java.sql.Connection;
 import java.util.Set;
 
-
 public class RestServer {
 
     public static final String API_URL = "/api/v1";
@@ -71,17 +70,19 @@ public class RestServer {
 
     private void configure(JavalinConfig config) {
         config.requestLogger(
-                (ctx, ms) ->
-                        logger.debug(
-                                "Handled HTTP "
-                                        + ctx.req.getMethod()
-                                        + " request for path "
-                                        + ctx.path()
-                                        + " from "
-                                        + ctx.req.getRemoteAddr()
-                                        + " in "
-                                        + ms.toString()
-                                        + "ms"));
+                (ctx, ms) -> {
+                    if (!ctx.path().contains("/api/v1")) return;
+                    logger.debug(
+                            "Handled HTTP "
+                                    + ctx.req.getMethod()
+                                    + " request for path "
+                                    + ctx.path()
+                                    + " from "
+                                    + ctx.req.getRemoteAddr()
+                                    + " in "
+                                    + ms.toString()
+                                    + "ms");
+                });
         config.showJavalinBanner = false;
         config.accessManager((handler, ctx, permittedRoles) -> {
             UserRole userRole = getUserRole(ctx);
@@ -110,6 +111,7 @@ public class RestServer {
                 ApiBuilder.get("getOrders", customerController::getOrders, CUSTOMER_ROLE);
                 ApiBuilder.post("updateInfo", customerController::doUpdateInfo, CUSTOMER_ROLE);
             });
+            ApiBuilder.put("guest/placeOrder", customerController::doPlaceGuestOrder, ANYONE_ROLE);
             ApiBuilder.put("employee", employeeController::doCreate, ANYONE_ROLE);
             ApiBuilder.post("employee/login", employeeController::doLogin, ANYONE_ROLE);
             ApiBuilder.path("employee", () -> {

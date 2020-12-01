@@ -257,6 +257,41 @@ public final class CustomerService {
         return responseCode;
     }
 
+    public Pair<Integer, Integer> placeGuestOrder(CustomerController.Guest guest, OrderMerchandise[] items) {
+        int responseCode;
+        int orderNo = -1;
+
+        // we create a one-time-use Customer that gets assigned to a single order here
+        Customer guestCust = new Customer(-1, "", guest.firstName, guest.lastName, guest.street, guest.city, guest.state, Integer.parseInt(guest.zip), guest.phoneNumber, guest.email, null);
+        try {
+            if (guestCust.insert(conn)) {
+
+                // now that we have a "customer", we can place the order
+                Order newOrder = new Order();
+                newOrder.setStatus("Placed");
+                newOrder.getOrderMerchandiseContainer().addItems(items);
+                newOrder.setCustomerID(guestCust.getCustomerID());
+
+                try {
+                    newOrder.insert(conn);
+                    orderNo = newOrder.getOrderID();
+                    responseCode = HttpStatus.OK_200;
+                } catch (SQLException ex) {
+                    logger.error("Failed to insert order for guest(" + guestCust.getCustomerID() + ")", ex);
+                    responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+                }
+            } else {
+                logger.error("Unknown failure to insert new guest(" + guestCust.getEmail() + ")");
+                responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+            }
+        } catch (SQLException ex) {
+            logger.error("Failed to insert new guest(" + guestCust.getEmail() + ")", ex);
+            responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+        }
+
+        return Pair.of(responseCode, orderNo);
+    }
+
     public Pair<Integer, String> updateInfo(String token, String firstName, String lastName, String street, String city, String state, int zipcode, String phoneNum, String password) {
         int responseCode;
         Optional<Customer> customerOptional = CustomerSQL.getCustomerByToken(conn, token);

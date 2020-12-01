@@ -6,17 +6,22 @@ import com.cist2931.petstore.application.PasswordHelper;
 import com.cist2931.petstore.application.order.Order;
 import com.cist2931.petstore.application.order.OrderMerchandise;
 import com.cist2931.petstore.logging.Logger;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.http.Context;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 public final class CustomerController {
 
     private static final Logger logger = new Logger(CustomerController.class);
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final CustomerService customerService;
 
     public CustomerController(Connection dbConnection) {
@@ -138,6 +143,45 @@ public final class CustomerController {
 
         if (updateResponse.getLeft() == HttpStatus.OK_200) {
             AuthenticationService.storeToken(ctx, updateResponse.getRight());
+        }
+    }
+
+    public void doPlaceGuestOrder(Context ctx) throws JsonProcessingException {
+        Map<String, List<String>> formParams = ctx.formParamMap();
+        String items = ctx.formParam("items");
+        OrderMerchandise[] actualItems = objectMapper.readValue(items, OrderMerchandise[].class);
+        Guest guest = new Guest(ctx);
+
+        Pair<Integer, Integer> response = customerService.placeGuestOrder(guest, actualItems);
+        int responseCode = response.getLeft();
+        int orderId = response.getRight();
+
+        ctx.status(responseCode);
+        if (orderId != -1) {
+            String orderIdJson = "{\"orderID\": " + orderId + "}";
+            ctx.result(orderIdJson);
+        }
+    }
+
+    static class Guest {
+        public final String firstName;
+        public final String lastName;
+        public final String street;
+        public final String city;
+        public final String state;
+        public final String zip;
+        public final String phoneNumber;
+        public final String email;
+
+        public Guest(Context ctx) {
+            firstName = ctx.formParam("firstName");
+            lastName = ctx.formParam("lastName");
+            street = ctx.formParam("street");
+            city = ctx.formParam("city");
+            state = ctx.formParam("state");
+            zip = ctx.formParam("zipcode");
+            phoneNumber = ctx.formParam("phoneNumber");
+            email = ctx.formParam("email");
         }
     }
 }
