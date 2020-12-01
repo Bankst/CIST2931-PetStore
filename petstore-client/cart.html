@@ -231,8 +231,17 @@
       function setStatus() {
           if (localStorage.getItem('first_name') !== null) {
               document.getElementById("status").innerHTML = '<a href="#" onclick="customerLogOut()">Sign out</a>';
+			  document.getElementById("top-information").innerHTML = `Hi, <a href="customer.html">${localStorage.getItem('first_name')} ${localStorage.getItem('last_name')}</a>`;			  
+			  document.getElementById("icon-first").classList.add('fa-user-circle');		  
+			  document.getElementById("icon-second").classList.add('fa-sign-out-alt');
           } else {
               document.getElementById("status").innerHTML = '<a href="login.html">Sign in</a>';
+			     document.getElementById("icon-first").classList.remove('fas');
+			   document.getElementById("icon-first").classList.remove('body__icon');
+			    document.getElementById("icon-first").classList.remove('body__icon--icon-right');
+			    document.getElementById("icon-second").classList.add('fa-user-circle');
+			  
+			   
           }
 
       }
@@ -286,8 +295,8 @@
 
         <div class="col-lg-4 offset-lg-4 col-md-5 col-sm-6 offset-md-2 col-12 my-auto mb-4">
 
-          <p class="text-right"><i class="fas fa-phone body__icon"></i>456-678-1232
-            <i class="fas fa-user-circle body__icon body_icon--right"></i><span id="status">
+        <p class="text-right"><i id="icon-first" class="fas body__icon"></i><span id="top-information"></span>
+            <i id="icon-second" class="fas body__icon body_icon--right"></i><span id="status">
                     </span></p>
 
         </div>
