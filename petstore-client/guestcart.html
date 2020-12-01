@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Guest Form</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="./css/style.css">
+	<script src="js/api.js"></script>
+	<script>
+	//item variables
+	
+	let storedCart = localStorage.getItem('cart');
+		 console.log(storedCart);
+		 let items = [];
+		 
+			let cartHtml = "";
+
+            if (storedCart) {
+                items = JSON.parse(storedCart);
+				console.log(items);
+            } else {
+                console.log("there were no items");
+				
+            }
+					
+	
+	
+        function onLoad() {
+		    setStatus();
+		    if (localStorage.getItem('first_name') !== null) {
+			 document.location.assign("customercart.html");	
+			}else{
+			// check if adding item
+            const queryString = window.location.search;
+            if (queryString.length) {
+                const params = new URLSearchParams(queryString);
+
+                if (params.has('addItem')) {
+                    let merchID = parseInt(params.get('addItem'));
+                    let quantity = params.has('quantity') ? parseInt(params.get('quantity')) : 1;
+					let merchName=params.get('merchName');
+					let merchPrice=params.get('merchPrice');
+					//let merchImage=params.get('merchImage');
+					console.log(merchID);
+					
+
+                    let newItem = {merchID: merchID, merchName: merchName, quantity: quantity, merchPrice: merchPrice};
+
+                    // if item is the same merchID, add the new quantity - if not, add the new item to the list
+                    if (items.some(itm => itm.merchID === merchID)) {
+                        let item = items.find(itm => itm.merchID === merchID);
+                        item.quantity = parseInt(item.quantity) + quantity;
+                    } else {
+                        items.push(newItem);
+						
+                    }
+	    					
+					document.location.assign("guestcart.html");
+                }
+				
+            }
+			
+        
+			
+
+            // display items
+            for (let i = 0; i < items.length; i++) {
+                let item = items[i];
+                console.log(`Item ${i} - ID: ${item.merchID}, Quantity: ${item.quantity}, Title: ${item.merchName}, Price:  ${item.merchPrice}`);
+				
+				 cartHtml +=
+                            `
+                               <tr>
+                            <td class="align-middle td_first">
+                                <div>
+                                    <img class="img img-fluid" src="./img/${(item.merchID).pad(2)}.png" alt="product"
+                                         style="padding:15px;">
+                                </div>
+                            </td>
+                            <td class="align-middle td_second">
+                                <div class="text-center">
+                                    <h5 class="card-custom__title">${item.merchName}</h5>
+                                    <p class="card-text">${item.merchPrice}</p>
+                                </div>
+                            </td>
+                            <td class="align-middle td_third">
+                                <div class="form-group select">
+                                    <select class="form-control" id="${i}" onchange="changeQuantity(${i},this.value)" >
+									<option value="${item.quantity}" selected>${item.quantity}</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+					                    <option value="3">3</option>
+                                        <option value="4">4</option>
+					                    <option value="5">5</option>  
+										 <option value="4">6</option>
+					                    <option value="5">7</option>  
+										<option value="5">8</option>  
+										 <option value="4">9</option>
+					                    <option value="5">10</option>  
+                                    </select>
+                                </div>
+
+
+                            </td>
+                            <td class="align-middle text-center td_forth">
+                                <p style="margin:0 auto;">
+                                    <a href="#" onclick="deleteItem(${i})"><i class=" material-icons" style="vertical-align: middle;">&#xe928;</i> Delete
+                                </a></p>
+
+                            </td>
+                        </tr>`
+				//console.log(i);
+				//console.log(items[i].quantity);
+            }
+						
+			 document.getElementById("cart-container").innerHTML = cartHtml;
+			 
+
+            localStorage.setItem('cart', JSON.stringify(items));
+		//Subtotal
+		 
+		 document.getElementById("subtotal").innerHTML=setSubtotal();
+						
+			}
+										        
+        }
+		
+		//Function to change quantity
+		function changeQuantity(i,quantity){
+		console.log(i);
+		console.log(quantity);
+		items[i].quantity= parseInt(quantity);		
+		localStorage.setItem('cart', JSON.stringify(items));
+        document.getElementById("subtotal").innerHTML=setSubtotal();		
+			
+		}
+		
+		//function to delete item
+		
+		function deleteItem(i){
+		items.splice(i, 1);
+		localStorage.setItem('cart', JSON.stringify(items));
+		document.location.assign("guestcart.html");
+		
+		}
+		
+	    function setSubtotal(){
+		subtotal=0;
+		  for (let i = 0; i < items.length; i++) {
+                let item = items[i];
+				itemTotal=item.quantity*item.merchPrice;
+				subtotal=subtotal+itemTotal;
+				}
+		let prettySubtotal = (subtotal).toFixed(2);
+		return prettySubtotal;
+		
+		}
+		/***********Place Order*******/
+		
+		function placeOrder(){
+		
+		
+		console.log("ok");
+		let sentItems=[];
+				
+		
+		for (let i = 0; i < items.length; i++) {
+        let item = items[i];
+		console.log(item);
+		 let addItem = {merchandiseID: item.merchID, merchandiseQuantity: item.quantity};
+		sentItems.push(addItem);
+			console.log(addItem);
+		}
+		
+	    //setting guest data
+		
+		let guest_data = new FormData(document.querySelector('form'));
+		let guestData=JSON.stringify(sentItems);
+		
+		//for (var pair of guestData.entries()) {
+       // console.log(pair[0]+ ', ' + pair[1]); 
+       // }
+		
+		
+	    localStorage.setItem('sentcart', JSON.stringify(sentItems));
+		let sentcart=JSON.stringify(sentItems);
+		
+		let orderData = `{"guest":${JSON.parse(guestData)}, "items":${JSON.parse(sentcart)}}`;
+		console.log(orderData);
+		sendRequest(`/api/v1/customer/placeOrder`, 'PUT', orderData, ok, null);
+		
+		}
+		
+		
+		function ok(){
+		if (this.status === 200){
+		console.log("ok!");
+		localStorage.removeItem("cart");
+		localStorage.removeItem("sentcart");
+		document.location.assign('cart.html');
+		
+		}
+		}
+		
+		
+		
+		
+		
+		
+		
+       /******Handling Login/Logout*****/
+		
+		//Function to set Sign in/sign out
+		
+		function setStatus(){
+		if (localStorage.getItem('first_name') !== null){
+		document.getElementById("status").innerHTML='<a href="#" onclick="logOut()">Sign out</a>';
+		}else{
+		document.getElementById("status").innerHTML='<a href="login.html">Sign in</a>';
+		}
+			
+		}
+		
+		//Logout Function
+		
+		function logOut(){
+		console.log("hello");
+		sendRequest('/api/v1/customer/logout', 'POST', null, unsetUserData, logoutError);
+		
+		}
+		
+		//Remove Storage Items
+		function unsetUserData(){
+		if (this.status === 200){
+		 localStorage.removeItem("first_name");
+                 localStorage.removeItem("last_name");
+                localStorage.removeItem("street");
+                localStorage.removeItem("city");
+                localStorage.removeItem("state");
+                localStorage.removeItem("zip");
+                localStorage.removeItem("email");
+                localStorage.removeItem("phone");
+		 document.location.assign("index.html");
+		}
+		}
+			
+			
+	    function logoutError(x) {
+            console.log(x);
+        }
+		
+     
+    </script>
+</head>
+
+<body onload="onLoad()">
+<div class="cover-container d-flex h-100 mx-auto flex-column">
+
+<div class="jumbotron header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-5 col-sm-6 col-12 my-auto mb-4">
+                <div class="media align-items-center">
+                    <img class="img-fluid" src="./img/logo.png" style="max-width:120px" alt="PetStore Logo">
+                    <div class="media-body">
+                        <h2 class="header__title">Pet Store</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 offset-lg-4 col-md-5 col-sm-6 offset-md-2 col-12 my-auto mb-4">
+               <p class="text-right"><i class="fas fa-phone body__icon"></i>456-678-1232
+                        <i class="fas fa-user-circle body__icon body_icon--right"></i><span id="status">
+                    </span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--navbar-->
+     <nav class="navbar navbar-expand-sm navbar-dark navbar-toggleable menu">
+        <div class="container">
+		<div>
+		      <button class="navbar-toggler" data-target="#collapsibleNavbar" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="nav navbar-nav">
+                    <li id="nav_home" class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html">Home</a></li>
+                    <li id="nav_cats" class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html?category=cats">Cats</a></li>
+                    <li id="nav_dogs" class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html?category=dogs">Dogs</a></li>
+                    <li id="nav_fish" class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html?category=fish">Fish</a></li>
+                    <li id="nav_birds" class="nav-item menu__item text-uppercase"><a class="nav-link" href="./index.html?category=birds">Birds</a></li>
+                </ul>
+            </div>
+			</div>
+            <div class="navbar-text menu__icon">
+                <a class="nav-link" href="cart.html"><i class="fa nav__icon">&#xf07a;</i></a>
+            </div>
+        </div>
+    </nav>
+    <!--navbar end-->
+
+ <section id="guests">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-0">
+                </div>
+                <div class="col-lg-6 col-12 pb-4">
+                    <div class="py-3 mx-4">
+                        <h5 class="pl-3 pt-3 middle-weight-heading">Enter your Shipment Information:</h5>
+                        <div class="mx-auto pt-4">
+                            <div class="customer-data p-3">
+                                <form class="py-2 px-4">
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3 label-text">
+                                            <label for="first_name">First Name:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" minlength="2" class="form-control" id="firstName" name="firstName" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3 label-text">
+                                            <label for="last_name">Last Name:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" minlength="2" class="form-control" id="lastName" name="lastName" required>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3 label-text">
+                                            <label for="address">Address:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" minlength="10" class="form-control" id="street" name="street" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3  label-text">
+                                            <label for="city">City:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="city" name="city" required>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3  label-text">
+                                            <label for="state">State:</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" minlength="2" class="form-control" id="state" name="state" required>
+                                        </div>
+
+                                        <div class="col-md-3  label-text">
+                                            <label for="zip">Zip:</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" id="zip" name="zipcode" required>
+                                        </div>
+										<div class="error" id="error_zip"></div>
+
+                                    </div>
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3  label-text">
+                                            <label for="phone">Phone Number:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="phone" name="phoneNumber" required>
+                                        </div>
+										<div class="error" id="error_phone"></div>
+                                    </div>
+
+                                    <div class="form-row form-group d-flex align-items-center">
+                                        <div class="col-md-3  label-text">
+                                            <label for="email">Email:</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="email" name="email" required>
+                                        </div>
+										<div class="error" id="error_email"></div>
+                                    </div>
+
+
+
+                                    <div class="text-center pt-3">
+                                        <button type="button" class="btn btn-custom" id="register" onclick="placeOrder()">Submit the Order</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-lg-3 col-0">
+                </div>
+
+            </div>
+            <!--Cart-->
+
+            <div class="row">
+                <div class="col-lg-2">
+                </div>
+
+                <div class="col-lg-8 cart__row">
+                    <h5 class="middle-weight-heading py-3 pl-4">Review Items in your Cart:</h5>
+                    <div class="table-responsive">
+                        <table class="table table__table">
+                            <tbody id="cart-container">
+							
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="cart__subtotal">
+                        <div class="left-item">
+                            <h5>Subtotal:</h5>
+                        </div>
+                        <div class="right-item">
+                            <h5 id="subtotal"></h5>
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="buttons px-3 text-center">
+                        
+                        <div>
+                            <button type="button" class="btn btn-custom my-3 middle-weight-heading">
+                               <a href="index.html"> Continue Shopping</a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2">
+                </div>
+
+            </div>
+        </div>
+        
+    </section>
+
+
+<!--footer-->
+ <footer class="footer mastfoot mt-auto footer-custom">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-6 text-center">
+                <p class="text-uppercase footer__title">Contact us</p>
+                <p class="footer__text">Email: shop@pet-sup.com</p>
+                <p>Phone: 456-678-1232</p>
+            </div>
+
+
+            <div class="col-lg-3 offset-lg-6 col-md-3 offset-md-3 col-6 text-center">
+                <div class="">
+                    <p class="text-uppercase footer__title">Follow us</p>
+                    <i class="fab fa-facebook-square body__icon"></i>
+                    <i class="fab fa-twitter-square body__icon"></i>
+                    <i class="fab fa-instagram body__icon"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</footer>
+	</div>
+<script src="./js/script.js"></script>
+</body>
+
+</html>
