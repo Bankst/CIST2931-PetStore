@@ -9,6 +9,21 @@ public final class CustomerSQL {
 
     private static final Logger logger = new Logger(CustomerSQL.class);
 
+    public static Optional<Customer> getCustomerById(Connection conn, int id) {
+        final String selectQuery = "SELECT * FROM Customer WHERE CustID = ?";
+
+        try {
+            PreparedStatement statement = conn.prepareStatement(selectQuery);
+            statement.setInt(1, id);
+
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next() ? Optional.of(new Customer(resultSet)) : Optional.empty();
+        } catch (SQLException ex) {
+            logger.error("Failed to get customer by ID!", ex);
+            return Optional.empty();
+        }
+    }
+
     public static Optional<Customer> getCustomerByEmail(Connection conn, String email) {
         final String selectQuery = "SELECT * FROM Customer WHERE Email = ?";
 

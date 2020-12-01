@@ -1,7 +1,7 @@
 package com.cist2931.petstore.application.employee;
 
+import com.cist2931.petstore.StringUtils;
 import com.cist2931.petstore.application.AuthenticationService;
-import com.cist2931.petstore.application.order.Order;
 import com.cist2931.petstore.logging.Logger;
 import io.javalin.http.Context;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,11 +20,6 @@ public class EmployeeController {
         employeeService = new EmployeeService(dbConnection);
     }
 
-    public void doCreate(Context ctx) {
-        String username = ctx.queryParam("username");
-        String password = ctx.queryParam("password");
-    }
-
     public void doLogin(Context ctx) {
         String username = ctx.formParam("username");
         String password = ctx.formParam("password");
@@ -33,33 +28,24 @@ public class EmployeeController {
         ctx.status(loginResponse.getLeft());
 
         if (loginResponse.getLeft() == HttpStatus.OK_200) {
-            AuthenticationService.storeToken(ctx, loginResponse.getRight());
+            AuthenticationService.storeEmployeeToken(ctx, loginResponse.getRight());
         }
     }
 
     public void doLogout(Context ctx) {
-        String token = AuthenticationService.getToken(ctx);
+        String token = AuthenticationService.getEmployeeToken(ctx);
 
         int respCode = employeeService.logout(token);
 
         ctx.status(respCode);
 
         if (respCode == HttpStatus.OK_200) {
-            AuthenticationService.storeToken(ctx, "");
+            AuthenticationService.storeEmployeeToken(ctx, "");
         }
     }
 
-    public void doChangePassword(Context ctx) {
-        String token = AuthenticationService.getToken(ctx);
-        String newPassword = ctx.formParam("newPassword");
-
-        int respCode = employeeService.changePassword(token, newPassword);
-
-        ctx.status(respCode);
-    }
-
     public void getEmployee(Context ctx) {
-        String token = AuthenticationService.getToken(ctx);
+        String token = AuthenticationService.getEmployeeToken(ctx);
 
         Pair<Integer, Employee> getResponse = employeeService.getByToken(token);
 
@@ -68,14 +54,27 @@ public class EmployeeController {
     }
 
     public void getOrders(Context ctx) {
-        String token = AuthenticationService.getToken(ctx);
+        String token = AuthenticationService.getEmployeeToken(ctx);
 
-        Pair<Integer, List<Order>> response = employeeService.getOrders(token);
+        Pair<Integer, List<EmployeeService.OrderInfo>> response = employeeService.getOrders(token);
 
         if (response.getLeft() == HttpStatus.OK_200) {
             ctx.json(response.getRight());
         }
 
         ctx.status(response.getLeft());
+    }
+
+    public void setOrderShipped(Context ctx) {
+        int orderNo;
+        if (!StringUtils.hasValue(ctx.pathParam("orderNo"))) {
+            orderNo = -1;
+        } else {
+            orderNo = Integer.parseInt(ctx.pathParam("orderNo"));
+        }
+
+        int response = employeeService.setOrderStatus(orderNo, "Shipped");
+
+        ctx.status(response);
     }
 }

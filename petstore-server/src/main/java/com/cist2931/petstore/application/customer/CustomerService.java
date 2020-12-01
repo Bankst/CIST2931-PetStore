@@ -173,7 +173,7 @@ public final class CustomerService {
             Customer customer = customerOptional.get();
 
             Order newOrder = new Order();
-            newOrder.setStatus("Placed");
+            newOrder.setStatus("Open");
             newOrder.getOrderMerchandiseContainer().addItems(orderItems);
             newOrder.setCustomerID(customer.getCustomerID());
 
@@ -268,7 +268,7 @@ public final class CustomerService {
 
                 // now that we have a "customer", we can place the order
                 Order newOrder = new Order();
-                newOrder.setStatus("Placed");
+                newOrder.setStatus("Open");
                 newOrder.getOrderMerchandiseContainer().addItems(items);
                 newOrder.setCustomerID(guestCust.getCustomerID());
 

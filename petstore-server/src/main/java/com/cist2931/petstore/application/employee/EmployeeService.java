@@ -3,7 +3,10 @@ package com.cist2931.petstore.application.employee;
 import com.cist2931.petstore.application.PasswordHelper;
 import com.cist2931.petstore.application.customer.Customer;
 import com.cist2931.petstore.application.customer.CustomerSQL;
+import com.cist2931.petstore.application.merchandise.Merchandise;
+import com.cist2931.petstore.application.merchandise.MerchandiseSQL;
 import com.cist2931.petstore.application.order.Order;
+import com.cist2931.petstore.application.order.OrderMerchandise;
 import com.cist2931.petstore.application.order.OrderSQL;
 import com.cist2931.petstore.logging.Logger;
 import org.apache.commons.lang3.tuple.Pair;
@@ -68,7 +71,7 @@ public final class EmployeeService {
 
             logger.info("Logged out employee(" + employee.getEmpID() + ")");
             return HttpStatus.OK_200;
-        } else return HttpStatus.FORBIDDEN_403;
+        } else return HttpStatus.UNAUTHORIZED_401;
     }
 
     public int changePassword(String token, String newPassword) {
@@ -106,14 +109,76 @@ public final class EmployeeService {
         return Pair.of(responseCode, employee);
     }
 
-    public Pair<Integer, List<Order>> getOrders(String token) {
+    public int setOrderStatus(int orderNo, String status) {
         int responseCode;
-        List<Order> orders = new ArrayList<>();
+
+        if (orderNo == -1) {
+            responseCode = HttpStatus.BAD_REQUEST_400;
+        } else {
+            try {
+                Optional<Order> orderOptional = OrderSQL.getOrderByOrderID(conn, orderNo);
+                if (orderOptional.isPresent()) {
+                    Order order = orderOptional.get();
+                    order.setStatus(status);
+                    order.update(conn);
+                    responseCode = HttpStatus.OK_200;
+                    logger.info("Updated order(" + orderNo + ") status to \"" + status + "\"");
+                } else {
+                    logger.error("Failed to update order(" + orderNo + ") status - Not found!");
+                    responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+                }
+            } catch (SQLException ex) {
+                logger.error("Failed to update order(" + orderNo + ") status!", ex);
+                responseCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+            }
+        }
+
+        return responseCode;
+    }
+
+    public class OrderInfo {
+        public final int orderNo;
+        public final String timestamp;
+        public final String status;
+        public final String address;
+        public final double total;
+
+        public OrderInfo(Order order) {
+            orderNo = order.getOrderID();
+            timestamp = order.getPrettyTimestamp();
+            status = order.getStatus();
+
+            String addr = "Unknown";
+            Optional<Customer> customerOptional = CustomerSQL.getCustomerById(conn, order.getCustomerID());
+            if (customerOptional.isPresent()) {
+                Customer customer = customerOptional.get();
+                addr = customer.getStreet() + " " + customer.getCity() + ", " + customer.getState() + " " + customer.getZipcode();
+            }
+            address = addr;
+
+            double orderTotal = 0;
+            List<OrderMerchandise> items = order.getOrderMerchandiseContainer().getMerchandiseList();
+            for (OrderMerchandise merch : items) {
+                Optional<Merchandise> merchInfo = MerchandiseSQL.getMerchandiseById(conn, merch.getMerchandiseID());
+                if (merchInfo.isPresent()) {
+                    orderTotal += merch.getMerchandiseQuantity() * merchInfo.get().getPrice();
+                }
+            }
+            total = orderTotal;
+        }
+    }
+
+    public Pair<Integer, List<OrderInfo>> getOrders(String token) {
+        int responseCode;
+        List<OrderInfo> orderInfos = new ArrayList<>();
 
         Optional<Employee> employeeOptional = EmployeeSQL.getEmployeeByToken(conn, token);
         if(employeeOptional.isPresent()) {
             try {
-                orders = OrderSQL.getAllOrders(conn);
+                List<Order> orders = OrderSQL.getAllOrders(conn);
+                for (Order order : orders) {
+                    orderInfos.add(new OrderInfo(order));
+                }
                 responseCode = HttpStatus.OK_200;
             } catch (SQLException ex) {
                 logger.error("Failed to get orders", ex);
@@ -122,6 +187,6 @@ public final class EmployeeService {
         } else {
             responseCode = HttpStatus.FORBIDDEN_403;
         }
-        return Pair.of(responseCode, orders);
+        return Pair.of(responseCode, orderInfos);
     }
 }

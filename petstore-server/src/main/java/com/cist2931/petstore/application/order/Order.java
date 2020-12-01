@@ -1,18 +1,21 @@
 package com.cist2931.petstore.application.order;
 
 import java.sql.*;
+import java.time.Instant;
 import java.util.Arrays;
 
 @SuppressWarnings("unused")
 public class Order {
     private int orderID;
     private int customerID;
+    private final Timestamp timestamp;
     private final OrderMerchandiseContainer orderMerchandiseContainer;
     private String status;
 
     public Order() {
         orderID = -1;
         customerID = 0;
+        timestamp = Timestamp.from(Instant.now());
         status = "Unknown";
         orderMerchandiseContainer = new OrderMerchandiseContainer(orderID);
     }
@@ -21,14 +24,16 @@ public class Order {
         this.orderID = -1;
         this.customerID = customerID;
         this.status = status;
+        timestamp = Timestamp.from(Instant.now());
         orderMerchandiseContainer = new OrderMerchandiseContainer(orderID);
         orderMerchandiseContainer.addItems(Arrays.asList(merchandises));
     }
 
     protected Order(ResultSet rs) throws SQLException {
         orderID = rs.getInt("OrderID");
-        customerID = rs.getInt("CustID");
+        customerID = rs.getInt("CustomerID");
         status = rs.getString("Status");
+        timestamp = rs.getTimestamp("Timestamp");
         orderMerchandiseContainer = new OrderMerchandiseContainer(orderID);
     }
 
@@ -73,13 +78,22 @@ public class Order {
         this.status = status;
     }
 
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public String getPrettyTimestamp() {
+        return String.format("%1$TD %1$TT", timestamp);
+    }
+
     @Override
     public String toString() {
-        return "Order{ " +
-                "orderID: " + orderID +
-                ", customerID: " + customerID +
-                ", " + orderMerchandiseContainer +
-                ", status: \"" + status +
-                "\" }";
+        return "Order{" +
+                "orderID=" + orderID +
+                ", customerID=" + customerID +
+                ", timestamp=" + getPrettyTimestamp() +
+                ", orderMerchandiseContainer=" + orderMerchandiseContainer +
+                ", status='" + status + '\'' +
+                '}';
     }
 }

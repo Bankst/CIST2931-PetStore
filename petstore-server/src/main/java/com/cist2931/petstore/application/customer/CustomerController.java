@@ -7,7 +7,6 @@ import com.cist2931.petstore.application.order.Order;
 import com.cist2931.petstore.application.order.OrderMerchandise;
 import com.cist2931.petstore.logging.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.http.Context;
 import org.apache.commons.lang3.tuple.Pair;
@@ -64,24 +63,24 @@ public final class CustomerController {
         ctx.status(loginResponse.getLeft());
 
         if (loginResponse.getLeft() == HttpStatus.OK_200) {
-            AuthenticationService.storeToken(ctx, loginResponse.getRight());
+            AuthenticationService.storeCustomerToken(ctx, loginResponse.getRight());
         }
     }
 
     public void doLogout(Context ctx) {
-        String token = AuthenticationService.getToken(ctx);
+        String token = AuthenticationService.getCustomerToken(ctx);
 
         int respCode = customerService.logout(token);
 
         ctx.status(respCode);
 
         if (respCode == HttpStatus.OK_200) {
-            AuthenticationService.storeToken(ctx, "");
+            AuthenticationService.storeCustomerToken(ctx, "");
         }
     }
 
     public void doChangePassword(Context ctx) {
-        String token = AuthenticationService.getToken(ctx);
+        String token = AuthenticationService.getCustomerToken(ctx);
         String newPassword = ctx.formParam("newPassword");
 
         int respCode = customerService.changePassword(token, newPassword);
@@ -90,7 +89,7 @@ public final class CustomerController {
     }
 
     public void getOrders(Context ctx) {
-        String token = AuthenticationService.getToken(ctx);
+        String token = AuthenticationService.getCustomerToken(ctx);
 
         Pair<Integer, List<Order>> response = customerService.getOrders(token);
 
@@ -102,7 +101,7 @@ public final class CustomerController {
     }
 
     public void doPlaceOrder(Context ctx) {
-        String token = AuthenticationService.getToken(ctx);
+        String token = AuthenticationService.getCustomerToken(ctx);
         OrderMerchandise[] orderItems = ctx.bodyAsClass(OrderMerchandise[].class);
 
         Pair<Integer, Integer> response = customerService.placeOrder(token, orderItems);
@@ -117,7 +116,7 @@ public final class CustomerController {
     }
 
     public void getCustomer(Context ctx) {
-        String token = AuthenticationService.getToken(ctx);
+        String token = AuthenticationService.getCustomerToken(ctx);
 
         Pair<Integer, Customer> getResponse = customerService.getByToken(token);
 
@@ -126,7 +125,7 @@ public final class CustomerController {
     }
 
     public void doUpdateInfo(Context ctx) {
-        String token = AuthenticationService.getToken(ctx);
+        String token = AuthenticationService.getCustomerToken(ctx);
         String firstName = ctx.formParam("firstName");
         String lastName = ctx.formParam("lastName");
         String street = ctx.formParam("street");
@@ -136,13 +135,14 @@ public final class CustomerController {
         String phoneNum = ctx.formParam("phoneNum");
         String password = ctx.formParam("password");
 
+        if (zipcodeRaw == null) zipcodeRaw = "00000";
         int zipcode = Integer.parseInt(zipcodeRaw);
 
         Pair<Integer, String> updateResponse = customerService.updateInfo(token, firstName, lastName, street, city, state, zipcode, phoneNum, password);
         ctx.status(updateResponse.getLeft());
 
         if (updateResponse.getLeft() == HttpStatus.OK_200) {
-            AuthenticationService.storeToken(ctx, updateResponse.getRight());
+            AuthenticationService.storeCustomerToken(ctx, updateResponse.getRight());
         }
     }
 

@@ -1,177 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Pet Store</title>
-    <meta charset="utf-8">
-    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favi.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
+  <title>Pet Store</title>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" type="image/x-icon" href="./images/favi.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet">
+  <link rel="stylesheet" href="./css/style.css">
+  <script src="../js/api.js"></script>
+
+  <script>
+      function onLoad() {
+          if (localStorage.getItem('emp_username') == null) {
+              document.location.assign("/employee/login.html");
+              return;
+          }
+
+          document.getElementById('name_tag').innerText = `Hi, ${localStorage.getItem('emp_name')}`;
+
+          sendRequest('/api/v1/employee/getOrders', 'GET', null, getOrdersSuccess);
+      }
+
+      function getOrdersSuccess() {
+          if (this.status === 200) {
+              let orders = JSON.parse(this.responseText);
+
+              if (orders.length === 0) {
+                  document.getElementById('order-table-container').innerHTML = `<h3>No orders found.</h3>`;
+                  return;
+              }
+
+              let ordersHtml =
+                  `<tr class="thead-dark">
+                     <th>Order No</th>
+                     <th>Date</th>
+                     <th>Status</th>
+                     <th>Address</th>
+                     <th>Total</th>
+                     <th>Action</th>
+                   </tr>`;
+
+              for (let i = 0; i < orders.length; i++) {
+                  let order = orders[i];
+
+                  let orderNo = order.orderNo;
+                  let timestamp = order.timestamp;
+                  let status = order.status;
+                  let address = order.address;
+                  let total = order.total;
+
+                  let statusHtml = "";
+                  let statusChangeHtml = "";
+                  if (status === "Open") {
+                      statusHtml = `<a class="btn btn-table-01">Open</a>`;
+                      statusChangeHtml = `<button onclick="setOrderShipped(${orderNo})" class="btn btn-primary btn-sm">Set as Shipped</button>`;
+                  } else {
+                      statusHtml = `<a class="btn btn-table-02">Shipped</a>`
+                      statusChangeHtml = `<button class="btn btn-outline-primary btn-sm" disabled>Order already Shipped</button>`;
+                  }
+
+                  ordersHtml +=
+                      `
+                      <tr>
+                        <td><p>#${orderNo}</p></td>
+                        <td><p><i class="fa fa-calendar"></i> ${timestamp}</p></td>
+                        <td>${statusHtml}</td>
+                        <td><p>${address}</p></td>
+                        <td><p>$${(total).toFixed(2)}</p></td>
+                        <td>${statusChangeHtml}</td>
+                      </tr>
+                      `;
+              }
+
+              document.getElementById('order-table').innerHTML = ordersHtml;
+          }
+      }
+
+      function setOrderShipped(orderNo) {
+          sendRequest(`/api/v1/employee/setOrderShipped/${orderNo}`, 'POST', null, setOrderStatusSuccess);
+      }
+
+      function setOrderStatusSuccess() {
+          document.location.assign("/employee/order-management.html");
+      }
+  </script>
 </head>
-<body>
+<body onload="onLoad()">
 
-    <header>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <img src="assets/images/logo.png" class="img-fluid logo" alt="img" />
-                </div>
-                <div class="col-md-8 text-md-right text-center">
-                    <p>
-                        <span>
-                            <i class="fa fa-phone"></i>
-                            <a href="tel:(+92) 102 01012">
-                                (+1) 123 4567
-                            </a>
-                        </span>
-                        <span>
-                            <i class="fa fa-envelope-o"></i>
-                            <a href="mailto:abc@web.com">
-                                abc@web.com
-                            </a>
-                        </span>
-                    </p>
-                </div>
-            </div>
+<header>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <img src="./images/logo.png" class="img-fluid logo" alt="img"/>
+      </div>
+      <div class="col-md-8 text-md-right text-center">
+        <p>
+          <span>
+              <i class="fa fa-user"></i>
+              <a id="name_tag"></a>
+          </span>
+          <span onclick="employeeLogOut()" style="cursor:pointer;">
+              <i class="fa fa-sign-out"></i>
+              <a>Log Out</a>
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="mt-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="section-title">
+          <h2>Order Management</h2>
         </div>
-    </header>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <section class="mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="section-title">
-                        <h2>Order Management</h2>
-                    </div>
-                </div>
-            </div>
+<section class="mt-5 mb-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="table-responsive" style="text-align: center" id="order-table-container">
+          <table class="table table-striped w-100 table-style" id="order-table" style="text-align: left">
+          </table>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <section class="bg-light mt-2 pt-3 pb-3">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="search-fields">
-                        <input type="text" placeholder="Search by order#" class="form-control" />
-                        <i class="fa fa-search"></i>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="search-fields">
-                        <input type="text" placeholder="Search by date" class="form-control" />
-                        <i class="fa fa-search"></i>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="search-fields">
-                        <input type="text" placeholder="Search by name" class="form-control" />
-                        <i class="fa fa-search"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <p>&copy;2020, All Rights Reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
 
-
-    <section class="mt-5 mb-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                    <table class="table table-striped w-100 table-style">
-                        <tr class="thead-dark">
-                            <th>Order</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Ship</th>
-                            <th>Total</th>
-                            <th>Action</th>
-                        </tr>
-                        <tr>
-                            <td><p>#11-1792182-121</p></td>
-                            <td><p><i class="fa fa-calendar"></i> Sept 4, 2020</p></td>
-                            <td><a href="" class="btn btn-table-01">Open</a></td>
-                            <td><p>Abc New Road, Road Xyz</p></td>
-                            <td><p>$129,99</p></td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="" disabled selected>Choose your option</option>
-                                    <option value="1">Open</option>
-                                    <option value="2">Shipped</option>
-                                    <option value="3">Delete</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><p>#11-1792182-121</p></td>
-                            <td><p><i class="fa fa-calendar"></i> Sept 4, 2020</p></td>
-                            <td><a href="" class="btn btn-table-02">Shipped</a></td>
-                            <td><p>Abc New Road, Road Xyz</p></td>
-                            <td><p>$129,99</p></td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="" disabled selected>Choose your option</option>
-                                    <option value="1">Open</option>
-                                    <option value="2">Shipped</option>
-                                    <option value="3">Delete</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><p>#11-1792182-121</p></td>
-                            <td><p><i class="fa fa-calendar"></i> Sept 4, 2020</p></td>
-                            <td><a href="" class="btn btn-table-01">Open</a></td>
-                            <td><p>Abc New Road, Road Xyz</p></td>
-                            <td><p>$129,99</p></td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="" disabled selected>Choose your option</option>
-                                    <option value="1">Open</option>
-                                    <option value="2">Shipped</option>
-                                    <option value="3">Delete</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><p>#11-1792182-121</p></td>
-                            <td><p> <i class="fa fa-calendar"></i> Sept 4, 2020</p></td>
-                            <td><a href="" class="btn btn-table-02">Shipped</a></td>
-                            <td><p>Abc New Road, Road Xyz</p></td>
-                            <td><p>$129,99</p></td>
-                            <td>
-                                <select class="form-control">
-                                    <option value="" disabled selected>Choose your option</option>
-                                    <option value="1">Open</option>
-                                    <option value="2">Shipped</option>
-                                    <option value="3">Delete</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <p>&copy;2020, All Rights Reserved.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </body>
-
 </html>

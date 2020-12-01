@@ -230,7 +230,7 @@
 
       function setStatus() {
           if (localStorage.getItem('first_name') !== null) {
-              document.getElementById("status").innerHTML = '<a href="#" onclick="logOut()">Sign out</a>';
+              document.getElementById("status").innerHTML = '<a href="#" onclick="customerLogOut()">Sign out</a>';
           } else {
               document.getElementById("status").innerHTML = '<a href="login.html">Sign in</a>';
           }

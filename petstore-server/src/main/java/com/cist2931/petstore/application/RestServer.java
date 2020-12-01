@@ -1,5 +1,6 @@
 package com.cist2931.petstore.application;
 
+import com.cist2931.petstore.StringUtils;
 import com.cist2931.petstore.application.customer.CustomerController;
 import com.cist2931.petstore.application.employee.EmployeeController;
 import com.cist2931.petstore.application.merchandise.MerchandiseController;
@@ -18,16 +19,13 @@ import java.util.Set;
 
 public class RestServer {
 
+    private static final Logger logger = new Logger(RestServer.class);
     public static final String API_URL = "/api/v1";
     public static final String CUSTOMER_API_URL = API_URL + "/customer";
     public static final String EMPLOYEE_API_URL = API_URL + "/employee";
-    public static final String MERCHANDISE_API_URL = API_URL + "/merchandise";
-
-    // This will be handled by the according customer and employee APIs
-    // the business object "Order" will be common between them
-    // public static final String ORDER_API_URL = API_URL + "/orders";
-
-    private static final Logger logger = new Logger(RestServer.class);
+    private static final Set<Role> ANYONE_ROLE = SecurityUtil.roles(UserRole.ANYONE, UserRole.CUSTOMER, UserRole.EMPLOYEE);
+    private static final Set<Role> CUSTOMER_ROLE = SecurityUtil.roles(UserRole.CUSTOMER);
+    private static final Set<Role> EMPLOYEE_ROLE = SecurityUtil.roles(UserRole.EMPLOYEE);
 
     private enum UserRole implements Role {
         ANYONE,
@@ -54,17 +52,17 @@ public class RestServer {
     }
 
     private UserRole getUserRole(Context ctx) {
-        String authToken = ctx.cookieStore("authToken");
-        if (authToken != null && !authToken.isEmpty()) {
-            if (ctx.path().startsWith(CUSTOMER_API_URL)) {
-                int cid = authService.authorizeCustomer(authToken);
-                if (cid > -1) return UserRole.CUSTOMER;
-            } else if (ctx.path().startsWith(EMPLOYEE_API_URL)) {
-                return UserRole.EMPLOYEE;
-            } else {
-                return UserRole.ANYONE;
-            }
+        String customerAuthToken = AuthenticationService.getCustomerToken(ctx);
+        String employeeAuthToken = AuthenticationService.getEmployeeToken(ctx);
+
+        if (StringUtils.hasValue(customerAuthToken) && ctx.path().startsWith(CUSTOMER_API_URL)) {
+            int cid = authService.authorizeCustomer(customerAuthToken);
+            if (cid > -1) return UserRole.CUSTOMER;
+        } else if (StringUtils.hasValue(employeeAuthToken) && ctx.path().startsWith(EMPLOYEE_API_URL)) {
+            int eid = authService.authorizeEmployee(employeeAuthToken);
+            if (eid > -1) return UserRole.EMPLOYEE;
         }
+
         return UserRole.ANYONE;
     }
 
@@ -89,6 +87,7 @@ public class RestServer {
             if (permittedRoles.contains(userRole)) {
                 handler.handle(ctx);
             } else {
+                logger.info("401'd bad access");
                 ctx.status(401).result("Unauthorized");
             }
         });
@@ -96,10 +95,6 @@ public class RestServer {
     }
 
     private void addEndpoints() {
-        final Set<Role> ANYONE_ROLE = SecurityUtil.roles(UserRole.ANYONE, UserRole.CUSTOMER, UserRole.EMPLOYEE);
-        final Set<Role> CUSTOMER_ROLE = SecurityUtil.roles(UserRole.CUSTOMER);
-        final Set<Role> EMPLOYEE_ROLE = SecurityUtil.roles(UserRole.EMPLOYEE);
-
         ApiBuilder.path(API_URL, () -> {
             ApiBuilder.put("customer", customerController::doCreate, ANYONE_ROLE);
             ApiBuilder.post("customer/login", customerController::doLogin, ANYONE_ROLE);
@@ -112,13 +107,12 @@ public class RestServer {
                 ApiBuilder.post("updateInfo", customerController::doUpdateInfo, CUSTOMER_ROLE);
             });
             ApiBuilder.put("guest/placeOrder", customerController::doPlaceGuestOrder, ANYONE_ROLE);
-            ApiBuilder.put("employee", employeeController::doCreate, ANYONE_ROLE);
             ApiBuilder.post("employee/login", employeeController::doLogin, ANYONE_ROLE);
             ApiBuilder.path("employee", () -> {
                 ApiBuilder.get(employeeController::getEmployee, EMPLOYEE_ROLE);
                 ApiBuilder.post("logout", employeeController::doLogout, EMPLOYEE_ROLE);
-                ApiBuilder.post("changePassword", employeeController::doChangePassword, EMPLOYEE_ROLE);
                 ApiBuilder.get("getOrders", employeeController::getOrders, EMPLOYEE_ROLE);
+                ApiBuilder.post("setOrderShipped/:orderNo", employeeController::setOrderShipped, EMPLOYEE_ROLE);
             });
             ApiBuilder.put("merchandise", merchandiseController::doCreate, ANYONE_ROLE);
             ApiBuilder.path("merchandise", () -> {

@@ -16,7 +16,7 @@ Number.prototype.pad = function(size) {
 
 function setClientAccountStatus() {
     if (localStorage.getItem('first_name') !== null) {
-        document.getElementById("status").innerHTML = '<a href="#" onclick="logOut()">Sign out</a>';
+        document.getElementById("status").innerHTML = '<a href="#" onclick="customerLogOut()">Sign out</a>';
     } else {
         document.getElementById("status").innerHTML = '<a href="/login.html">Sign in</a>';
     }
@@ -27,7 +27,7 @@ function getCartUrl() {
     return localStorage.getItem('first_name') !== null ? "/customercart.html" : "/guestcart.html";
 }
 
-function logOut(){
+function customerLogOut() {
     sendRequest('/api/v1/customer/logout', 'POST', null, function () {
         if (this.status === 200) {
             unsetCustomerData();
@@ -47,7 +47,7 @@ function logOut(){
     }, generalError);
 }
 
-function logOutEmployee() {
+function employeeLogOut() {
     sendRequest('/api/v1/employee/logout', 'POST', null, function () {
         if (this.status === 200) {
             unsetEmployeeData();
