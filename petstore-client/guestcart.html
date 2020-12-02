@@ -172,6 +172,9 @@
 
       function ok() {
           if (this.status === 200) {
+	      let jsonResponse = JSON.parse(this.responseText);
+              let orderNo = jsonResponse.orderID;
+              window.alert("Your Order has been placed! Your Order ID is " +orderNo+".");
               localStorage.removeItem("cart");
               document.location.assign('cart.html');
           }
