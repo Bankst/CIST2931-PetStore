@@ -211,6 +211,9 @@
 
       function orderSuccess() {
           if (this.status === 200) {
+	       let jsonResponse = JSON.parse(this.responseText);
+              let orderNo = jsonResponse.orderID;
+              window.alert("Your Order has been placed! Your Order ID is " +orderNo+".");
               console.log("ok!");
               localStorage.removeItem("cart");
               localStorage.removeItem("sentcart");
